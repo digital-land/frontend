@@ -1,0 +1,27 @@
+{
+  "name": "digital-land-frontend",
+  "version": "0.1.0",
+  "description": "Code for building interfaces for digital land pages and services",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digital-land/frontend.git"
+  },
+  "author": "Digital Land",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/digital-land/frontend/issues"
+  },
+  "homepage": "https://github.com/digital-land/frontend#readme",
+  "dependencies": {
+    "govuk-frontend": "^3.9.1"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-sass": "^4.1.0"
+  }
+}
