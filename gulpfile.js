@@ -3,11 +3,13 @@
 const gulp = require('gulp')
 const sass = require('gulp-sass')
 const clean = require('gulp-clean')
+const rollup = require('gulp-better-rollup')
 
 // set paths
 const config = {
   scssPath: 'src/scss',
-  cssDestPath: 'digital-land-frontend/static/stylesheets'
+  cssDestPath: 'digital-land-frontend/static/stylesheets',
+  jsDestPath: 'digital-land-frontend/static/javascripts'
 }
 
 // Tasks used to generate latest stylesheets
@@ -27,6 +29,24 @@ const compileStylesheets = () =>
     )
     .on('error', sass.logError)
     .pipe(gulp.dest(config.cssDestPath))
+
+// Compile application.js
+// ======================
+gulp.task('js:compile', () => {
+  return gulp
+    .src(['src/js/dl-frontend.js'])
+    .pipe(
+      rollup({
+        // set the 'window' global
+        name: 'DLFrontend',
+        // Legacy mode is required for IE8 support
+        legacy: true,
+        // UMD allows the published bundle to work in CommonJS and in the browser.
+        format: 'umd'
+      })
+    )
+    .pipe(gulp.dest(`${config.jsDestPath}`))
+})
 
 // Tasks to expose to CLI
 // ======================
