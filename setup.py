@@ -4,10 +4,14 @@ import os
 from setuptools import setup
 
 components = []
-directories = glob.glob("digital_land_frontend/**/**/*.html", recursive=True)
+directories_html = glob.glob("digital_land_frontend/**/**/*.html", recursive=True)
+directories_jinja = glob.glob("digital_land_frontend/**/**/*.jinja", recursive=True)
 
-for directory in directories:
+for directory in directories_html:
     components.append(os.path.relpath(os.path.dirname(directory), "digital_land_frontend") + "/*.html")
+
+for directory in directories_jinja:
+    components.append(os.path.relpath(os.path.dirname(directory), "digital_land_frontend") + "/*.jinja")
 
 setup(
     name="digital-land-frontend",
