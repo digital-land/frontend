@@ -4,6 +4,39 @@
 
 Frontend contains the code you need to start building a user interface for digital land pages and services. It builds on [GOV.UK frontend](https://github.com/alphagov/govuk-frontend).
 
+## How to use digital-land-frontend
+
+The easiest way to use digital-land-frontend is to install it with pip. We recommend working in a virtual environment.
+
+You will also need to install the ported govuk templates.
+
+To install both, run
+
+    pip install -e git+https://github.com/digital-land/frontend.git#egg=digital_land_frontend
+    pip install -e git+https://github.com/digital-land/govuk-jinja-components.git@base-template#egg=govuk_jinja_components
+
+Then in your `render.py` or equivalent you'll need to register the templates (partials and macros) so that jinja knows they are available. You can do that with code similar to
+
+    import jinja2
+    
+    # where you set up jinja add this
+    multi_loader = jinja2.ChoiceLoader([
+        jinja2.FileSystemLoader(searchpath="<<path to your templates>>"),
+        jinja2.PrefixLoader({
+            'govuk-jinja-components': jinja2.PackageLoader('govuk_jinja_components'),
+            'digital-land-frontend': jinja2.PackageLoader('digital_land_frontend')
+        })
+    ])
+    jinja2.Environment(loader=multi_loader)
+
+Then in your templates you can access templates from `govuk-jinja-components` like this
+
+    {% extends "govuk-jinja-components/template.html" %}
+
+And from `digital-land-frontend` like this
+
+    {% from "digital-land-frontend/components/page-feedback/macro.jinja" import dlfPageFeedback %}
+
 ### Update GOV.UK assets
 
 Fecth the latest release of [GOV.UK frontend](https://github.com/alphagov/govuk-frontend) with
