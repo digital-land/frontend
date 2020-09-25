@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="digital-land-frontend",
-    version="0.1.0",
+    version="0.1.1",
     author="Digital land",
     description="Reusable frontend code for digital land services and products",
     license="MIT",
@@ -11,5 +11,6 @@ setup(
     python_requires=">=3.5",
     install_requires=[
         "jinja2",
+        "govuk-jinja-components @ git+https://github.com/digital-land/govuk-jinja-components.git@base-template",
     ],
 )
