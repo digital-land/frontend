@@ -6,7 +6,7 @@ setup(
     author="Digital land",
     description="Reusable frontend code for digital land services and products",
     license="MIT",
-    packages=["digital-land-frontend"],
+    packages=["digital_land_frontend"],
     package_data={'digital-land-frontend': ['templates/**.*']},
     python_requires=">=3.5",
     install_requires=[
