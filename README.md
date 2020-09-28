@@ -37,6 +37,24 @@ And from `digital-land-frontend` like this
 
     {% from "digital-land-frontend/components/page-feedback/macro.jinja" import dlfPageFeedback %}
 
+
+### Compile latest stylesheets and javascript
+
+Running
+
+    gulp
+
+will recompile the stylesheets and javascript files, as well as copying any vendor assets into the `digital_land_frontend/static` directory.
+
+If you need to recompile `dl-frontend.css`, run
+
+    gulp stylesheets
+
+If you need to recompile `dl-frontend.js`, run
+
+    gulp js:compile
+
+
 ### Update GOV.UK assets
 
 Fecth the latest release of [GOV.UK frontend](https://github.com/alphagov/govuk-frontend) with

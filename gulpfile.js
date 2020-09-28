@@ -9,10 +9,12 @@ const eol = require('gulp-eol')
 const gulpif = require('gulp-if')
 const rename = require('gulp-rename')
 const uglify = require('gulp-uglify')
+const del = require('del')
 
 // set paths
 const config = {
   scssPath: 'src/scss',
+  destPath: 'digital_land_frontend/static',
   cssDestPath: 'digital_land_frontend/static/stylesheets',
   jsDestPath: 'digital_land_frontend/static/javascripts',
   govukPath: 'node_modules/govuk-frontend/govuk/',
@@ -20,6 +22,10 @@ const config = {
 }
 
 const isDist = true
+
+const cleanAll = () =>
+  del(`${config.destPath}/**/*`)
+cleanAll.description = 'Empty static dir'
 
 // Tasks used to generate latest stylesheets
 // =========================================
@@ -120,7 +126,7 @@ const latestVendorAssets = gulp.parallel(
   copyVendorJS,
   'govukjs:compile'
 )
-latestVendorAssets.description = 'Copy all govuk and vendor assets to package';
+latestVendorAssets.description = 'Copy all govuk and vendor assets to package'
 
 const latestStylesheets = gulp.series(
   cleanCSS,
@@ -129,6 +135,9 @@ const latestStylesheets = gulp.series(
 )
 latestStylesheets.description = 'Generate the latest stylesheets'
 
-exports.default = latestStylesheets
 exports.stylesheets = latestStylesheets
 exports.assets = latestVendorAssets
+exports.clean = cleanAll
+
+// set of tasks when $ gulp command is run
+exports.default = gulp.series(cleanAll, gulp.parallel(latestStylesheets, 'js:compile'), latestVendorAssets)
