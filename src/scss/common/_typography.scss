@@ -2,8 +2,34 @@
   max-width: 30em !important;
 }
 
-.govuk-body {
+// limit text line length
+.govuk-body,
+.govuk-main-wrapper p,
+.govuk-inset-text,
+.text-max-width {
   max-width: 38em;
+}
+
+.govuk-caption-s {
+  @include govuk-font($size: 16);
+  display: block;
+  color: $govuk-secondary-text-colour;
+}
+
+// ===========================
+// Links
+// ===========================
+// govuk link style as default
+a {
+  @extend %govuk-link;
+}
+
+.govuk-link--no-underline {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .dl-heading-section-break {
@@ -13,4 +39,27 @@
 
 .dl-small-text {
   @include govuk-font($size: 16);
+}
+
+// helper class to dim text colour
+.secondary-text {
+  color: $govuk-secondary-text-colour;
+}
+
+// don't break content on to new lines
+.no-wrap {
+  white-space: nowrap;
+}
+
+// attempt to break long long URLS
+.long-link {
+  word-break: break-all;
+}
+
+.highlight-text {
+  color: govuk-colour("blue");
+}
+
+.hidden-text {
+  color: transparent;
 }

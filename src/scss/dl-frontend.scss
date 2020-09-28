@@ -67,24 +67,11 @@ $using-helvetica: false;
   }
 }
 
-a {
-  @extend %govuk-link;
-}
-
-.govuk-main-wrapper p,
-.govuk-inset-text {
-  max-width: 38em;
-}
-
 .govuk-header__menu-button {
   top: 12px;
   @include govuk-media-query($from: tablet) {
     top: govuk-spacing(4);
   }
-}
-
-.no-wrap {
-  white-space: nowrap;
 }
 
 // required for the Autocomplete if using
@@ -95,18 +82,6 @@ a {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.highlight-text {
-  color: govuk-colour("blue");
-}
-
-.govuk-link--no-underline {
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 %block-text {
@@ -128,30 +103,6 @@ a {
 
 .publishing-metadata {
   @include govuk-font($size: 16, $line-height: 1.45);
-}
-
-.secondary-text {
-  color: $govuk-secondary-text-colour;
-}
-
-.hidden-text {
-  color: transparent;
-}
-
-.long-link {
-  word-break: break-all;
-}
-
-.text-max-width {
-  max-width: 38em;
-}
-
-.govuk-caption-s {
-  @include govuk-font($size: 16);
-
-  display: block;
-
-  color: $govuk-secondary-text-colour;
 }
 
 .organisations__no-filter-match {
