@@ -9,8 +9,8 @@ const rollup = require('gulp-better-rollup')
 // set paths
 const config = {
   scssPath: 'src/scss',
-  cssDestPath: 'digital-land-frontend/static/stylesheets',
-  jsDestPath: 'digital-land-frontend/static/javascripts'
+  cssDestPath: 'digital_land_frontend/static/stylesheets',
+  jsDestPath: 'digital_land_frontend/static/javascripts'
 }
 
 // Tasks used to generate latest stylesheets
