@@ -105,7 +105,7 @@ gulp.task('govukjs:compile', () => {
       })
     ))
     .pipe(eol())
-    .pipe(gulp.dest(`${config.jsDestPath}`))
+    .pipe(gulp.dest(`${config.jsDestPath}/govuk`))
 })
 
 // Tasks for copying assets to application
