@@ -1,0 +1,14 @@
+.def-list--basic {
+  margin: 0;
+
+  dt {
+    padding-right: 5px;
+    float: left;
+  }
+
+  dd {
+    display: inline-block;
+    margin-left: .35em;
+    font-weight: bold;
+  }
+}

@@ -1,0 +1,37 @@
+.local-plan-card {
+  max-width: 630px;
+  border: 1px solid $govuk-border-colour;
+  border-bottom-width: 4px;
+  @include govuk-clearfix;
+}
+
+.local-plan-card__main {
+  padding: 10px;
+}
+
+.local-plan-card__info {
+  border-top: 1px solid $govuk-border-colour;
+  @include govuk-font($size: 19);
+
+  > div:first-child {
+    border-right: 1px solid $govuk-border-colour;
+  }
+
+  > div {
+    padding: 10px;
+  }
+}
+
+.local-plan-card__name {
+  margin-bottom: 0;
+}
+
+.local-plan-card__creators {
+  margin: 5px 0 0;
+}
+
+.local-plan-card__status {
+  .govuk-tag {
+    margin-right: $govuk-gutter-half;
+  }
+}

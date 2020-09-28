@@ -1,1 +1,229 @@
+$govuk-fonts-path: "/static/govuk/assets/fonts/";
+$govuk-images-path: "/static/govuk/assets/images/";
+
+// import all GOVUK Frontend scss
 @import "node_modules/govuk-frontend/govuk/all";
+
+$using-helvetica: false;
+
+// Import common Digital Land styles
+@import "common/colours";
+@import "common/helvetica-fixes";
+@import "common/mhclg-branding";
+@import "common/site-full-width-container";
+@import "common/dl-header";
+@import "common/icons";
+@import "common/typography";
+
+// import Digital Land components
+@import "components/page-feedback";
+@import "components/back-to-top";
+@import "components/buttons";
+@import "components/contribution-bar";
+@import "components/data-tables";
+@import "components/definition-lists";
+@import "components/hero";
+@import "components/tags";
+@import "components/panels";
+@import "components/task-list";
+@import "components/lists";
+@import "components/contents";
+@import "components/govuk-search";
+@import "components/dl-info-text";
+@import "components/related-items";
+@import "components/highlight-box";
+@import "components/pagination";
+@import "components/filter-group";
+@import "components/charts";
+@import "components/maps";
+@import "components/section-separators";
+@import "components/summary-cards";
+@import "components/technical-summary-card";
+@import "components/timeline";
+@import "components/data-item";
+@import "components/local-plan";
+
+// import styles that are specific to certain digital land pages
+@import "page-specific/collections";
+@import "page-specific/hugo/hugo-pages";
+@import "page-specific/local-plans-prototype";
+@import "page-specific/local-plans";
+
+// import components from elsewhere e.g. MOJ
+@import "vendor-components/moj-sortable-table";
+
+// usually added to html element
+.smooth-scroll-enabled {
+  scroll-behavior: smooth;
+}
+
+.hide-if-no-js {
+  display: none;
+}
+
+.js-enabled {
+  .hide-if-no-js {
+    display: block;
+  }
+}
+
+a {
+  @extend %govuk-link;
+}
+
+.govuk-main-wrapper p,
+.govuk-inset-text {
+  max-width: 38em;
+}
+
+.govuk-header__menu-button {
+  top: 12px;
+  @include govuk-media-query($from: tablet) {
+    top: govuk-spacing(4);
+  }
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+// required for the Autocomplete if using
+// Govuk design system
+// --------------------------------------
+.autocomplete__menu {
+  font-family: "nta", Arial, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.highlight-text {
+  color: govuk-colour("blue");
+}
+
+.govuk-link--no-underline {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+%block-text {
+  padding: 2px 4px 1px;
+  font-weight: bold;
+}
+
+.block-text--green {
+  @extend %block-text;
+  color: govuk-colour("white");
+  background: govuk-colour("green");
+}
+
+.block-text--red {
+  @extend %block-text;
+  color: govuk-colour("white");
+  background: govuk-colour("red");
+}
+
+.publishing-metadata {
+  @include govuk-font($size: 16, $line-height: 1.45);
+}
+
+.secondary-text {
+  color: $govuk-secondary-text-colour;
+}
+
+.hidden-text {
+  color: transparent;
+}
+
+.long-link {
+  word-break: break-all;
+}
+
+.text-max-width {
+  max-width: 38em;
+}
+
+.govuk-caption-s {
+  @include govuk-font($size: 16);
+
+  display: block;
+
+  color: $govuk-secondary-text-colour;
+}
+
+.organisations__no-filter-match {
+  @include govuk-font($size: 19);
+  display: none;
+  max-width: 100% !important;
+  text-align: center;
+}
+
+.govuk-warning-text__icon--error {
+  border-color:  $govuk-error-colour;
+  color: $govuk-error-colour;
+  background: transparent;
+}
+
+// hide some elements and show if javascript enabled
+.dl-timeline__filter,
+.dl-js-enhancement,
+.global-cookie-message,
+.cookie-message__confirmation {
+  display: none;
+}
+
+.js-enabled {
+  .hub-list__separator:first-of-type {
+    display: none;
+  }
+
+  .hub:first-of-type {
+    margin-top: 50px;
+  }
+
+  .govuk-error-message {
+    display: none;
+  }
+
+  .govuk-form-group--error {
+    .govuk-error-message {
+      display: block;
+    }
+  }
+
+  .js-hidden {
+    display: none;
+    visibility: hidden;
+  }
+
+  .dl-timeline__filter,
+  .dl-js-enhancement,
+  .global-cookie-message,
+  .cookie-message__confirmation.saved {
+    display: block;
+  }
+}
+
+.hub__la-list {
+  .found {
+    @include govuk-focused-text;
+  }
+}
+
+.dl-found-item {
+  @include govuk-focused-text;
+}
+
+// Cookie options saved panel
+// to do: make this info panel a component
+.cookie-message__confirmation {
+  border: 5px solid govuk-colour("blue");
+  color: $govuk-text-colour;
+
+  section {
+    padding: 20px;
+  }
+}

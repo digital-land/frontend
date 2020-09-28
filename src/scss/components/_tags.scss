@@ -1,0 +1,24 @@
+// Tag variations
+// --------------
+
+.govuk-tag--error {
+  background-color: govuk-colour("red");
+}
+
+.govuk-tag--warning {
+  color: govuk-shade(govuk-colour("dark-grey"), 20);
+  background-color: govuk-colour("yellow");
+}
+
+// dl Tag
+// --------------
+.dl-tag {
+  display: inline-block;
+  margin-right: 8px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  background: govuk-colour("light-grey", $legacy: "grey-3");
+  font-weight: 600;
+  white-space: nowrap;
+}

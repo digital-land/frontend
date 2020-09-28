@@ -1,0 +1,54 @@
+.technical-summary-card {
+  @include govuk-clearfix;
+  @include govuk-font($size: 19);
+  margin: 0;
+  padding: 20px;
+  border: 1px solid govuk-colour("mid-grey", $legacy: "grey-2");
+  background: govuk-colour("light-grey", $legacy: "grey-4");
+}
+
+.technical-summary-card__title {
+  a {
+    text-decoration: none;
+
+    &:hover:not(:active):not(:focus) {
+      text-decoration: underline;
+    }
+  }
+}
+
+.technical-summary-card__result {
+  display: inline-block;
+  position: relative;
+  padding-right: 10px;
+  padding-left: 20px;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: calc(50% - 5px);
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: $govuk-border-colour;
+  }
+
+  &--success:after {
+    background: govuk-colour("green");
+  }
+
+  &--fail:after {
+    background: $govuk-error-colour;
+  }
+}
+
+.technical-summary-card--compressed {
+  padding: 10px;
+}
+
+.technical-summary-card__section {
+  margin-top: 20px;
+  padding-top: $govuk-gutter-half;
+  border-top: 1px solid govuk-colour("mid-grey");
+}

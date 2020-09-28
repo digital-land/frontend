@@ -1,0 +1,44 @@
+.org-count + .org-count {
+  margin-top: $govuk-gutter * 1.5;
+}
+
+.org-count__name {
+  margin-bottom: 0;
+}
+
+.org-count__wrapper {
+  margin-top: -5px;
+}
+
+.org-list {
+  padding-left: 0;
+
+  &__item {
+    list-style: none;
+    @include govuk-responsive-margin(3, "bottom");
+    @include govuk-responsive-padding(3, "bottom");
+    border-bottom: 1px solid $govuk-border-colour;
+  }
+
+  .org-list__item-title {
+    @include govuk-font($size: 19);
+  }
+}
+
+.filter-list__label {
+  display: inline;
+  padding-right: 5px;
+}
+
+.filter-list__input {
+  max-width: 200px;
+  @include govuk-media-query($from: tablet) {
+    max-width: 400px;
+  }
+}
+
+.js-enabled {
+  .organisations__no-filter-match {
+    display: block;
+  }
+}

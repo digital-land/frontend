@@ -1,0 +1,80 @@
+// overriding Sidebar plugin defaults
+.bfs-sidebar {
+  max-width: 350px !important;
+
+  & > .leaflet-control {
+    padding: 15px;
+  }
+}
+
+// for overiding some leaflet popup defaults
+.bfs-popup {
+  .leaflet-popup-content-wrapper {
+    border-radius: 4px;
+  }
+}
+
+.bfs {
+  @include govuk-font($size: 16);
+}
+
+.bfs__end-banner {
+  display: block;
+  margin-bottom: 5px;
+  padding: 0 5px;
+  color: $warning-tag-text;
+  background: $warning-tag-bg;
+  font-weight: 700;
+  text-align: center;
+}
+
+.bfs__header {
+  padding-bottom: 5px;
+  border-bottom: 1px solid govuk-colour("light-grey");
+
+  .bfs__addr {
+    margin-bottom: 5px;
+  }
+}
+
+.bfs__footer {
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid govuk-colour("light-grey");
+  @include govuk-font($size: 14);
+}
+
+.bfs__key-data {
+  dt,
+  dd {
+    display: block;
+    text-align: center;
+  }
+
+  dd {
+    @include govuk-font($size: 19, $weight: bold);
+    margin-left: 0;
+  }
+}
+
+.bfs__meta,
+.bfs__property-list {
+  dl {
+    @include govuk-font($size: 14);
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+
+  dt,
+  dd {
+    display: inline-block;
+  }
+
+  dt {
+    color: $govuk-secondary-text-colour;
+  }
+
+  dd {
+    margin-left: 5px;
+  }
+}

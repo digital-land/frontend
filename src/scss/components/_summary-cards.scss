@@ -1,0 +1,72 @@
+.dlf-summary-card {
+  border: 1px solid $govuk-border-colour;
+
+  .dlf-summary-card__header {
+    padding: govuk-spacing(3);
+    background-color: govuk-colour("light-grey");
+  }
+
+  .dlf-summary-card__title {
+    @include govuk-font($size: 19, $weight: bold);
+    margin: 0;
+  }
+
+  .dlf-summary-card__body {
+    @include govuk-font($size: 19);
+    padding: govuk-spacing(3);
+
+    .govuk-list {
+      margin-bottom: 0;
+    }
+  }
+}
+
+
+.dlf-inset-card {
+  padding-bottom: govuk-spacing(3);
+  border-bottom: 2px solid $govuk-border-colour;
+  background-color: govuk-colour("light-grey");
+
+  .dlf-inset-card__header {
+    padding: govuk-spacing(3) govuk-spacing(3) govuk-spacing(2);
+  }
+
+  .dlf-inset-card__title {
+    @include govuk-font($size: 19, $weight: bold);
+    margin: 0;
+  }
+
+  .dlf-inset-card__body {
+    @include govuk-font($size: 19);
+    padding: 0 govuk-spacing(3);
+
+    .govuk-list {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.dlf-inset-card--s {
+  padding-bottom: govuk-spacing(3);
+
+  .dlf-inset-card__header {
+    padding: govuk-spacing(3) govuk-spacing(3) govuk-spacing(1);
+  }
+
+  .dlf-inset-card__title {
+    @include govuk-font($size: 16, $weight: bold);
+  }
+
+  .dlf-inset-card__body {
+    @include govuk-font($size: 16);
+    padding: 0 govuk-spacing(3);
+
+    .govuk-link {
+      @include govuk-font($size: 16);
+    }
+
+    li:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
