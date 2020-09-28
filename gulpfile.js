@@ -2,6 +2,7 @@
 
 const gulp = require('gulp')
 const sass = require('gulp-sass')
+const sassLint = require('gulp-sass-lint')
 const clean = require('gulp-clean')
 const rollup = require('gulp-better-rollup')
 
@@ -30,6 +31,20 @@ const compileStylesheets = () =>
     .on('error', sass.logError)
     .pipe(gulp.dest(config.cssDestPath))
 
+// check .scss files against .sass-lint.yml config
+const lintSCSS = () =>
+  gulp
+    .src('src/scss/**/*.s+(a|c)ss')
+    .pipe(
+      sassLint({
+        files: { ignore: '' },
+        configFile: '.sass-lint.yml'
+      })
+    )
+    .pipe(sassLint.format())
+    .pipe(sassLint.failOnError())
+lintSCSS.description = 'Check files follow GOVUK style'
+
 // Compile application.js
 // ======================
 gulp.task('js:compile', () => {
@@ -52,6 +67,7 @@ gulp.task('js:compile', () => {
 // ======================
 const latestStylesheets = gulp.series(
   cleanCSS,
+  lintSCSS,
   compileStylesheets
 )
 latestStylesheets.description = 'Generate the latest stylesheets'
