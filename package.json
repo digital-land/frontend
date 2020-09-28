@@ -37,7 +37,8 @@
   "standard": {
     "globals": [
       "page",
-      "browser"
+      "browser",
+      "ga"
     ],
     "parser": "babel-eslint"
   }

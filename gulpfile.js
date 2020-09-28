@@ -78,7 +78,8 @@ gulp.task('js:compile', () => {
     .pipe(gulp.dest(`${config.jsDestPath}`))
 })
 
-// build latest govuk-frontend.min.js
+// Compile latest govuk-frontend.min.js
+// ====================================
 gulp.task('govukjs:compile', () => {
   // for dist/ folder we only want compiled 'all.js' file
   const srcFiles = config.govukPath + 'all.js'
@@ -118,6 +119,9 @@ const copyGovukAssets = () =>
 const copyVendorJS = () =>
   gulp.src('src/js/vendor/*.js').pipe(gulp.dest(`${config.jsDestPath}/vendor`))
 
+const copyCookieJS = () =>
+  gulp.src('src/js/dl-cookies.js').pipe(gulp.dest(`${config.jsDestPath}/`))
+
 // Tasks to expose to CLI
 // ======================
 const latestVendorAssets = gulp.parallel(
@@ -135,9 +139,16 @@ const latestStylesheets = gulp.series(
 )
 latestStylesheets.description = 'Generate the latest stylesheets'
 
+const latestJS = gulp.parallel(
+  copyCookieJS,
+  'js:compile'
+)
+latestJS.description = 'Compile and copy latest digital land javascripts'
+
 exports.stylesheets = latestStylesheets
 exports.assets = latestVendorAssets
+exports.js = latestJS
 exports.clean = cleanAll
 
 // set of tasks when $ gulp command is run
-exports.default = gulp.series(cleanAll, gulp.parallel(latestStylesheets, 'js:compile'), latestVendorAssets)
+exports.default = gulp.series(cleanAll, gulp.parallel(latestStylesheets, latestJS), latestVendorAssets)

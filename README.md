@@ -46,13 +46,13 @@ Running
 
 will recompile the stylesheets and javascript files, as well as copying any vendor assets into the `digital_land_frontend/static` directory.
 
-If you need to recompile `dl-frontend.css`, run
+If you need to recompile the digital land **stylesheets**, run
 
     gulp stylesheets
 
-If you need to recompile `dl-frontend.js`, run
+If you need to recompile the digital land **javascripts**, run
 
-    gulp js:compile
+    gulp js
 
 
 ### Update GOV.UK assets
