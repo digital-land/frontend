@@ -1,15 +1,16 @@
-{% extends "base.html" %}
-{% from "govuk-jinja-components/phase-banner/macro.jinja" import govukPhaseBanner %}
-{% from "govuk-jinja-components/breadcrumbs/macro.jinja" import govukBreadcrumbs %}
-{% from "dl-macros/page-feedback/macro.html" import dlfPageFeedback %}
+{% extends "govuk-jinja-components/template.html" %}
+{% from "govuk-jinja-components/components/phase-banner/macro.jinja" import govukPhaseBanner %}
+{% from "govuk-jinja-components/components/breadcrumbs/macro.jinja" import govukBreadcrumbs %}
+
+{% from "digital-land-frontend/components/page-feedback/macro.html" import dlfPageFeedback %}
 
 {% block head %}
 <link href="{{ staticPath | default('/static') }}/stylesheets/dl-frontend.css" rel="stylesheet" />
 {% endblock %}
 
 {% block header %}
-{% include 'dl-partials/dl-cookie-banner.html' %}
-{% include 'dl-partials/dl-header.html' %}
+{% include 'digital-land-frontend/partials/dl-cookie-banner.html' %}
+{% include 'digital-land-frontend/partials/dl-header.html' %}
 {% endblock%}
 
 
@@ -25,7 +26,7 @@
 	<script src="{{ staticPath | default('/static') }}/javascripts/vendor/jquery-3.4.1.min.js"></script>
 	{% endif %}
 
-	<script src="{{ staticPath | default('/static') }}/javascripts/govuk/govuk-frontend-3.0.0.min.js"></script>
+	<script src="{{ staticPath | default('/static') }}/javascripts/govuk/govuk-frontend.min.js"></script>
 	<script>
 		// initiate all GOVUK components
 		window.GOVUKFrontend.initAll();
