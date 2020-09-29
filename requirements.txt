@@ -1,0 +1,7 @@
+attrs==20.2.0
+click==7.1.2
+curlylint==0.12.0
+dataclasses==0.7
+parsy==1.1.0
+pathspec==0.8.0
+toml==0.10.1

@@ -64,3 +64,15 @@ Fecth the latest release of [GOV.UK frontend](https://github.com/alphagov/govuk-
 Once update it is recommended that you recompile the stylesheets.
 
     gulp stylesheets
+
+### Contributing templates, partials and components
+
+Check any HTML and jinja snippets with `curlylint`.
+
+Install requirements.
+
+    pip install -r requirements.txt
+
+To check HTML run
+
+    curlylint digital_land_frontend/templates/
