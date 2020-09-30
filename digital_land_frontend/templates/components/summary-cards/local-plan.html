@@ -1,0 +1,41 @@
+{% macro localPlanCard(params) %}
+{# Set classes for this component #}
+{%- set classNames = "local-plan-card govuk-!-margin-bottom-6" -%}
+
+{%- if params.classes %}
+  {% set classNames = classNames + " " + params.classes %}
+{% endif %}
+
+{%- set commonAttributes %} class="{{ classNames }}" {% for attribute, value in (params.attributes.items() if params.attributes else {}.items()) %} {{attribute}}="{{value}}"{% endfor %}{% endset %}
+
+{% set organisations = params.plan['organisations'].split(';') %}
+
+<li {{ commonAttributes }}>
+    <div class="local-plan-card__main">
+        <h3 class="govuk-heading-m local-plan-card__name">
+            <a href="{{ params.plan['development-plan'] }}" class="govuk-link">{{ params.plan['name'] }}</a>
+        </h3>
+        <p class="govuk-link local-plan-card__creators">Created by {% for organisation in organisations %}
+            <a href="{{organisation}}" class="govuk-link">{{ organisation|map_organisation_by_id }}</a>
+            {% if not loop.last %}, {% endif %}
+        {% endfor %}</p>
+    </div>
+    <div class="local-plan-card__info">
+        <div class="govuk-grid-column-one-half">
+            <div class="local-plan-card__status">
+            {% if params.plan['status'] %}
+            {% set statusObj = params.plan['status'] %}
+                <span class="govuk-tag{% if statusObj['current']['status'] != 'adopted' %} govuk-tag--grey{% endif %}">{{ statusObj['current']['status'] }}</span>
+                <span>{{ statusObj['current']['date'] }}</span>
+            {%- else -%}
+            <span class="govuk-tag govuk-tag--grey">Unknown</span>
+            {% endif %}
+            </div>
+        </div>
+        <div class="govuk-grid-column-one-half">
+            <span><a href="{{ params.plan['development-plan'] }}#associated-documents" class="govuk-link">{{ params.plan['document']|length }} associated document{{ "s" if params.plan['document']|length != 1 }}</a></span>
+        </div>
+    </div>
+</li>
+{% endmacro %}
+
