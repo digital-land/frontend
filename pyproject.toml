@@ -1,0 +1,6 @@
+[tool.curlylint]
+include = '\.(html|jinja)$'
+
+[tool.curlylint.rules]
+aria_role = true
+image_alt = true
