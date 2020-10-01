@@ -80,21 +80,8 @@ gulp.task('js:compile', () => {
 
 // Compile latest govuk-frontend.min.js
 // ====================================
-gulp.task('govukjs:compile', () => {
-  // for dist/ folder we only want compiled 'all.js' file
-  const srcFiles = config.govukPath + 'all.js'
-
-  return gulp.src([
-    srcFiles
-  ])
-    .pipe(rollup({
-      // Used to set the `window` global and UMD/AMD export name.
-      name: 'GOVUKFrontend',
-      // Legacy mode is required for IE8 support
-      legacy: true,
-      // UMD allows the published bundle to work in CommonJS and in the browser.
-      format: 'umd'
-    }))
+gulp.task('govukjs:minify', () => {
+  return gulp.src(config.govukPath + 'all.js')
     .pipe(gulpif(isDist, uglify({
       ie8: true
     })))
@@ -128,7 +115,7 @@ const latestVendorAssets = gulp.parallel(
   copyVendorStylesheets,
   copyGovukAssets,
   copyVendorJS,
-  'govukjs:compile'
+  'govukjs:minify'
 )
 latestVendorAssets.description = 'Copy all govuk and vendor assets to package'
 
