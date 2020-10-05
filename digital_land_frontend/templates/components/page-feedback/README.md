@@ -8,7 +8,8 @@ This is a test explanation
       "url": "example.html",
       "size": "xs"
     },
-    "partial": [{
-      "name": 'digital-land-frontend/components/page-feedback/example.html'
-    }]
+    "component": {
+        "name": "page-feedback",
+        "tabs": ["HTML", "jinja"]
+    }
 }) }}

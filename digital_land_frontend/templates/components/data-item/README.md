@@ -8,16 +8,10 @@ Use the data item component when you want to display a number from some data.
     "url": "example.html",
     "size": "s"
 },
-"partial": [
-    {
-    "type": "html",
-    "name": 'digital-land-frontend/components/data-item/example.html'
-    },
-    {
-    "type": "jinja",
-    "path": 'digital-land-frontend/components/data-item/example.html'
-    }
-]
+"component": {
+    "name": "data-item",
+    "tabs": ["HTML", "jinja"]
+}
 }) }}
 
 ### When not to use
@@ -34,14 +28,8 @@ Add a `.data-item--inline` class if you need the data item to display inline.
     "url": "example-inline.html",
     "size": "s"
 },
-"partial": [
-    {
-    "type": "html",
-    "name": 'digital-land-frontend/components/data-item/example-inline.html'
-    },
-    {
-    "type": "jinja",
-    "path": 'digital-land-frontend/components/data-item/example-inline.html'
-    }
-]
+"component": {
+    "name": "data-item",
+    "tabs": ["HTML", "jinja"]
+}
 }) }}

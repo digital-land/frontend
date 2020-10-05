@@ -6,16 +6,10 @@ This builds on the govukButton macro.
 "iframe": {
     "title": "An example of a start button",
     "url": "example.html",
-    "size": "s"
+    "size": "xs"
 },
-"partial": [
-    {
-    "type": "html",
-    "name": 'digital-land-frontend/components/button/example.html'
-    },
-    {
-    "type": "jinja",
-    "path": 'digital-land-frontend/components/button/example.html'
-    }
-]
+"component": {
+    "name": "button",
+    "tabs": ["HTML", "jinja"]
+}
 }) }}
