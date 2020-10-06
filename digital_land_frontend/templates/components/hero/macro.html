@@ -1,6 +1,6 @@
 {% macro dlHero(params) %}
-<header class="hero{{ ' ' + params.classes if params.classes }}">
-    <div class="hero__content">
+<header class="hero">
+    <div class="hero__content{{ ' ' + params.classes if params.classes }}">
         {% if caller %} {#- if statement allows usage of `call` to be optional -#}
         {{ caller() }}
         {% elif params.html %}
