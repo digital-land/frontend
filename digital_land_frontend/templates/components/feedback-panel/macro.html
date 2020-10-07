@@ -1,0 +1,6 @@
+{% macro dlFeedbackPanel(params) %}
+<div class="feedback-panel{{ ' ' + params.classes if params.classes }}">
+    <h3 class="feedback-panel__heading">{{ params.heading }}</h3>
+    <p>{{ params.html|safe if params.html else params.text }}</p>
+</div>
+{% endmacro %}
