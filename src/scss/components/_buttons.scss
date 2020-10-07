@@ -46,6 +46,11 @@
   @include govuk-style-button($button-text-colour: $govuk-text-colour, $button-colour:  govuk-colour("light-grey", $legacy: "grey-3"));
 }
 
+.dl-button--on-blue {
+  @include govuk-style-button($button-text-colour: govuk-colour("blue"), $button-colour: govuk-colour("white"), $button-shadow-colour: govuk-colour("black"));
+  font-weight: bold;
+}
+
 // Allows you to align an anchor next to the button
 // Used for buttons such as form cancel/reset
 .link-align-btn,
