@@ -51,7 +51,7 @@ const lintSCSS = () =>
     .src('src/scss/**/*.s+(a|c)ss')
     .pipe(
       sassLint({
-        files: { ignore: '' },
+        files: { ignore: 'src/scss/styleguide/_highlight-style.scss' },
         configFile: '.sass-lint.yml'
       })
     )
