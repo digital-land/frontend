@@ -139,12 +139,14 @@ $navigation-height: 53px;
 }
 
 .app-subnav__section-item {
-  margin-bottom: 5px;
-  padding: 5px 0;
+  list-style: none;
 }
 
 .app-subnav__link {
-  //display: block;
+  display: block;
+  padding: 10px;
+  border-left: 4px solid transparent;
+  color: govuk-colour("blue");
   text-decoration: none;
 
   &:hover,
@@ -154,7 +156,7 @@ $navigation-height: 53px;
   }
 
   &:hover {
-    text-decoration: underline;
+    border-color: govuk-colour("blue");
   }
 
   // put last so text colour not overridden by :hover state
@@ -172,7 +174,6 @@ $navigation-height: 53px;
   a {
     font-weight: bold;
   }
-  
 }
 
 .app-subnav__heading {

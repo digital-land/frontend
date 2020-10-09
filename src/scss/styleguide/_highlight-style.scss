@@ -4,11 +4,11 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 
 */
 
-.hljs {
+.hljs-container {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background-color: #f8f8f8;
+  background-color: govuk-colour("light-grey");
   font-family: monospace;
 }
 
