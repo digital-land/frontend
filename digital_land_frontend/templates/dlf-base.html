@@ -14,6 +14,10 @@
 {% endblock%}
 
 
+{% block footer %}
+  {% include 'digital-land-frontend/partials/dl-footer-code.html' %}
+{% endblock %}
+
 {% block bodyEnd %}
 	{%- block googleAnalytics -%}
 	<script src="{{ staticPath | default('/static') }}/javascripts/dl-cookies.js"></script>
