@@ -18,8 +18,9 @@ def make_link(eval_ctx, url):
 
     Requires autoescaping option to be set to True
     """
-    if validators.url(url):
-        anchor = f'<a class="govuk-link" href="{url}">{url}</a>'
-        if eval_ctx.autoescape:
-            return Markup(anchor)
+    if url is not None:
+        if validators.url(url):
+            anchor = f'<a class="govuk-link" href="{url}">{url}</a>'
+            if eval_ctx.autoescape:
+                return Markup(anchor)
     return url
