@@ -30,6 +30,7 @@ $list-indent: 25px;
 
   li {
     @include govuk-font($size: 16);
+    margin-bottom: 5px;
     list-style: none;
     line-height: 1.3;
 
