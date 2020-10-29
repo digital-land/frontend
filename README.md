@@ -13,7 +13,7 @@ You will also need to install the ported govuk templates.
 To install both, run
 
     pip install -e git+https://github.com/digital-land/frontend.git#egg=digital_land_frontend
-    pip install -e git+https://github.com/digital-land/govuk-jinja-components.git@base-template#egg=govuk_jinja_components
+    pip install -e git+https://github.com/digital-land/govuk-jinja-components.git#egg=govuk_jinja_components
 
 Then in your `render.py` or equivalent you'll need to register the templates (partials and macros) so that jinja knows they are available. You can do that with code similar to
 
