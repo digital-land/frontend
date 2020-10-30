@@ -1,4 +1,5 @@
 import os
+import numbers
 import validators
 from jinja2 import evalcontextfilter, Markup
 
@@ -47,4 +48,6 @@ def commanum(v):
 
     E.g. 1000000 -> 1,000,000
     """
-    return "{:,}".format(v)
+    if isinstance(v, numbers.Number):
+        return "{:,}".format(v)
+    return v
