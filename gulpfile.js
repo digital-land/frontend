@@ -78,6 +78,23 @@ gulp.task('js:compile', () => {
     .pipe(gulp.dest(`${config.jsDestPath}`))
 })
 
+gulp.task('js-map:compile', () => {
+  return gulp
+    .src(['src/js/dl-maps.js'])
+    .pipe(
+      rollup({
+        // set the 'window' global
+        name: 'DLMaps',
+        // Legacy mode is required for IE8 support
+        legacy: true,
+        // UMD allows the published bundle to work in CommonJS and in the browser.
+        format: 'umd'
+      })
+    )
+    .pipe(eol())
+    .pipe(gulp.dest(`${config.jsDestPath}`))
+})
+
 // Compile latest govuk-frontend.min.js
 // ====================================
 gulp.task('govukjs:minify', () => {
