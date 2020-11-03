@@ -1,3 +1,5 @@
+/* global L, fetch */
+
 // govuk consistent colours
 var colours = {
   lightBlue: '#1d70b8',
