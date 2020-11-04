@@ -21,8 +21,10 @@ Map.prototype.init = function (params) {
   // needs to be featureGroup so that it has getBounds() func
   this.geoBoundaries = L.featureGroup().addTo(this.map)
 
-  if (params.boundaryURLs.length) {
-    this.plotBoundaries(params.boundaryURLs)
+  this.geojsonUrls = params.boundaryURLs || []
+  this.geojsonUrls = this.extractURLS()
+  if (this.geojsonUrls.length) {
+    this.plotBoundaries(this.geojsonUrls)
   }
 }
 
@@ -40,6 +42,24 @@ Map.prototype.createMap = function () {
     zoom: this.default_zoom,
     layers: [this.tiles]
   })
+}
+
+Map.prototype.extractURLS = function () {
+  var urlsStr = this.$module.dataset.geojsonUrls
+  var urlList = this.geojsonUrls
+
+  function isListed (value, arr) {
+    return arr.indexOf(value) > -1
+  }
+
+  if (typeof urlsStr !== 'undefined') {
+    urlsStr.split(';').forEach(function (url) {
+      if (!isListed(url, urlList)) {
+        urlList.push(url)
+      }
+    })
+  }
+  return urlList
 }
 
 Map.prototype.plotBoundaries = function (urls) {

@@ -1,6 +1,14 @@
 {% macro dlMap(params) %}
 {% set height = params.height + "px" if params.height else "350px"  %}
-<div class="dl-map{{ ' ' + params.classes if params.classes }}" id="{{ params.id if params.id else 'map' }}" data-module="boundary-map" style="height: {{ height }};">
+<div 
+    class="dl-map{{ ' ' + params.classes if params.classes }}"
+    id="{{ params.id if params.id else 'map' }}"
+    data-module="boundary-map"
+    style="height: {{ height }};"
+    {% if params.attributes -%}
+    {%- for attribute, value in params.attributes.items() %} {{ attribute }}="{{ value }}"{% endfor %}
+    {%- endif %}   
+>
     <noscript>To view this map, you need to enable JavaScript.</noscript>
 </div>
 {% endmacro %}
