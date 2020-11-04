@@ -27,7 +27,7 @@ Map.prototype.init = function (params) {
   // needs to be featureGroup so that it has getBounds() func
   this.geoBoundaries = L.featureGroup().addTo(this.map);
 
-  this.geojsonUrls = params.boundaryURLs || [];
+  this.geojsonUrls = params.geojsonURLs || [];
   this.geojsonUrls = this.extractURLS();
   if (this.geojsonUrls.length) {
     this.plotBoundaries(this.geojsonUrls);
