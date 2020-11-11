@@ -3,6 +3,8 @@ import numbers
 import validators
 from jinja2 import evalcontextfilter, Markup
 
+from .jinja_filters.organisation_mapper import OrganisationMapper
+
 
 def get_jinja_template_raw(template_file_path):
     if template_file_path:
@@ -42,7 +44,7 @@ def float_to_int(v):
     return ""
 
 
-def commanum(v): 
+def commanum(v):
     """
     Makes large numbers readable by adding commas
 
@@ -51,3 +53,15 @@ def commanum(v):
     if isinstance(v, numbers.Number):
         return "{:,}".format(v)
     return v
+
+
+organisation_mapper = OrganisationMapper()
+
+
+def organisation_id_to_name_filter(id):
+    """
+    Maps organistion id to the name of the organisation
+
+    E.g. local-authority-eng:HAG -> Harrogate Borough Council
+    """
+    return organisation_mapper.get_by_key(id)
