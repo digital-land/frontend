@@ -7110,6 +7110,7 @@
 }
 
 .data-record__properties {
+  width: calc(100% - 30px);
   margin-bottom: 0;
   padding: 0 15px;
 }

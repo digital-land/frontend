@@ -12,9 +12,12 @@
   word-wrap: break-word;
 }
 
+$data-record-panel-padding: $govuk-gutter-half;
+
 .data-record__properties {
+  width: calc(100% - #{$data-record-panel-padding*2});
   margin-bottom: 0;
-  padding: 0 15px;
+  padding: 0 $data-record-panel-padding;
 
   .govuk-summary-list__row:last-of-type {
     .govuk-summary-list__key,
@@ -27,6 +30,6 @@
 .data-record__resource {
   @include govuk-font(16);
   margin-bottom: 15px;
-  padding: 15px 15px 0;
+  padding: $data-record-panel-padding $data-record-panel-padding 0;
   border-top: 1px solid govuk-colour("dark-grey");
 }
