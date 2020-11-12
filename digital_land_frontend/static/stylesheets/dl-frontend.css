@@ -7154,6 +7154,10 @@
   }
 }
 
+.data-reference {
+  display: inline-block;
+}
+
 .data-table__viewer,
 .wide-table {
   padding-left: 10px;
