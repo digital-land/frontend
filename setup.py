@@ -20,7 +20,7 @@ for directory in directories_jinja:
 
 setup(
     name="digital-land-frontend",
-    version="0.2.2",
+    version="0.2.3",
     author="Digital land",
     description="Reusable frontend code for digital land services and products",
     license="MIT",
@@ -28,7 +28,9 @@ setup(
     package_data={"digital-land-frontend": components},
     python_requires=">=3.5",
     install_requires=[
+        "CacheControl",
         "jinja2",
+        "lockfile",
         "validators",
         "requests",
     ],

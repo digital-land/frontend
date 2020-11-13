@@ -1,6 +1,8 @@
 import csv
 import requests
 
+from ..caching import session, get
+
 # get data from organisation dataset
 dataset = "https://raw.githubusercontent.com/digital-land/organisation-dataset/master/collection/organisation.csv"
 
@@ -14,8 +16,7 @@ class OrganisationMapper:
         self.create_mapping()
 
     def fetch_data(self):
-        response = requests.get(self.dataset_url)
-        return response.text
+        return get(self.dataset_url)
 
     def create_mapping(self):
         cr = csv.DictReader(self.raw.splitlines())
