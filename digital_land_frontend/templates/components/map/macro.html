@@ -1,14 +1,22 @@
-{% macro dlMap(params) %}
-{% set height = params.height + "px" if params.height else "350px"  %}
-<div 
-    class="dl-map{{ ' ' + params.classes if params.classes }}"
-    id="{{ params.id if params.id else 'map' }}"
-    data-module="boundary-map"
-    style="height: {{ height }};"
-    {% if params.attributes -%}
-    {%- for attribute, value in params.attributes.items() %} {{ attribute }}="{{ value }}"{% endfor %}
-    {%- endif %}   
->
-    <noscript>To view this map, you need to enable JavaScript.</noscript>
+{%- macro dlMap(params) %}
+{%- from 'digital-land-frontend/components/dl-helpers.html' import random_int %}
+{%- set height = params.height + "px" if params.height else "350px"  %}
+<div class="dl-map__wrapper">
+    {%- if params.arialabelledby %}
+    {%- set ariaId = "aria-label-" + random_int(4) %}
+    <span id="{{ ariaId }}" class="govuk-visually-hidden">{{ params.arialabelledby }}</span>
+    {% endif -%}
+    <div 
+        class="dl-map{{ ' ' + params.classes if params.classes }}"
+        id="{{ params.id if params.id else 'map' }}"
+        data-module="boundary-map"
+        style="height: {{ height }};"
+        {%- if params.arialabelledby %} aria-labelledby="{{ ariaId }}"{% endif -%}
+        {% if params.attributes -%}
+        {%- for attribute, value in params.attributes.items() %} {{ attribute }}="{{ value }}"{% endfor %}
+        {%- endif %}   
+    >
+        <noscript>To view this map, you need to enable JavaScript.</noscript>
+    </div>
 </div>
 {% endmacro %}
