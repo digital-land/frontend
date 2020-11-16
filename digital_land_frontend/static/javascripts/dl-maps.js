@@ -32,6 +32,8 @@ Map.prototype.init = function (params) {
   if (this.geojsonUrls.length) {
     this.plotBoundaries(this.geojsonUrls);
   }
+
+  return this
 };
 
 Map.prototype.setTiles = function () {
