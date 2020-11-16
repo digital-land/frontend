@@ -1,6 +1,6 @@
 {%- macro dlMap(params) %}
 {%- from 'digital-land-frontend/components/dl-helpers.html' import random_int %}
-{%- set height = params.height + "px" if params.height else "350px"  %}
+{%- set height = params.height|string + "px" if params.height else "350px"  %}
 <div class="dl-map__wrapper">
     {%- if params.arialabelledby %}
     {%- set ariaId = "aria-label-" + random_int(4) %}
