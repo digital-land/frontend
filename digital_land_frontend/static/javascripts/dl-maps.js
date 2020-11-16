@@ -14,6 +14,13 @@ var colours = {
   yellow_brown: '#a0964e'
 };
 
+const organisationBoundaryStyle = {
+  fillOpacity: 0.2,
+  weight: 2,
+  color: colours.darkBlue,
+  fillColor: colours.lightBlue
+};
+
 function Map ($module) {
   this.$module = $module;
 }
@@ -23,14 +30,13 @@ Map.prototype.init = function (params) {
   this.tiles = this.setTiles();
   this.map = this.createMap();
   this.featureGroups = {};
-
-  // create layer to contain all boundaries
-  // needs to be featureGroup so that it has getBounds() func
-  this.geoBoundaries = 
+  this.styles = {
+    defaultBoundaryStyle: organisationBoundaryStyle
+  };
 
   this.geojsonUrls = params.geojsonURLs || [];
   this.geojsonUrls = this.extractURLS();
-  // if pointers to geojson provided add to the default featureGroup
+  // if pointers to geojson provided add to the default featureGroup (a featureGroup has getBounds() func)
   if (this.geojsonUrls.length) {
     this.createFeatureGroup('initBoundaries').addTo(this.map);
     this.plotBoundaries(this.geojsonUrls);
@@ -44,6 +50,10 @@ Map.prototype.setTiles = function () {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   })
+};
+
+Map.prototype.addStyle = function (name, style) {
+  this.styles[name] = style;
 };
 
 Map.prototype.createMap = function () {
@@ -83,6 +93,7 @@ Map.prototype.extractURLS = function () {
 Map.prototype.plotBoundaries = function (urls) {
   const map = this.map;
   const defaultFG = this.featureGroups.initBoundaries;
+  const defaultStyle = this.styles.defaultBoundaryStyle;
   var count = 0;
   urls.forEach(function (url) {
     fetch(url)
@@ -91,12 +102,7 @@ Map.prototype.plotBoundaries = function (urls) {
       })
       .then((data) => {
         let boundary = L.geoJSON(data, {
-          style: {
-            fillOpacity: 0.2,
-            weight: 2,
-            color: colours.darkBlue,
-            fillColor: colours.lightBlue
-          }
+          style: defaultStyle
         }).addTo(defaultFG);
         count++;
         // only pan map once all boundaries have loaded
