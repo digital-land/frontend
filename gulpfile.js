@@ -145,7 +145,8 @@ latestStylesheets.description = 'Generate the latest stylesheets'
 
 const latestJS = gulp.parallel(
   copyCookieJS,
-  'js:compile'
+  'js:compile',
+  'js-map:compile'
 )
 latestJS.description = 'Compile and copy latest digital land javascripts'
 
