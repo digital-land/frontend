@@ -18,5 +18,13 @@
     >
         <noscript>To view this map, you need to enable JavaScript.</noscript>
     </div>
+    {% if params.loader -%}
+    <div class="dl-map__loader">
+        <div class="dl-map__loader-msg">
+            <div class="dl-map__spinning-loader"></div>
+            <span class="govuk-!-font-size-24 govuk-!-margin-top-6">{{ params.loader.text }}</span>
+        </div>
+    </div>
+    {% endif -%}
 </div>
 {% endmacro %}

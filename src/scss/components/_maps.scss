@@ -97,3 +97,50 @@ $bfs-brown: #594d00;
     font-weight: 700;
   }
 }
+
+
+.dl-map__wrapper {
+  position: relative;
+}
+
+.dl-map__loader {
+  position: absolute;
+  z-index: 1001;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(govuk-colour("light-grey"), .9);
+  @include govuk-font($size: 24);
+}
+
+.dl-map__loader-msg {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dl-map__spinning-loader {
+  // sass-lint:disable-block no-duplicate-properties
+  //position: relative;
+  //top: 50%;
+  width: 60px;
+  height: 60px;
+  margin: -30px auto 0 auto;
+  border: 8px solid rgba(govuk-colour("light-blue"), .4);
+  border-radius: 50%;
+  border-top-color: rgba(govuk-colour("blue"), .5);
+  border-top-color: govuk-colour("blue");
+  animation: loader-rotate 1s linear infinite;
+}
+
+@keyframes loader-rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
