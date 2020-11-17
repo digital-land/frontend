@@ -310,10 +310,6 @@ rules:
         - "list-style-type"
         - "list-style-image"
         -
-        - "transform"
-        - "transition"
-        - "animation"
-        -
         - "border"
         - "border-top"
         - "border-right"
@@ -398,6 +394,10 @@ rules:
         - "white-space"
         - "word-spacing"
         - "hyphens"
+        -
+        - "transform"
+        - "transition"
+        - "animation"
         -
         - "src"
         - "cursor"
