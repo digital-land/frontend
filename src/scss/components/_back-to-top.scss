@@ -42,8 +42,8 @@
     width: 100%;
     margin-bottom: 0;
     padding: 10px 15px;
-    transition: background .15s ease-in;
     background: govuk-colour("light-grey");
+    transition: background .15s ease-in;
     @include govuk-media-query($from: tablet) {
       padding: 10px 45px;
     }
