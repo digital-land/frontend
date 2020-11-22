@@ -8460,6 +8460,10 @@
   color: #0b0c0c;
 }
 
+.highlight-box p:last-child {
+  margin-bottom: 0;
+}
+
 .highlight-box--flush {
   margin-left: 0;
 }

@@ -54,6 +54,10 @@
 
   p {
     color: $govuk-text-colour;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
