@@ -11115,6 +11115,10 @@
   background: transparent;
 }
 
+.content__img {
+  max-width: 100%;
+}
+
 .dl-timeline__filter,
 .dl-js-enhancement,
 .global-cookie-message,

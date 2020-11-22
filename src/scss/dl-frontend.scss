@@ -119,6 +119,10 @@ $using-helvetica: false;
   background: transparent;
 }
 
+.content__img {
+  max-width: 100%;
+}
+
 // hide some elements and show if javascript enabled
 .dl-timeline__filter,
 .dl-js-enhancement,
