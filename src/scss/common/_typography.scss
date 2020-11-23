@@ -63,3 +63,10 @@ a {
 .hidden-text {
   color: transparent;
 }
+
+.dl-code {
+  padding: 2px 5px;
+  color: darken(govuk-colour("blue"), 25);
+  background-color: govuk-colour("light-grey");
+  line-height: govuk-em(25, 19);
+}
