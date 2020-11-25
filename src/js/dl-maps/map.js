@@ -63,6 +63,9 @@ Map.prototype.createMap = function () {
 
 Map.prototype.createFeatureGroup = function (name, options) {
   const _options = options || {}
+  if (Object.prototype.hasOwnProperty.call(this.featureGroups, name)) {
+    return this.featureGroups[name]
+  }
   const fG = L.featureGroup([], _options)
   this.featureGroups[name] = fG
   return fG
