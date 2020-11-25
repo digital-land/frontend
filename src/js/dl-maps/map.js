@@ -68,6 +68,10 @@ Map.prototype.createFeatureGroup = function (name, options) {
   return fG
 }
 
+Map.prototype.zoomToLayer = function (layer) {
+  this.map.fitBounds(layer.getBounds())
+}
+
 Map.prototype.extractURLS = function () {
   var urlsStr = this.$module.dataset.geojsonUrls
   var urlList = this.geojsonUrls
