@@ -53,12 +53,13 @@ Map.prototype.addStyle = function (name, style) {
 }
 
 Map.prototype.createMap = function () {
-  var latLng = L.latLng(this.default_pos[0], this.default_pos[1])
+  const opts = this.options
+  var latLng = L.latLng(opts.default_pos[0], opts.default_pos[1])
   return L.map(this.mapId, {
     center: latLng,
-    zoom: this.default_zoom,
-    minZoom: this.minZoom,
-    maxZoom: this.maxZoom,
+    zoom: opts.default_zoom,
+    minZoom: opts.minZoom,
+    maxZoom: opts.maxZoom,
     layers: [this.tiles]
   })
 }
@@ -126,11 +127,13 @@ Map.prototype.plotBoundaries = function (urls) {
 
 Map.prototype.setupOptions = function (params) {
   params = params || {}
-  this.default_pos = params.default_pos || [52.561928, -1.464854]
-  this.default_zoom = params.minZoom || 6
+  this.options = {
+    default_pos: params.default_pos || [52.561928, -1.464854],
+    default_zoom: params.minZoom || 6,
+    minZoom: params.minZoom || 6,
+    maxZoom: params.maxZoom || 16
+  }
   this.mapId = params.mapId || 'aMap'
-  this.minZoom = params.minZoom || 6
-  this.maxZoom = params.maxZoom || 16
 }
 
 export default Map
