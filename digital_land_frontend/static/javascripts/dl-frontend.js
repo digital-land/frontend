@@ -2239,6 +2239,10 @@ utils.toCamelCase = function (s) {
   return s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, camelCaseReplacer)
 };
 
+utils.truncate = function (s, len) {
+  return s.slice(0, len) + '...'
+};
+
 function polyfill (options) {
   // polyfill for browsers without NodeList forEach method
   if (window.NodeList && !window.NodeList.prototype.forEach) {
