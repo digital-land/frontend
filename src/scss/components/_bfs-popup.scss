@@ -33,7 +33,12 @@
   border-bottom: 1px solid govuk-colour("light-grey");
 
   .bfs__addr {
-    margin-bottom: 5px;
+    margin-bottom: 0;
+  }
+
+  .bfs__coords {
+    @include govuk-font($size: 14);
+    font-style: italic;
   }
 }
 
