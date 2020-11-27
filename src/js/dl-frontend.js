@@ -8,6 +8,8 @@ import InputCopy from './dl-components/input-copy'
 import FilterTimelineByDate from './dl-components/filter-timeline-by-date'
 import AppTabs from './dl-components/app-tabs'
 
+import utils from './helpers/utils.js'
+
 function polyfill (options) {
   // polyfill for browsers without NodeList forEach method
   if (window.NodeList && !window.NodeList.prototype.forEach) {
@@ -25,5 +27,6 @@ export {
   FilterList,
   InputCopy,
   FilterTimelineByDate,
-  AppTabs
+  AppTabs,
+  utils
 }

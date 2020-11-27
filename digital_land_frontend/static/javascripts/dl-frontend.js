@@ -2229,6 +2229,16 @@ AppTabs.prototype.handleClick = function (event) {
   }
 };
 
+var utils = {};
+
+function camelCaseReplacer (match, s) {
+  return s.toUpperCase()
+}
+
+utils.toCamelCase = function (s) {
+  return s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, camelCaseReplacer)
+};
+
 function polyfill (options) {
   // polyfill for browsers without NodeList forEach method
   if (window.NodeList && !window.NodeList.prototype.forEach) {
@@ -2246,5 +2256,6 @@ exports.FilterList = FilterList;
 exports.InputCopy = InputCopy;
 exports.FilterTimelineByDate = FilterTimelineByDate;
 exports.AppTabs = AppTabs;
+exports.utils = utils;
 
 })));
