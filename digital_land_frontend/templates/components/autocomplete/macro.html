@@ -8,9 +8,9 @@
   </span>
   <select class="govuk-select" id="{{ params.name }}" name="{{ params.name }}">
     <option value=""></option>
-    {% for i in params.data %}
+    {%- for i in params.data %}
     <option value="{{ i.value }}">{{ i.text }}</option>
-    {% endfor %}
+    {%- endfor %}
   </select>
 </div>
 {% endmacro %}
