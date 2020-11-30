@@ -139,7 +139,8 @@ latestVendorAssets.description = 'Copy all govuk and vendor assets to package'
 const latestStylesheets = gulp.series(
   cleanCSS,
   lintSCSS,
-  compileStylesheets
+  compileStylesheets,
+  copyVendorStylesheets
 )
 latestStylesheets.description = 'Generate the latest stylesheets'
 
