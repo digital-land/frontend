@@ -76,3 +76,11 @@ Install requirements.
 To check HTML run
 
     curlylint digital_land_frontend/templates/
+
+### Working on the package locally
+
+You should run
+
+    pip install -e .
+
+To make sure all the dependencies are installed
