@@ -1,5 +1,5 @@
 {% macro dlAutocomplete(params) %}
-<div class="govuk-form-group">
+<div class="govuk-form-group{{ ' ' + params.classes if params.classes }}">
   <label class="govuk-label" for="{{ params.name }}">
     {{ params.label }}
   </label>
