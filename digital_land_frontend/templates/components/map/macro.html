@@ -26,5 +26,11 @@
         </div>
     </div>
     {% endif -%}
+
+    {% if params.sidePanel %}
+    <div class="dl-map__side-panel{{ ' ' + params.sidePanel.classes if params.sidePanel.classes }}">
+        {{ params.sidePanel.html }}
+    </div>
+    {% endif %}
 </div>
 {% endmacro %}
