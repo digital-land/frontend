@@ -28,6 +28,10 @@ crossorigin="" />
 {% include 'digital-land-frontend/partials/dl-header.html' %}
 {% endblock%}
 
+{% block beforeContent %}
+  {% include 'digital-land-frontend/partials/dl-prototype-banner.html' %}
+  {% block dl_breadcrumbs %}{% endblock %}
+{% endblock %}
 
 {% block footer %}
   {% include 'digital-land-frontend/partials/dl-footer-code.html' %}
