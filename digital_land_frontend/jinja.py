@@ -3,7 +3,7 @@ import jinja2
 from .filters import organisation_id_to_name_filter
 
 
-def setup_jinja(url_path=None):
+def setup_jinja():
     # register templates
     multi_loader = jinja2.ChoiceLoader(
         [
