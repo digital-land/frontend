@@ -34,3 +34,7 @@ $govuk-page-width-full: 1280px;
 .govuk-header__container.govuk-width-container-full {
   margin-bottom: -10px;
 }
+
+.dl-full-width-container {
+  @include govuk-width-container($width: $dl-full-page-width);
+}

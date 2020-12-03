@@ -6,6 +6,9 @@ $govuk-images-path: "/static/govuk/assets/images/";
 
 $using-helvetica: false;
 
+// Import digital land settings
+@import "settings/measurements";
+
 // Import common Digital Land styles
 @import "common/colours";
 @import "common/helvetica-fixes";
