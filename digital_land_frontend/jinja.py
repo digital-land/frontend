@@ -3,7 +3,7 @@ import jinja2
 from .filters import organisation_id_to_name_filter
 
 
-def setup_jinja(url_path):
+def setup_jinja(url_path=None):
     # register templates
     multi_loader = jinja2.ChoiceLoader(
         [
@@ -27,6 +27,5 @@ def setup_jinja(url_path):
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"
-    env.globals["urlPath"] = url_path
 
     return env
