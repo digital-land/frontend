@@ -81,7 +81,6 @@ Map.prototype.createFeatureGroup = function (name, options) {
 };
 
 Map.prototype.setMapHeight = function (height) {
-  console.log("setting height");
   const h = height || (2 / 3);
   const $map = this.$module;
   const width = $map.offsetWidth;

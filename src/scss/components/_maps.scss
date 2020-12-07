@@ -144,3 +144,37 @@ $bfs-brown: #594d00;
     transform: rotate(360deg);
   }
 }
+
+.dl-map__side-panel {
+  position: absolute;
+  z-index: 1001;
+  top: $govuk-gutter-half;
+  right: $govuk-gutter-half;
+  width: 330px;
+  background: govuk-colour("white");
+}
+
+.dl-map__side-panel__section {
+  padding: $govuk-gutter-half;
+  border-top: 1px solid $govuk-border-colour;
+
+  &:first-child {
+    border-top: 0;
+  }
+
+  &--title {
+    border-top-width: 2px;
+    border-top-color: govuk-colour("black");
+  }
+}
+
+.dl-map__highlight--yellow {
+  padding: 4px 7px;
+  color: govuk-shade(govuk-colour("yellow"), 65);
+  background: govuk-tint(govuk-colour("yellow"), 75);
+}
+
+.dl-map__error {
+  color: govuk-colour("red");
+  @include govuk-font($size: 16);
+}
