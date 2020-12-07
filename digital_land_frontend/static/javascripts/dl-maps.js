@@ -80,6 +80,17 @@ Map.prototype.createFeatureGroup = function (name, options) {
   return fG
 };
 
+Map.prototype.setMapHeight = function (height) {
+  console.log("setting height");
+  const h = height || (2 / 3);
+  const $map = this.$module;
+  const width = $map.offsetWidth;
+  const v = (h < 1) ? width * h : h;
+
+  $map.style.height = v + 'px';
+  this.map.invalidateSize();
+};
+
 Map.prototype.zoomToLayer = function (layer) {
   this.map.fitBounds(layer.getBounds());
 };
