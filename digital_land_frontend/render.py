@@ -7,20 +7,35 @@ from digital_land_frontend.jinja_filters.organisation_mapper import Organisation
 
 
 class Renderer:
-    organisation_mapper = OrganisationMapper()
-
-    def __init__(self, name, dataset, url_root=None, docs="docs"):
+    def __init__(self, name, url_root=None, docs="docs"):
         self.name = name
-        self.dataset = dataset
         self.ids = set()
         self.env = setup_jinja()
-        self.index_template = self.env.get_template("index.html")
-        self.row_template = self.env.get_template("row.html")
 
         if url_root:
             self.env.globals["urlRoot"] = url_root
         else:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
+
+    def render(self, path, template, docs="docs", **kwargs):
+        path = os.path.join(docs, path)
+        directory = os.path.dirname(path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        with open(path, "w") as f:
+            print(f"creating {path}")
+            f.write(template.render(**kwargs))
+
+
+class DataTypeRenderer(Renderer):
+    organisation_mapper = OrganisationMapper()
+
+    def __init__(self, name, dataset, url_root=None, docs="docs"):
+        super.__init__(name, url_root, docs)
+        self.dataset = dataset
+        self.index_template = self.env.get_template("index.html")
+        self.row_template = self.env.get_template("row.html")
 
     translations = str.maketrans({"/": "-", " ": "", "(": "", ")": "", "'": ""})
 
@@ -77,13 +92,3 @@ class Renderer:
 
         self.render("index.html", self.index_template, index=index, data_type=self.name)
         print(failing)
-
-    def render(self, path, template, docs="docs", **kwargs):
-        path = os.path.join(docs, path)
-        directory = os.path.dirname(path)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        with open(path, "w") as f:
-            print(f"creating {path}")
-            f.write(template.render(**kwargs))
