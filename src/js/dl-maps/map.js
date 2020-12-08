@@ -5,19 +5,31 @@ var colours = {
   lightBlue: '#1d70b8',
   darkBlue: '#003078',
   brown: '#594d00',
-  yellow_brown: '#a0964e'
+  yellow_brown: '#a0964e',
+  black: '#0b0c0c'
 }
 
-const organisationBoundaryStyle = {
+const boundaryStyle = {
   fillOpacity: 0.2,
   weight: 2,
   color: colours.darkBlue,
   fillColor: colours.lightBlue
 }
 
+const boundaryHoverStyle = {
+  fillOpacity: 0.25,
+  weight: 2,
+  color: colours.black,
+  fillColor: colours.darkBlue
+}
+
 function Map ($module) {
   this.$module = $module
   this.$wrapper = $module.closest('.dl-map__wrapper')
+}
+
+function isFunction (x) {
+  return Object.prototype.toString.call(x) === '[object Function]'
 }
 
 Map.prototype.init = function (params) {
@@ -26,7 +38,8 @@ Map.prototype.init = function (params) {
   this.map = this.createMap()
   this.featureGroups = {}
   this.styles = {
-    defaultBoundaryStyle: organisationBoundaryStyle
+    defaultBoundaryStyle: boundaryStyle,
+    defaultBoundaryHoverStyle: boundaryHoverStyle
   }
   this.$loader = this.$wrapper.querySelector('.dl-map__loader')
 
@@ -50,6 +63,33 @@ Map.prototype.setTiles = function () {
 
 Map.prototype.addStyle = function (name, style) {
   this.styles[name] = style
+}
+
+/**
+ * Add event listeners for hovering a layer
+ * @param  {Object} layer A leaflet layer (e.g. a polygon)
+ * @param  {Object} options Options for configuring hover interaction
+ *    {Func} .check Check to decide whether styles+ should be performed
+ *    {Object} .defaultStyle Leaflet style object to apply when not hovered
+ *    {Object} .hoverStyle Leaflet style object to apply when hovered
+ *    {Func} .cb Optional callback to trigger, accepts cb(layer <- leaflet layer, hovered <- boolean)
+ */
+Map.prototype.addLayerHoverState = function (layer, options) {
+  const check = (options.check && isFunction(options.check)) ? options.check(layer) : true
+  const defaultStyle = options.defaultStyle || this.styles.defaultBoundaryStyle
+  const hoverStyle = options.hoverStyle || this.styles.defaultBoundaryHoverStyle
+  layer.on('mouseover', function () {
+    if (check) {
+      layer.setStyle(hoverStyle)
+      if (options.cb && isFunction(options.cb)) { options.cb(layer, true) }
+    }
+  })
+  layer.on('mouseout', function () {
+    if (check) {
+      layer.setStyle(defaultStyle)
+      if (options.cb && isFunction(options.cb)) { options.cb(layer, false) }
+    }
+  })
 }
 
 Map.prototype.createMap = function () {
