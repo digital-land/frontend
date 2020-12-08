@@ -192,6 +192,223 @@ Map.prototype.setupOptions = function (params) {
   this.mapId = params.mapId || 'aMap';
 };
 
+var utils = {};
+
+function camelCaseReplacer (match, s) {
+  return s.toUpperCase()
+}
+
+utils.curie_to_url_part = function (curie) {
+  return curie.replace(':', '/')
+};
+
+utils.toCamelCase = function (s) {
+  return s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, camelCaseReplacer)
+};
+
+utils.truncate = function (s, len) {
+  return s.slice(0, len) + '...'
+};
+
+/**
+ * Create an organisation mapper. Maps organisation ids to names
+ * @param  {Array} orgsObj Array of organisation objs. Must contain .id and .name propterties
+ */
+utils.createOrgMapper = function (orgsObj) {
+  const mapper = {};
+  orgsObj.forEach(function (o) {
+    mapper[o.id] = o.name;
+  });
+  return mapper
+};
+
+/* global L, fetch */
+
+// set up config variables
+
+let organisationMapper = {};
+
+const popupTemplate =
+  '<div class="bfs">' +
+    '{hasEndDate}' +
+    '<div class="bfs__header">' +
+      '<span class="govuk-caption-s">{site}</span>' +
+      '<h3 class="govuk-heading-s bfs__addr">{site-address}</h3>' +
+      '<span class="bfs__coords">{latitude},{longitude}</span>' +
+    '</div>' +
+    '<div class="govuk-grid-row bfs__key-data">' +
+      '<dl class="govuk-grid-column-one-half">' +
+        '<dt>Hectare</dt>' +
+        '<dd>{hectares}</dd>' +
+      '</dl>' +
+      '<dl class="govuk-grid-column-one-half">' +
+        '<dt>Dwellings</dt>' +
+        '<dd>{isRange}</dd>' +
+      '</dl>' +
+    '</div>' +
+    '<div class="bfs__meta">' +
+      '{orgLink}' +
+      '{optionalFields}' +
+      '{datesSection}' +
+    '</div>' +
+    '<div class="bfs__footer">' +
+      'From resource: <a href="https://digital-land.github.io/resource/{resource}" class="govuk-link">{resourceTrunc}</a>' +
+    '</div>' +
+  '</div>';
+
+const popupOptions = {
+  minWidth: '270',
+  maxWidth: '270',
+  className: 'bfs-popup'
+};
+
+const brownfieldSiteStyle = {
+  color: '#745729',
+  fillColor: '#745729',
+  fillOpacity: 0.5
+};
+
+const historicalBrownfieldSiteStyle = {
+  color: '#d53880 ',
+  fillColor: '#f3f2f1',
+  fillOpacity: 0.5
+};
+
+const potentiallyNullFields = ['deliverable', 'hazardous-substances', 'ownership', 'planning-permission-status', 'planning-permission-type'];
+
+// private functions
+
+function datesSection (data) {
+  return definitionList('Date added', data['start-date'])
+}
+
+function definitionList (field, value) {
+  return ['<dl>',
+    `<dt>${field}</dt>`,
+    `<dd>${value}</dd>`,
+    '</dl>'].join('\n')
+}
+
+function hasEndDate (data) {
+  if (data['end-date']) {
+    return '<span class="bfs__end-banner">End date: ' + data['end-date'] + '</span>'
+  }
+  return ''
+}
+
+function isRange (data) {
+  var str = data['minimum-net-dwellings'];
+  if (data['minimum-net-dwellings'] != null) {
+    if (parseInt(data['minimum-net-dwellings']) !== parseInt(data['maximum-net-dwellings']) || parseInt(data['maximum-net-dwellings']) === 0) {
+      str = data['minimum-net-dwellings'] + '-' + data['maximum-net-dwellings'];
+    }
+    return str
+  }
+  return ''
+}
+
+function linkToOrg (data) {
+  let orgName = data.organisation;
+  if (Object.prototype.hasOwnProperty.call(organisationMapper, data.organisation)) {
+    orgName = organisationMapper[data.organisation];
+  }
+  return '<dl>' +
+  '<dt>Organisation</dt>' +
+  `<dd><a class="govuk-link" href="https://digital-land.github.io/organisation/${utils.curie_to_url_part(data.organisation)}">${orgName}</a></dd>` +
+  '</dl>'
+}
+
+function optionalFields (data) {
+  let extras = '';
+  potentiallyNullFields.forEach(function (field) {
+    if (data[field]) {
+      extras += definitionList(field, data[field]);
+    }
+  });
+  return extras
+}
+
+function processSiteData (row) {
+  const templateFuncs = {
+    isRange: isRange,
+    hasEndDate: hasEndDate,
+    datesSection: datesSection,
+    orgLink: linkToOrg,
+    resourceTrunc: utils.truncate(row.resource, 9),
+    optionalFields: optionalFields
+  };
+  // need Object.assign polyfill for IE
+  return Object.assign(row, templateFuncs)
+}
+
+function bindBrownfieldPopup (feature, layer) {
+  var popupHTML = createPopup(feature.properties);
+  layer
+    .bindPopup(popupHTML, popupOptions)
+    .on('popupopen', function (e) {
+      console.log('Brownfield site selected', e.sourceTarget.feature);
+    });
+}
+
+function plot (feature, latlng) {
+  var style = (feature.properties['end-date']) ? historicalBrownfieldSiteStyle : brownfieldSiteStyle;
+  var size = siteSize(feature.properties.hectares);
+  style.radius = size.toFixed(2);
+  return L.circle(latlng, style)
+}
+
+// public methods - available on object
+
+function createPopup (row) {
+  return L.Util.template(popupTemplate, processSiteData(row))
+}
+
+function loadBrownfieldSites (map, url, groupName, options) {
+  const groupNameCC = utils.toCamelCase(groupName);
+  // check to see if already loaded data
+  if (!Object.prototype.hasOwnProperty.call(map.featureGroups, groupNameCC)) {
+    console.log('fetch from url', url);
+    fetch(url)
+      .then(resp => resp.json())
+      .then((data) => {
+        var l = map.createFeatureGroup(groupNameCC);
+        L.geoJSON(data, {
+          pointToLayer: plot,
+          onEachFeature: options.onEachFeature || bindBrownfieldPopup
+        })
+          .addTo(l);
+        if (typeof options.layerGroup !== 'undefined') {
+          l.addTo(options.layerGroup);
+        }
+      })
+      .catch(function (err) {
+        console.log('error loading brownfield sites', err);
+      });
+  }
+}
+
+// this feels messy!
+function registerMapper (orgObj) {
+  organisationMapper = utils.createOrgMapper(orgObj);
+}
+
+function siteSize (hectares) {
+  if (isNaN(hectares)) {
+    return 100 // give it a default size
+  }
+  return (Math.sqrt((hectares * 10000) / Math.PI))
+}
+
+const brownfieldSites = {
+  calcSiteSize: siteSize,
+  createPopup: createPopup,
+  loadSites: loadBrownfieldSites,
+  popupOptions: popupOptions,
+  popupTemplate: popupTemplate,
+  registerOrganisationMapper: registerMapper
+};
+
 exports.Map = Map;
+exports.brownfieldSites = brownfieldSites;
 
 })));
