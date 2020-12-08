@@ -9473,6 +9473,8 @@
 }
 
 .dl-map__highlight--yellow {
+  display: block;
+  margin-left: -7px;
   padding: 4px 7px;
   color: #594d00;
   background: #fff7bf;

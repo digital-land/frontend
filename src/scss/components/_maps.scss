@@ -169,6 +169,8 @@ $bfs-brown: #594d00;
 }
 
 .dl-map__highlight--yellow {
+  display: block;
+  margin-left: -7px;
   padding: 4px 7px;
   color: govuk-shade(govuk-colour("yellow"), 65);
   background: govuk-tint(govuk-colour("yellow"), 75);
