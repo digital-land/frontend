@@ -81,18 +81,17 @@ Map.prototype.addStyle = function (name, style) {
  *    {Func} .cb Optional callback to trigger, accepts cb(layer <- leaflet layer, hovered <- boolean)
  */
 Map.prototype.addLayerHoverState = function (layer, options) {
-  const check = (options.check && isFunction(options.check)) ? options.check(layer) : true;
+  const hasCheck = (options.check && isFunction(options.check));
   const defaultStyle = options.defaultStyle || this.styles.defaultBoundaryStyle;
   const hoverStyle = options.hoverStyle || this.styles.defaultBoundaryHoverStyle;
   layer.on('mouseover', function () {
-    if (check) {
+    if ((hasCheck) ? options.check(layer) : true) {
       layer.setStyle(hoverStyle);
       if (options.cb && isFunction(options.cb)) { options.cb(layer, true); }
     }
   });
   layer.on('mouseout', function () {
-    console.log("Mouseout", layer);
-    if (check) {
+    if ((hasCheck) ? options.check(layer) : true) {
       layer.setStyle(defaultStyle);
       if (options.cb && isFunction(options.cb)) { options.cb(layer, false); }
     }
