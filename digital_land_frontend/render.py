@@ -18,7 +18,7 @@ class Renderer:
     def __init__(self, name, dataset, url_root=None, docs="docs"):
         self.name = name
         self.dataset = dataset
-        self.docs = docs
+        self.docs = Path(docs)
         self.env = setup_jinja()
         self.index_template = self.env.get_template("index.html")
         self.row_template = self.env.get_template("row.html")
@@ -63,7 +63,7 @@ class Renderer:
         rows = []
         for idx, row in enumerate(csv.DictReader(open(self.dataset)), start=1):
             row["id"] = self.get_id(row, idx)
-            output_dir = Path(self.docs, row["id"])
+            output_dir = self.docs / row["id"]
             if not output_dir.exists():
                 output_dir.mkdir()
 
@@ -85,7 +85,12 @@ class Renderer:
             "organisation": self.by_organisation(rows),
         }
 
-        self.render("index.html", self.index_template, index=index, data_type=self.name)
+        self.render(
+            self.docs / "index.html",
+            self.index_template,
+            index=index,
+            data_type=self.name,
+        )
 
     def render(self, path, template, **kwargs):
         with open(path, "w") as f:
