@@ -1,4 +1,5 @@
 import csv
+import logging
 import os
 from collections import OrderedDict
 
@@ -7,35 +8,21 @@ from digital_land_frontend.jinja_filters.organisation_mapper import Organisation
 
 
 class Renderer:
-    def __init__(self, name, url_root=None, docs="docs"):
+    organisation_mapper = OrganisationMapper()
+
+    def __init__(self, name, dataset, url_root=None, docs="docs"):
         self.name = name
-        self.ids = set()
+        self.dataset = dataset
+        self.docs = docs
         self.env = setup_jinja()
+        self.index_template = self.env.get_template("index.html")
+        self.row_template = self.env.get_template("row.html")
+        self.ids = set()
 
         if url_root:
             self.env.globals["urlRoot"] = url_root
         else:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
-
-    def render(self, path, template, docs="docs", **kwargs):
-        path = os.path.join(docs, path)
-        directory = os.path.dirname(path)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        with open(path, "w") as f:
-            print(f"creating {path}")
-            f.write(template.render(**kwargs))
-
-
-class DataTypeRenderer(Renderer):
-    organisation_mapper = OrganisationMapper()
-
-    def __init__(self, name, dataset, url_root=None, docs="docs"):
-        super.__init__(name, url_root, docs)
-        self.dataset = dataset
-        self.index_template = self.env.get_template("index.html")
-        self.row_template = self.env.get_template("row.html")
 
     translations = str.maketrans({"/": "-", " ": "", "(": "", ")": "", "'": ""})
 
@@ -69,21 +56,17 @@ class DataTypeRenderer(Renderer):
         return result
 
     def render_pages(self):
-        failing = []
+        self.ids = set()
         rows = []
         for idx, row in enumerate(csv.DictReader(open(self.dataset)), start=1):
             row["id"] = self.get_id(row, idx)
-
-            try:
-                self.render(
-                    f"{row['id']}/index.html",
-                    self.row_template,
-                    row=row,
-                    data_type=self.name,
-                )
-                rows.append(row)
-            except Exception as e:
-                failing.append((row["organisation"], idx, e))
+            self.render(
+                f"{row['id']}/index.html",
+                self.row_template,
+                row=row,
+                data_type=self.name,
+            )
+            rows.append(row)
 
         index = {
             "count": len(rows),
@@ -91,4 +74,13 @@ class DataTypeRenderer(Renderer):
         }
 
         self.render("index.html", self.index_template, index=index, data_type=self.name)
-        print(failing)
+
+    def render(self, path, template, **kwargs):
+        path = os.path.join(self.docs, path)
+        directory = os.path.dirname(path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        with open(path, "w") as f:
+            logging.debug(f"creating {path}")
+            f.write(template.render(**kwargs))
