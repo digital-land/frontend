@@ -1,10 +1,14 @@
 import csv
+import json
 import logging
 import os
 from collections import OrderedDict
 
+import shapely.wkt
+
 from digital_land_frontend.jinja import setup_jinja
-from digital_land_frontend.jinja_filters.organisation_mapper import OrganisationMapper
+from digital_land_frontend.jinja_filters.organisation_mapper import \
+    OrganisationMapper
 
 
 class Renderer:
@@ -60,6 +64,7 @@ class Renderer:
         rows = []
         for idx, row in enumerate(csv.DictReader(open(self.dataset)), start=1):
             row["id"] = self.get_id(row, idx)
+            self.create_geometry_file(row)
             self.render(
                 f"{row['id']}/index.html",
                 self.row_template,
@@ -84,3 +89,21 @@ class Renderer:
         with open(path, "w") as f:
             logging.debug(f"creating {path}")
             f.write(template.render(**kwargs))
+
+    def create_geometry_file(self, area):
+        area_dir = f"{self.docs}/{area['id']}"
+        if area["point"] == "POINT( )":
+            return
+        if not os.path.exists(area_dir):
+            os.mkdir(area_dir)
+        try:
+            geojson = wkt_to_json_geometry(area["point"])
+            with open(f"{area_dir}/geometry.geojson", "w") as f:
+                json.dump(geojson, f)
+        except Exception as e:
+            print(e)
+
+
+def wkt_to_json_geometry(input_):
+    shape = shapely.wkt.loads(input_)
+    return shapely.geometry.mapping(shape)
