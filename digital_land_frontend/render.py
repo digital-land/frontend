@@ -30,11 +30,11 @@ class Renderer:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
 
     def get_id(self, row, idx):
-        id = row["site"].translate(self.translations)
-        if not row["site"] or row["site"] in self.ids:
-            id = f"{row['resource']}:{idx}"
-        self.ids.add(id)
-        return id
+        id_ = row["site"].translate(self.translations)
+        if not row["site"] or row["site"].lower() in self.ids:
+            id_ = f"{row['resource']}:{idx}"
+        self.ids.add(id_.lower())
+        return id_
 
     def by_organisation(self, rows):
         by_organisation = {}
