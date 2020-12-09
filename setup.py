@@ -1,7 +1,7 @@
 import glob
 import os
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 components = []
 directories_html = glob.glob("digital_land_frontend/**/**/*.html", recursive=True)
@@ -24,7 +24,7 @@ setup(
     author="Digital land",
     description="Reusable frontend code for digital land services and products",
     license="MIT",
-    packages=["digital_land_frontend"],
+    packages=find_packages(),
     package_data={"digital-land-frontend": components},
     python_requires=">=3.5",
     install_requires=[
