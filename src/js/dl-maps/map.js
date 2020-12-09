@@ -44,11 +44,12 @@ Map.prototype.init = function (params) {
   this.$loader = this.$wrapper.querySelector('.dl-map__loader')
 
   this.geojsonUrls = params.geojsonURLs || []
+  const geojsonOptions = params.geojsonOptions || {}
   this.geojsonUrls = this.extractURLS()
   // if pointers to geojson provided add to the default featureGroup (a featureGroup has getBounds() func)
   if (this.geojsonUrls.length) {
     this.createFeatureGroup('initBoundaries').addTo(this.map)
-    this.plotBoundaries(this.geojsonUrls)
+    this.plotBoundaries(this.geojsonUrls, geojsonOptions)
   }
 
   return this
@@ -152,10 +153,26 @@ Map.prototype.hideLoader = function () {
   }
 }
 
-Map.prototype.plotBoundaries = function (urls) {
+Map.prototype.geojsonLayer = function (data, type, options) {
+  const style = options.style || this.styles.defaultBoundaryStyle
+  const onEachFeature = options.onEachFeature || function () {}
+  if (type === 'point') {
+    return L.geoJSON(data, {
+      pointToLayer: options.pointToLayer,
+      onEachFeature: onEachFeature
+    })
+  }
+  return L.geoJSON(data, {
+    style: style,
+    onEachFeature: onEachFeature
+  })
+}
+
+Map.prototype.plotBoundaries = function (urls, options) {
+  const that = this
   const map = this.map
   const defaultFG = this.featureGroups.initBoundaries
-  const defaultStyle = this.styles.defaultBoundaryStyle
+  const _type = options.type || 'polygon'
   var count = 0
   urls.forEach(function (url) {
     fetch(url)
@@ -163,9 +180,8 @@ Map.prototype.plotBoundaries = function (urls) {
         return response.json()
       })
       .then((data) => {
-        let boundary = L.geoJSON(data, {
-          style: defaultStyle
-        }).addTo(defaultFG)
+        const layer = options.geojsonDataToLayer(data, options) || that.geojsonLayer(data, _type, options)
+        layer.addTo(defaultFG)
         count++
         // only pan map once all boundaries have loaded
         if (count === urls.length) {
