@@ -2240,7 +2240,12 @@ utils.curie_to_url_part = function (curie) {
 };
 
 utils.toCamelCase = function (s) {
-  return s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, camelCaseReplacer)
+  // check to see string isn't already camelCased
+  var nonWordChars = /\W/g;
+  if (s && s.match(nonWordChars)) {
+    return s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, camelCaseReplacer)
+  }
+  return s
 };
 
 utils.truncate = function (s, len) {

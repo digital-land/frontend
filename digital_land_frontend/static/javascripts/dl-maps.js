@@ -203,7 +203,12 @@ utils.curie_to_url_part = function (curie) {
 };
 
 utils.toCamelCase = function (s) {
-  return s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, camelCaseReplacer)
+  // check to see string isn't already camelCased
+  var nonWordChars = /\W/g;
+  if (s && s.match(nonWordChars)) {
+    return s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, camelCaseReplacer)
+  }
+  return s
 };
 
 utils.truncate = function (s, len) {
@@ -223,6 +228,10 @@ utils.createOrgMapper = function (orgsObj) {
 };
 
 /* global L, fetch */
+
+function isFunction$1 (x) {
+  return Object.prototype.toString.call(x) === '[object Function]'
+}
 
 // set up config variables
 
@@ -380,6 +389,8 @@ function loadBrownfieldSites (map, url, groupName, options) {
         if (typeof options.layerGroup !== 'undefined') {
           l.addTo(options.layerGroup);
         }
+        // run any callback
+        if (options.cb && isFunction$1(options.cb)) { options.cb(l, groupName); }
       })
       .catch(function (err) {
         console.log('error loading brownfield sites', err);
