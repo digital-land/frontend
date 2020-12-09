@@ -1,6 +1,10 @@
 /* global L, fetch */
 import utils from '../helpers/utils.js'
 
+function isFunction (x) {
+  return Object.prototype.toString.call(x) === '[object Function]'
+}
+
 // set up config variables
 
 let organisationMapper = {}
@@ -157,6 +161,8 @@ function loadBrownfieldSites (map, url, groupName, options) {
         if (typeof options.layerGroup !== 'undefined') {
           l.addTo(options.layerGroup)
         }
+        // run any callback
+        if (options.cb && isFunction(options.cb)) { options.cb(l, groupName) }
       })
       .catch(function (err) {
         console.log('error loading brownfield sites', err)
