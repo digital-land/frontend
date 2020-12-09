@@ -165,8 +165,8 @@ function loadBrownfieldSites (map, url, groupName, options) {
 }
 
 // this feels messy!
-function registerMapper (orgObj) {
-  organisationMapper = utils.createOrgMapper(orgObj)
+function registerMapper (mapper) {
+  organisationMapper = mapper
 }
 
 function siteSize (hectares) {
