@@ -97,7 +97,9 @@ class Renderer:
         if not os.path.exists(area_dir):
             os.mkdir(area_dir)
         try:
-            geojson = wkt_to_json_geometry(area["point"])
+            geojson = {"type": "Feature"}
+            geojson["geometry"] = wkt_to_json_geometry(area["point"])
+            geojson["properties"] = area
             with open(f"{area_dir}/geometry.geojson", "w") as f:
                 json.dump(geojson, f)
         except Exception as e:
