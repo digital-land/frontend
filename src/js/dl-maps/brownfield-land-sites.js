@@ -15,7 +15,7 @@ const popupTemplate =
     '<div class="bfs__header">' +
       '<span class="govuk-caption-s">{site}</span>' +
       '<h3 class="govuk-heading-s bfs__addr">{site-address}</h3>' +
-      '<span class="bfs__coords">{latitude},{longitude}</span>' +
+      '{ifCoords}' +
     '</div>' +
     '<div class="govuk-grid-row bfs__key-data">' +
       '<dl class="govuk-grid-column-one-half">' +
@@ -58,6 +58,13 @@ const historicalBrownfieldSiteStyle = {
 const potentiallyNullFields = ['deliverable', 'hazardous-substances', 'ownership', 'planning-permission-status', 'planning-permission-type']
 
 // private functions
+
+function ifCoords (data) {
+  if (data.latitude && data.longitude) {
+    return `<span class="bfs__coords">${data.latitude},${data.longitude}</span>`
+  }
+  return ''
+}
 
 function datesSection (data) {
   return definitionList('Date added', data['start-date'])
@@ -111,6 +118,7 @@ function optionalFields (data) {
 
 function processSiteData (row) {
   const templateFuncs = {
+    ifCoords: ifCoords,
     isRange: isRange,
     hasEndDate: hasEndDate,
     datesSection: datesSection,
@@ -144,6 +152,19 @@ function createPopup (row) {
   return L.Util.template(popupTemplate, processSiteData(row))
 }
 
+/**
+ * Converts brownfield geojson data into points and popups on the map
+ * @param  {Object} geojson Set of geojson features
+ * @param  {Object} options Options overriding defaults
+ *    {Func} .onEachFeature Function to execute on each feature layer created
+ */
+function brownfieldGeojsonToLayer (geojson, options) {
+  return L.geoJSON(geojson, {
+    pointToLayer: plot,
+    onEachFeature: options.onEachFeature || bindBrownfieldPopup
+  })
+}
+
 function loadBrownfieldSites (map, url, groupName, options) {
   const groupNameCC = utils.toCamelCase(groupName)
   // check to see if already loaded data
@@ -153,11 +174,8 @@ function loadBrownfieldSites (map, url, groupName, options) {
       .then(resp => resp.json())
       .then((data) => {
         var l = map.createFeatureGroup(groupNameCC)
-        L.geoJSON(data, {
-          pointToLayer: plot,
-          onEachFeature: options.onEachFeature || bindBrownfieldPopup
-        })
-          .addTo(l)
+        const geojsonLayer = brownfieldGeojsonToLayer(data, options)
+        geojsonLayer.addTo(l)
         if (typeof options.layerGroup !== 'undefined') {
           l.addTo(options.layerGroup)
         }
@@ -185,6 +203,7 @@ function siteSize (hectares) {
 const brownfieldSites = {
   calcSiteSize: siteSize,
   createPopup: createPopup,
+  geojsonToLayer: brownfieldGeojsonToLayer,
   loadSites: loadBrownfieldSites,
   popupOptions: popupOptions,
   popupTemplate: popupTemplate,
