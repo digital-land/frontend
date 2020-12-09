@@ -5,7 +5,13 @@
 {% from "digital-land-frontend/components/page-feedback/macro.html" import dlfPageFeedback %}
 
 {% block head %}
-<link href="{{ staticPath | default('/static') }}/stylesheets/dl-frontend.css" rel="stylesheet" />
+	{%- block dlCss %}
+	<link href="{{ staticPath | default('/static') }}/stylesheets/dl-frontend.css" rel="stylesheet" />
+
+	{%- if includeAutocomplete %}
+	<link href="{{ staticPath|default('/static') }}/stylesheets/vendor/govuk-accessible-autocomplete.min.css" rel="stylesheet" media="all" />
+	{%- endif %}
+	{% endblock dlCss -%}
 
 {%- if includesMap -%}
 <!-- should make this optional, no need to load if not showing a map -->
