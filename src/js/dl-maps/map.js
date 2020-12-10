@@ -125,6 +125,7 @@ Map.prototype.setMapHeight = function (height) {
   const $map = this.$module
   const h = height || (2 / 3)
   const offsetMin = 75
+  const minHeight = 300
   const width = $map.offsetWidth
   let v = (h < 1) ? width * h : h
 
@@ -134,7 +135,8 @@ Map.prototype.setMapHeight = function (height) {
     v = window.innerHeight - ((portion < offsetMin) ? offsetMin : portion)
   }
 
-  $map.style.height = v + 'px'
+  // but should never be less than minHeight
+  $map.style.height = ((v < minHeight) ? minHeight : v) + 'px'
   this.map.invalidateSize()
 }
 
