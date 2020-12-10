@@ -1,3 +1,5 @@
+import utils from '../helpers/utils.js'
+
 /* global L, fetch */
 
 // govuk consistent colours
@@ -26,10 +28,6 @@ const boundaryHoverStyle = {
 function Map ($module) {
   this.$module = $module
   this.$wrapper = $module.closest('.dl-map__wrapper')
-}
-
-function isFunction (x) {
-  return Object.prototype.toString.call(x) === '[object Function]'
 }
 
 Map.prototype.init = function (params) {
@@ -82,13 +80,13 @@ Map.prototype.addLayerHoverState = function (layer, options) {
   layer.on('mouseover', function () {
     if ((hasCheck) ? options.check(layer) : true) {
       layer.setStyle(hoverStyle)
-      if (options.cb && isFunction(options.cb)) { options.cb(layer, true) }
+      if (options.cb && utils.isFunction(options.cb)) { options.cb(layer, true) }
     }
   })
   layer.on('mouseout', function () {
     if ((hasCheck) ? options.check(layer) : true) {
       layer.setStyle(defaultStyle)
-      if (options.cb && isFunction(options.cb)) { options.cb(layer, false) }
+      if (options.cb && utils.isFunction(options.cb)) { options.cb(layer, false) }
     }
   })
 }

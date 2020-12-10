@@ -2,10 +2,6 @@
 import utils from '../helpers/utils.js'
 import '../vendor/polyfills/Object/assign'
 
-function isFunction (x) {
-  return Object.prototype.toString.call(x) === '[object Function]'
-}
-
 // set up config variables
 
 let organisationMapper = {}
@@ -180,7 +176,7 @@ function loadBrownfieldSites (map, url, groupName, options) {
           l.addTo(options.layerGroup)
         }
         // run any callback
-        if (options.cb && isFunction(options.cb)) { options.cb(l, groupName) }
+        if (options.cb && utils.isFunction(options.cb)) { options.cb(l, groupName) }
       })
       .catch(function (err) {
         console.log('error loading brownfield sites', err)

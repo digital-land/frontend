@@ -4,6 +4,45 @@
 	(factory((global.DLMaps = {})));
 }(this, (function (exports) { 'use strict';
 
+var utils = {};
+
+function camelCaseReplacer (match, s) {
+  return s.toUpperCase()
+}
+
+utils.curie_to_url_part = function (curie) {
+  return curie.replace(':', '/')
+};
+
+utils.toCamelCase = function (s) {
+  // check to see string isn't already camelCased
+  var nonWordChars = /\W/g;
+  if (s && s.match(nonWordChars)) {
+    return s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, camelCaseReplacer)
+  }
+  return s
+};
+
+utils.truncate = function (s, len) {
+  return s.slice(0, len) + '...'
+};
+
+/**
+ * Create an organisation mapper. Maps organisation ids to names
+ * @param  {Array} orgsObj Array of organisation objs. Must contain .id and .name propterties
+ */
+utils.createOrgMapper = function (orgsObj) {
+  const mapper = {};
+  orgsObj.forEach(function (o) {
+    mapper[o.id] = o.name;
+  });
+  return mapper
+};
+
+utils.isFunction = function (x) {
+  return Object.prototype.toString.call(x) === '[object Function]'
+};
+
 /* global L, fetch */
 
 // govuk consistent colours
@@ -32,10 +71,6 @@ const boundaryHoverStyle = {
 function Map ($module) {
   this.$module = $module;
   this.$wrapper = $module.closest('.dl-map__wrapper');
-}
-
-function isFunction (x) {
-  return Object.prototype.toString.call(x) === '[object Function]'
 }
 
 Map.prototype.init = function (params) {
@@ -88,13 +123,13 @@ Map.prototype.addLayerHoverState = function (layer, options) {
   layer.on('mouseover', function () {
     if ((hasCheck) ? options.check(layer) : true) {
       layer.setStyle(hoverStyle);
-      if (options.cb && isFunction(options.cb)) { options.cb(layer, true); }
+      if (options.cb && utils.isFunction(options.cb)) { options.cb(layer, true); }
     }
   });
   layer.on('mouseout', function () {
     if ((hasCheck) ? options.check(layer) : true) {
       layer.setStyle(defaultStyle);
-      if (options.cb && isFunction(options.cb)) { options.cb(layer, false); }
+      if (options.cb && utils.isFunction(options.cb)) { options.cb(layer, false); }
     }
   });
 };
@@ -208,41 +243,8 @@ Map.prototype.setupOptions = function (params) {
   this.mapId = params.mapId || 'aMap';
 };
 
-var utils = {};
-
-function camelCaseReplacer (match, s) {
-  return s.toUpperCase()
-}
-
-utils.curie_to_url_part = function (curie) {
-  return curie.replace(':', '/')
-};
-
-utils.toCamelCase = function (s) {
-  // check to see string isn't already camelCased
-  var nonWordChars = /\W/g;
-  if (s && s.match(nonWordChars)) {
-    return s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, camelCaseReplacer)
-  }
-  return s
-};
-
-utils.truncate = function (s, len) {
-  return s.slice(0, len) + '...'
-};
-
-/**
- * Create an organisation mapper. Maps organisation ids to names
- * @param  {Array} orgsObj Array of organisation objs. Must contain .id and .name propterties
- */
-utils.createOrgMapper = function (orgsObj) {
-  const mapper = {};
-  orgsObj.forEach(function (o) {
-    mapper[o.id] = o.name;
-  });
-  return mapper
-};
-
+// assign() polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+// probably just needed by IE browsers
 if (typeof Object.assign !== 'function') {
   // Must be writable: true, enumerable: false, configurable: true
   Object.defineProperty(Object, 'assign', {
@@ -273,10 +275,6 @@ if (typeof Object.assign !== 'function') {
 }
 
 /* global L, fetch */
-
-function isFunction$1 (x) {
-  return Object.prototype.toString.call(x) === '[object Function]'
-}
 
 // set up config variables
 
@@ -399,7 +397,6 @@ function processSiteData (row) {
     resourceTrunc: utils.truncate(row.resource, 9),
     optionalFields: optionalFields
   };
-  // need Object.assign polyfill for IE
   return Object.assign(row, templateFuncs)
 }
 
@@ -453,7 +450,7 @@ function loadBrownfieldSites (map, url, groupName, options) {
           l.addTo(options.layerGroup);
         }
         // run any callback
-        if (options.cb && isFunction$1(options.cb)) { options.cb(l, groupName); }
+        if (options.cb && utils.isFunction(options.cb)) { options.cb(l, groupName); }
       })
       .catch(function (err) {
         console.log('error loading brownfield sites', err);
