@@ -1,5 +1,6 @@
 /* global L, fetch */
 import utils from '../helpers/utils.js'
+import '../vendor/polyfills/Object/assign'
 
 function isFunction (x) {
   return Object.prototype.toString.call(x) === '[object Function]'
@@ -126,7 +127,6 @@ function processSiteData (row) {
     resourceTrunc: utils.truncate(row.resource, 9),
     optionalFields: optionalFields
   }
-  // need Object.assign polyfill for IE
   return Object.assign(row, templateFuncs)
 }
 
