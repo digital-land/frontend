@@ -152,6 +152,7 @@ $bfs-brown: #594d00;
   right: $govuk-gutter-half;
   width: 330px;
   background: govuk-colour("white");
+  box-shadow: 0 0 3px rgba(govuk-colour("black"), .8);
 }
 
 .dl-map__side-panel__section {

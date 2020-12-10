@@ -9456,6 +9456,7 @@
   right: 15px;
   width: 330px;
   background: #ffffff;
+  box-shadow: 0 0 3px rgba(11, 12, 12, 0.8);
 }
 
 .dl-map__side-panel__section {
