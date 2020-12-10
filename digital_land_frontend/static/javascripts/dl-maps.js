@@ -43,7 +43,7 @@ utils.isFunction = function (x) {
   return Object.prototype.toString.call(x) === '[object Function]'
 };
 
-/* global L, fetch */
+/* global L, fetch, window */
 
 // govuk consistent colours
 var colours = {
@@ -117,7 +117,7 @@ Map.prototype.addStyle = function (name, style) {
  *    {Func} .cb Optional callback to trigger, accepts cb(layer <- leaflet layer, hovered <- boolean)
  */
 Map.prototype.addLayerHoverState = function (layer, options) {
-  const hasCheck = (options.check && isFunction(options.check));
+  const hasCheck = (options.check && utils.isFunction(options.check));
   const defaultStyle = options.defaultStyle || this.styles.defaultBoundaryStyle;
   const hoverStyle = options.hoverStyle || this.styles.defaultBoundaryHoverStyle;
   layer.on('mouseover', function () {
@@ -156,11 +156,27 @@ Map.prototype.createFeatureGroup = function (name, options) {
   return fG
 };
 
+function greaterThanViewport (h) {
+  return h > window.innerHeight
+}
+
+/**
+ * Sets the height of the map
+ * @param  {Integer} height Height in pixels
+ */
 Map.prototype.setMapHeight = function (height) {
-  const h = height || (2 / 3);
   const $map = this.$module;
+  const h = height || (2 / 3);
+  const offsetMin = 75;
   const width = $map.offsetWidth;
-  const v = (h < 1) ? width * h : h;
+  let v = (h < 1) ? width * h : h;
+
+  // limit height to less than viewport to help scrolling
+  if (greaterThanViewport(v)) {
+    const portion = window.innerHeight * 0.1;
+    v = window.innerHeight - ((portion < offsetMin) ? offsetMin : portion);
+    console.log('greater than viewport so setting to ', v);
+  }
 
   $map.style.height = v + 'px';
   this.map.invalidateSize();
