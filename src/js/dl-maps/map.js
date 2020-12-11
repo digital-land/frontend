@@ -195,7 +195,7 @@ Map.prototype.plotBoundaries = function (urls, options) {
         return response.json()
       })
       .then((data) => {
-        const layer = options.geojsonDataToLayer(data, options) || that.geojsonLayer(data, _type, options)
+        const layer = (utils.isFunction(options.geojsonDataToLayer)) ? options.geojsonDataToLayer(data, options) : that.geojsonLayer(data, _type, options)
         layer.addTo(defaultFG)
         count++
         // only pan map once all boundaries have loaded
