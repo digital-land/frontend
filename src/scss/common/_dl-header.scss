@@ -20,3 +20,8 @@
     }
   }
 }
+
+.dl-header__service-name {
+  @include govuk-font($size: 24);
+  padding-left: $govuk-gutter-half;
+}
