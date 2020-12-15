@@ -1,13 +1,15 @@
 import csv
 import json
 import logging
+import re
 from collections import OrderedDict
 from pathlib import Path
 
 import shapely.wkt
 
 from digital_land_frontend.jinja import setup_jinja
-from digital_land_frontend.jinja_filters.organisation_mapper import OrganisationMapper
+from digital_land_frontend.jinja_filters.organisation_mapper import \
+    OrganisationMapper
 
 
 class Renderer:
@@ -15,10 +17,18 @@ class Renderer:
     translations = str.maketrans({"/": "-", " ": "", "(": "", ")": "", "'": ""})
     geometry_fields = ["geometry", "point"]
 
-    def __init__(self, name, dataset, url_root=None, docs="docs"):
+    def __init__(
+        self,
+        name,
+        dataset,
+        url_root=None,
+        key_columns=["organisation", "site"],
+        docs="docs",
+    ):
         self.name = name
         self.dataset = dataset
         self.docs = Path(docs)
+        self.key_columns = key_columns
         self.env = setup_jinja()
         self.index_template = self.env.get_template("index.html")
         self.row_template = self.env.get_template("row.html")
@@ -29,12 +39,29 @@ class Renderer:
         else:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
 
-    def get_id(self, row, idx):
-        id = row["site"].translate(self.translations)
-        if not row["site"] or row["site"] in self.ids:
-            id = f"{row['resource']}:{idx}"
-        self.ids.add(id)
-        return id
+    def get_slug(self, row, name):
+        slug = self._generate_slug(row, name, self.key_columns)
+        if slug.lower() in self.slugs:
+            return None
+
+        self.slugs.add(slug.lower())
+        return slug
+
+    @staticmethod
+    def _generate_slug(row, name, key_columns):
+        slug = [name]
+        for column in key_columns:
+            value = row[column]
+            if column == "organisation":
+                value = value.replace(":", "/")
+            else:
+                value = re.sub(
+                    r"[^A-Za-z0-9-]", "-", value
+                )  # Should do this during harmonise
+            slug.append(value)
+
+        slug_str = "/".join(slug)
+        return slug_str
 
     def by_organisation(self, rows):
         by_organisation = {}
@@ -59,17 +86,21 @@ class Renderer:
         return result
 
     def render_pages(self):
-        self.ids = set()
+        self.slugs = set()
         rows = []
         for idx, row in enumerate(csv.DictReader(open(self.dataset)), start=1):
-            row["id"] = self.get_id(row, idx)
+            row["id"] = self.get_slug(row, self.name)
+            if row["id"] is None:
+                continue  # Skip rows without a unique slug
+
             output_dir = self.docs / row["id"]
             if not output_dir.exists():
-                output_dir.mkdir()
+                output_dir.mkdir(parents=True)
 
             for field in self.geometry_fields:
                 if field in row and row[field]:
                     self.create_geometry_file(output_dir, row, field)
+                    row["has_geometry"] = True
                     break
 
             self.render(
@@ -92,16 +123,13 @@ class Renderer:
             data_type=self.name,
         )
 
-    def render(self, path, template, **kwargs):
+    @staticmethod
+    def render(path, template, **kwargs):
         with open(path, "w") as f:
             logging.debug(f"creating {path}")
             f.write(template.render(**kwargs))
 
     def create_geometry_file(self, output_dir, row, field):
-        # Remove this once dataset is fixed
-        if row[field] == "POINT( )":
-            return
-
         try:
             geojson = {"type": "Feature"}
             geojson["geometry"] = wkt_to_json_geometry(row[field])
