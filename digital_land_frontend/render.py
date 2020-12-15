@@ -41,6 +41,10 @@ class Renderer:
 
     def get_slug(self, row, name):
         slug = self._generate_slug(row, name, self.key_columns)
+
+        if not slug:
+            return None
+
         if slug.lower() in self.slugs:
             return None
 
@@ -52,6 +56,9 @@ class Renderer:
         slug = [name]
         for column in key_columns:
             value = row[column]
+            if not value:
+                return None
+
             if column == "organisation":
                 value = value.replace(":", "/")
             else:

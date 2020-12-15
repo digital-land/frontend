@@ -15,3 +15,11 @@ def test_generate_slug_strips_slashes():
     slug = Renderer._generate_slug(row, "conservation-area", ["organisation", "site"])
 
     assert slug == "conservation-area/local-authority-eng/YOR/SITE-01"
+
+
+def test_generate_slug_prevents_empty_fields():
+    row = {"organisation": "local-authority-eng:YOR", "site": ""}
+
+    slug = Renderer._generate_slug(row, "conservation-area", ["organisation", "site"])
+
+    assert slug is None
