@@ -22,13 +22,13 @@ class Renderer:
         name,
         dataset,
         url_root=None,
-        key_columns=["organisation", "site"],
+        key_fields=["organisation", "site"],
         docs="docs",
     ):
         self.name = name
         self.dataset = dataset
         self.docs = Path(docs)
-        self.key_columns = key_columns
+        self.key_fields = key_fields
         self.env = setup_jinja()
         self.index_template = self.env.get_template("index.html")
         self.row_template = self.env.get_template("row.html")
@@ -40,7 +40,7 @@ class Renderer:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
 
     def get_slug(self, row):
-        slug = self._generate_slug(row, self.key_columns)
+        slug = self._generate_slug(row, self.key_fields)
 
         if not slug:
             return None
@@ -52,14 +52,14 @@ class Renderer:
         return slug
 
     @staticmethod
-    def _generate_slug(row, key_columns):
+    def _generate_slug(row, key_fields):
         slug = []
-        for column in key_columns:
-            value = row[column]
+        for field in key_fields:
+            value = row[field]
             if not value:
                 return None
 
-            if column == "organisation":
+            if field == "organisation":
                 value = value.replace(":", "/")
             else:
                 value = re.sub(
