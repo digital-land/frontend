@@ -1,4 +1,4 @@
-.dl-timeline {
+@mixin dl-timeline($border-colour: govuk-colour("dark-grey"), $border-width: 4px) {
   position: relative;
   margin: 0 0 $govuk-gutter 12px;
   padding-bottom: $govuk-gutter;
@@ -11,12 +11,37 @@
     top: 11px;
     bottom: 9px;
     left: -4px;
-    border-left: 4px solid govuk-colour("dark-grey");
+    border-left: $border-width solid $border-colour;
   }
 
   &:after {
     bottom: 0;
   }
+}
+
+@mixin dl-timeline-circle($border-colour: govuk-colour("dark-grey"), $border-width: 4px, $background: govuk-colour("white")) {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: 2;
+  left: -11px;
+  width: 10px;
+  height: 10px;
+  border: $border-width solid $border-colour;
+  border-radius: 50%;
+  background: $background;
+}
+
+.dl-timeline {
+  @include dl-timeline();
+
+  .dl-timeline__entry-heading {
+    line-height: 1;
+  }
+}
+
+.dl-sbs {
+  @include dl-timeline($border-colour: govuk-colour("mid-grey"));
 
   .dl-timeline__entry-heading {
     line-height: 1;
@@ -25,16 +50,12 @@
 
 .dl-timeline:after,
 .dl-timeline__entry:before {
-  content: "";
-  display: block;
-  position: absolute;
-  z-index: 2;
-  left: -11px;
-  width: 10px;
-  height: 10px;
-  border: 4px solid govuk-colour("dark-grey");
-  border-radius: 50%;
-  background: govuk-colour("white");
+  @include dl-timeline-circle();
+}
+
+.dl-sbs:after,
+.dl-sbs__entry:before {
+  @include dl-timeline-circle($border-colour: govuk-colour("mid-grey"));
 }
 
 .dl-timeline:after {
@@ -55,7 +76,8 @@
   }
 }
 
-.dl-timeline__entry {
+.dl-timeline__entry,
+.dl-sbs__entry {
   padding-bottom: 10px;
   padding-left: 20px;
   @include govuk-media-query($from: tablet) {
@@ -63,9 +85,26 @@
   }
 }
 
+.dl-sbs__entry-heading,
 .dl-timeline__entry-heading {
   margin-bottom: govuk-spacing(2);
 }
+
+.dl-sbs__entry-heading {
+  color: $govuk-secondary-text-colour;
+}
+
+.dl-sbs__entry--current {
+  &:before {
+    border-color: govuk-colour("black");
+    background-color: govuk-colour("yellow");
+  }
+
+  .dl-sbs__entry-heading {
+    color: $govuk-text-colour;
+  }
+}
+
 
 .dl-timeline__entry__content {
   @include govuk-font($size: 19);
