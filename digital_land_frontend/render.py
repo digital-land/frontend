@@ -39,8 +39,8 @@ class Renderer:
         else:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
 
-    def get_slug(self, row, name):
-        slug = self._generate_slug(row, name, self.key_columns)
+    def get_slug(self, row):
+        slug = self._generate_slug(row, self.key_columns)
 
         if not slug:
             return None
@@ -52,8 +52,8 @@ class Renderer:
         return slug
 
     @staticmethod
-    def _generate_slug(row, name, key_columns):
-        slug = [name]
+    def _generate_slug(row, key_columns):
+        slug = []
         for column in key_columns:
             value = row[column]
             if not value:
@@ -96,7 +96,7 @@ class Renderer:
         self.slugs = set()
         rows = []
         for idx, row in enumerate(csv.DictReader(open(self.dataset)), start=1):
-            row["id"] = self.get_slug(row, self.name)
+            row["id"] = self.get_slug(row)
             if row["id"] is None:
                 continue  # Skip rows without a unique slug
 
