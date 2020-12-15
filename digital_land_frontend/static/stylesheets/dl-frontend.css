@@ -9934,8 +9934,8 @@
 
 .dl-sbs {
   position: relative;
-  margin: 0 0 30px 12px;
-  padding-bottom: 30px;
+  margin: 0 0 0 12px;
+  padding-bottom: 0;
   padding-left: 0;
   list-style-type: none;
 }
@@ -9963,6 +9963,7 @@
   display: block;
   position: absolute;
   z-index: 2;
+  top: 3px;
   left: -11px;
   width: 10px;
   height: 10px;
@@ -9971,12 +9972,22 @@
   background: #ffffff;
 }
 
-.dl-sbs:after,
+.dl-sbs:after {
+  content: "";
+  position: absolute;
+  bottom: 9px;
+  left: -9px;
+  width: 14px;
+  height: 0;
+  border-bottom: 2px solid #b1b4b6;
+}
+
 .dl-sbs__entry:before {
   content: "";
   display: block;
   position: absolute;
   z-index: 2;
+  top: 3px;
   left: -11px;
   width: 10px;
   height: 10px;
@@ -9999,6 +10010,7 @@
 
 .dl-timeline__entry,
 .dl-sbs__entry {
+  position: relative;
   padding-bottom: 10px;
   padding-left: 20px;
 }
