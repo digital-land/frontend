@@ -1,15 +1,13 @@
 import csv
 import json
 import logging
-import re
 from collections import OrderedDict
 from pathlib import Path
 
 import shapely.wkt
 
 from digital_land_frontend.jinja import setup_jinja
-from digital_land_frontend.jinja_filters.organisation_mapper import \
-    OrganisationMapper
+from digital_land_frontend.jinja_filters.organisation_mapper import OrganisationMapper
 
 
 class Renderer:
@@ -32,43 +30,11 @@ class Renderer:
         self.env = setup_jinja()
         self.index_template = self.env.get_template("index.html")
         self.row_template = self.env.get_template("row.html")
-        self.ids = set()
 
         if url_root:
             self.env.globals["urlRoot"] = url_root
         else:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
-
-    def get_slug(self, row):
-        slug = self._generate_slug(row, self.key_fields)
-
-        if not slug:
-            return None
-
-        if slug.lower() in self.slugs:
-            return None
-
-        self.slugs.add(slug.lower())
-        return slug
-
-    @staticmethod
-    def _generate_slug(row, key_fields):
-        slug = []
-        for field in key_fields:
-            value = row[field]
-            if not value:
-                return None
-
-            if field == "organisation":
-                value = value.replace(":", "/")
-            else:
-                value = re.sub(
-                    r"[^A-Za-z0-9-]", "-", value
-                )  # Should do this during harmonise
-            slug.append(value)
-
-        slug_str = "/".join(slug)
-        return slug_str
 
     def by_organisation(self, rows):
         by_organisation = {}
@@ -96,11 +62,10 @@ class Renderer:
         self.slugs = set()
         rows = []
         for idx, row in enumerate(csv.DictReader(open(self.dataset)), start=1):
-            row["id"] = self.get_slug(row)
-            if row["id"] is None:
+            if row["slug"] is None:
                 continue  # Skip rows without a unique slug
 
-            output_dir = self.docs / row["id"]
+            output_dir = self.docs / row["slug"]
             if not output_dir.exists():
                 output_dir.mkdir(parents=True)
 
