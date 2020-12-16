@@ -1,11 +1,18 @@
 {% macro dlStepByStepEntry(params) %}
+{%- set itemHeading = params.heading %}
+{% set ns = namespace(heading=params.heading) %}
+{% if params.href %}
+  {% set ns.heading %}
+  <a href="{{ params.href }}" class="govuk-link govuk-link--no-visited-state">{{ params.heading }}</a>
+  {% endset %}
+{% endif %}
 <li class="dl-sbs__entry
 {%- if params.current %} dl-sbs__entry--current{% endif %}
 {%- if params.classes %} {{ params.classes }}{% endif %}"
 {%- if params.attributes %}
 {%- for attribute, value in params.attributes.items() %} {{ attribute }}="{{ value }}"{% endfor %}
 {%- endif %}>
-    <h3 class="{{ params.heading_class|default('govuk-heading-s') }} dl-sbs__entry-heading">{{ params.heading }}{% if params.current %}
+    <h3 class="{{ params.heading_class|default('govuk-heading-s') }} dl-sbs__entry-heading">{{ ns.heading }}{% if params.current %}
       <strong class="govuk-tag govuk-tag--yellow">
         Active
       </strong>
@@ -19,7 +26,7 @@
     {%- if params.html %}
     {{ params.html|safe }}
     {%- elif params.text -%}
-    <p class="govuk-body">{{ params.text }}</p>
+    <p class="dl-small-text">{{ params.text }}</p>
     {% endif -%}
     </div>
 </li>
