@@ -62,8 +62,12 @@ class Renderer:
         self.slugs = set()
         rows = []
         for idx, row in enumerate(csv.DictReader(open(self.dataset)), start=1):
-            if row["slug"] is None:
+            if not row["slug"]:
                 continue  # Skip rows without a unique slug
+
+            row["slug"] = "/".join(
+                row["slug"].split("/")[1:]
+            )  # strip the prefix from slug
 
             output_dir = self.docs / row["slug"]
             if not output_dir.exists():
