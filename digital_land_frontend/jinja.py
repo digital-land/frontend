@@ -1,6 +1,6 @@
 import jinja2
 
-from .filters import organisation_id_to_name_filter
+from .filters import organisation_id_to_name_filter, strip_slug
 
 
 def setup_jinja():
@@ -24,6 +24,7 @@ def setup_jinja():
 
     # register jinja filters
     env.filters["organisation_id_to_name"] = organisation_id_to_name_filter
+    env.filters["clean_slug"] = strip_slug
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"

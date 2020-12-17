@@ -65,3 +65,8 @@ def organisation_id_to_name_filter(id):
     E.g. local-authority-eng:HAG -> Harrogate Borough Council
     """
     return organisation_mapper.get_by_key(id)
+
+
+def strip_slug(s):
+    parts = s.split("/")
+    return parts[-1]
