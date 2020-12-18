@@ -52,6 +52,7 @@ a {
 }
 
 // attempt to break long long URLS
+.dl-break-word,
 .long-link {
   word-break: break-all;
 }
