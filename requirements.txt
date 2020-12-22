@@ -13,6 +13,7 @@ parsy==1.1.0
 pathspec==0.8.0
 regex==2020.9.27
 requests==2.24.0
+Shapely==1.7.1
 six==1.15.0
 toml==0.10.1
 typed-ast==1.4.1
