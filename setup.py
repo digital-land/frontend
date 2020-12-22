@@ -33,6 +33,7 @@ setup(
         "lockfile",
         "validators",
         "requests",
+        "shapely",
         "govuk_jinja_components @ git+https://github.com/digital-land/govuk-jinja-components.git#egg=govuk_jinja_components"
     ],
     include_package_data=True,
