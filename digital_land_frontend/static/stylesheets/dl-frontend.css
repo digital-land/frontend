@@ -9319,7 +9319,7 @@
 }
 
 .bfs-hectare:after {
-  content: "0.5";
+  content: "1";
   display: block;
   position: absolute;
   top: -6px;
@@ -9341,7 +9341,7 @@
 }
 
 .bfs-hectare--lg:after {
-  content: "8.0";
+  content: "50";
 }
 
 .map-wrapper {
