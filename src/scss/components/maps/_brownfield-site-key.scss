@@ -1,0 +1,70 @@
+$key-padding: 10px;
+$key-hectare-border: 1px;
+$key-width: 80px;
+$key-background: govuk-colour("white");
+
+.bfs-hectares-key {
+  box-sizing: border-box;
+  width: $key-width + $key-padding;
+  padding: $key-padding 5px 0;
+  background: $key-background;
+  @include govuk-typography-common;
+}
+
+.bfs-hectares-key__title {
+  margin-top: 5px;
+  margin-bottom: 0;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.bfs-hectares-key__container {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  height: $key-width;
+  padding: $key-padding;
+}
+
+$key-hectare-width: 24px;
+$key-hectare-width-lg: 50px;
+$key-hectare-font-size: 10px;
+$key-half-width: ($key-hectare-font-size / 2) + 3px;
+$bfs-colour: #745729;
+
+.bfs-hectare {
+  position: absolute;
+  bottom: $key-padding;
+  left: ($key-width / 2) - ($key-hectare-width / 2) - $key-hectare-border;
+  width: $key-hectare-width;
+  height: $key-hectare-width;
+  border: $key-hectare-border solid $bfs-colour;
+  border-radius: 50%;
+
+  &:after {
+    content: "0.5";
+    display: block;
+    position: absolute;
+    top: -($key-hectare-font-size / 2) - 1px;
+    left: calc(50% - #{$key-half-width});
+    width: $key-hectare-font-size + 6px;
+    height: $key-hectare-font-size + 6px;
+    padding-top: 1px;
+    border-radius: 50%;
+    background: $key-background;
+    font-size: $key-hectare-font-size;
+    line-height: 1;
+    text-align: center;
+  }
+}
+
+.bfs-hectare--lg {
+  left: ($key-width / 2) - ($key-hectare-width-lg / 2) - $key-hectare-border;
+  width: $key-hectare-width-lg;
+  height: $key-hectare-width-lg;
+
+  &:after {
+    content: "8.0";
+  }
+}

@@ -1,4 +1,5 @@
 @import "components/bfs-popup";
+@import "maps/brownfield-site-key";
 
 // 25% tint of govuk-colour('yellow')
 $warning-tint-colour: #fff7bf;
@@ -98,7 +99,6 @@ $bfs-brown: #594d00;
   }
 }
 
-
 .dl-map__wrapper {
   position: relative;
 }
@@ -143,6 +143,24 @@ $bfs-brown: #594d00;
   100% {
     transform: rotate(360deg);
   }
+}
+
+%dl-map-panel {
+  position: absolute;
+  z-index: 1000;
+  box-shadow: 0 0 3px 0 rgba(govuk-colour("dark-grey"), .75);
+}
+
+.dl-map__panel-bottom-left {
+  @extend %dl-map-panel;
+  bottom: 10px;
+  left: 10px;
+}
+
+.dl-map__panel-top-left {
+  @extend %dl-map-panel;
+  top: 10px;
+  left: 10px;
 }
 
 .dl-map__side-panel {
