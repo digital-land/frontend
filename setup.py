@@ -20,7 +20,7 @@ for directory in directories_jinja:
 
 setup(
     name="digital-land-frontend",
-    version="0.3.0",
+    version="0.3.5",
     author="Digital land",
     description="Reusable frontend code for digital land services and products",
     license="MIT",
@@ -34,7 +34,8 @@ setup(
         "validators",
         "requests",
         "shapely",
-        "govuk_jinja_components @ git+https://github.com/digital-land/govuk-jinja-components.git#egg=govuk_jinja_components"
+        "govuk_jinja_components @ git+https://github.com/digital-land/govuk-jinja-components.git#egg=govuk_jinja_components",
+        "markdown"
     ],
     include_package_data=True,
 )
