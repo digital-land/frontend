@@ -32,6 +32,8 @@ def read_content_file(filename, expanded=False, **kwargs):
         else filename.with_suffix("")
     )
 
+    content["lede"] = file_content["attributes"].get("lede")
+
     if file_content["attributes"].get("section") is not None:
         content["section"] = file_content["attributes"].get("section")
 
