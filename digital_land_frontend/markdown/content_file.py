@@ -12,7 +12,7 @@ def create_breadcrumbs(output_path):
             breadcrumbs.append(
                 {
                     "text": part.capitalize().replace("-", " "),
-                    "href": "/".join(parts[: idx + 1]),
+                    "href": "/" + "/".join(parts[: idx + 1]),
                 }
             )
         else:
