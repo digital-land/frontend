@@ -18,3 +18,19 @@
     </svg>
 </div>
 {% endmacro %}
+
+{% macro documentPreview(params) %}
+<li class="govuk-grid-row{% if params.classes %} {{params.classes}}{% endif %}">
+<div class="govuk-grid-column-one-third">
+    {{ documentPreviewIcon({}) }}
+</div>
+<div class="govuk-grid-column-two-thirds">
+    <h3 class="govuk-heading-s govuk-!-margin-top-5 govuk-!-margin-bottom-1">{{ params.document['name'] }}</h3>
+    <p class="govuk-body">Owner: <a href="https://digital-land.github.io/organisation/{{ params.document['organisation']|replace(':', '/') }}" class="govuk-link">{{ params.document['organisation']|organisation_id_to_name }}</a></p>
+
+    {% if params.document['description'] %}<p class="govuk-body"><span class="dl-small-text">{{ params.document['description'] }}</span></p>{% endif %}
+    {% if params.document['notes'] %}<p class="govuk-body"><span class="dl-small-text">{{ params.document['notes'] }}</span></p>{% endif %}
+    <a class="govuk-link" href="{{ params.document['document-url'] }}">View full document</a>
+</div>
+</li>
+{% endmacro %}
