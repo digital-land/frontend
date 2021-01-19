@@ -17,9 +17,18 @@ def govukify(html):
     html = html.replace("<h4", '<h4 class="govuk-heading-s"')
     html = html.replace("<ul", '<ul class="govuk-list govuk-list--bullet"')
     html = html.replace("<pre>", '<pre class="hljs-container">')
-    html = html.replace("<img", '<img class="dl-image">')
+    html = html.replace("<img", '<img class="dl-image" ')
     html = html.replace(
         "<hr",
         '<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"',
     )
+
+    # add correct classes for govuk tables. Should test this
+    html = html.replace("<table", '<table class="govuk-table" ')
+    html = html.replace("<thead>", '<thead class="govuk-table__head">')
+    html = html.replace("<tbody>", '<tbody class="govuk-table__body">')
+    html = html.replace("<tr>", '<tr class="govuk-table__row">')
+    html = html.replace("<th>", '<th scope="row" class="govuk-table__header">')
+    html = html.replace("<td>", '<td class="govuk-table__cell">')
+
     return html
