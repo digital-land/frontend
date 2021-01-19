@@ -18,4 +18,8 @@ def govukify(html):
     html = html.replace("<ul", '<ul class="govuk-list govuk-list--bullet"')
     html = html.replace("<pre>", '<pre class="hljs-container">')
     html = html.replace("<img", '<img class="dl-image">')
+    html = html.replace(
+        "<hr",
+        '<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"',
+    )
     return html
