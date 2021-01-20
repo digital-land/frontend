@@ -3,7 +3,7 @@ import numbers
 import validators
 from jinja2 import evalcontextfilter, Markup
 
-from .jinja_filters.organisation_mapper import OrganisationMapper
+from .jinja_filters.mappers import OrganisationMapper, GeographyMapper
 
 
 def get_jinja_template_raw(template_file_path):
@@ -65,6 +65,37 @@ def organisation_id_to_name_filter(id):
     E.g. local-authority-eng:HAG -> Harrogate Borough Council
     """
     return organisation_mapper.get_by_key(id)
+
+
+geography_mapper = GeographyMapper()
+
+
+def geography_to_name_filter(id):
+    """
+    Maps geography to name
+
+    E.g. parish:E04001457 -> Aston Clinton
+    """
+    return geography_mapper.get_name(id)
+
+
+def geography_to_url_filter(id):
+    """
+    Maps geograpahy to a link for the relevant geograpahy page
+
+    E.g. parish:E04001457 -> https://digital-land.github.io/parish/E04001465/
+    """
+    return geography_mapper.get_url(id)
+
+
+def geography_to_geometry_url_filter(id):
+    """
+    Maps geograpahy to a link for the relevant geometry geojson file
+
+    E.g. parish:E04001457 -> https://digital-land.github.io/parish/E04001465/geometry.geojson
+    """
+
+    return geography_mapper.get_geometry_url(id)
 
 
 def strip_slug(s):

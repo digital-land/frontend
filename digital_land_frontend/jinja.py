@@ -1,6 +1,12 @@
 import jinja2
 
-from .filters import organisation_id_to_name_filter, strip_slug
+from .filters import (
+    organisation_id_to_name_filter,
+    geography_to_name_filter,
+    geography_to_url_filter,
+    geography_to_geometry_url_filter,
+    strip_slug,
+)
 
 
 def setup_jinja():
@@ -24,6 +30,9 @@ def setup_jinja():
 
     # register jinja filters
     env.filters["organisation_id_to_name"] = organisation_id_to_name_filter
+    env.filters["geography_to_name"] = geography_to_name_filter
+    env.filters["geography_to_url"] = geography_to_url_filter
+    env.filters["geography_to_geometry_url"] = geography_to_geometry_url_filter
     env.filters["clean_slug"] = strip_slug
 
     # set variables to make available to all templates

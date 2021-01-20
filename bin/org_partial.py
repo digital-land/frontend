@@ -1,14 +1,7 @@
 #!/usr/bin/env python
-
-import sys
 import jinja2
 
-# add parent directory
-sys.path.append(".")
-
-from digital_land_frontend.jinja_filters.organisation_mapper import (
-    OrganisationMapper,
-)
+from digital_land_frontend.jinja_filters.mappers import OrganisationMapper
 
 
 def setup_jinja():
