@@ -40,4 +40,8 @@ def read_content_file(filename, expanded=False, **kwargs):
     if expanded:
         content["body"] = file_content["body"]
 
+    # option to override the pageTitle
+    if file_content["attributes"].get("pageTitle") is not None:
+        content["pageTitle"] = file_content["attributes"].get("pageTitle")
+
     return {**content, **kwargs}
