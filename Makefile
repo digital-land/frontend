@@ -1,7 +1,7 @@
 .PHONY: black black-check flake8 lint test
 
 init:
-	pip install --upgrade pip
+	pip install --upgrade pip setuptools
 	pip install -e .
 	pip install -r requirements.txt
 

@@ -11,13 +11,17 @@ class Mapper:
     def __init__(self):
         self.mapping = {}
         self.slug = {}
-        self.data_fetched = False
+        self.loaded = False
 
-    def fetch_data(self):
-        self.data_fetched = True
-        return get(self.dataset_url)
+    def load(self):
+        for url in self.dataset_urls:
+            self.map_data(self.fetch_data(url))
 
-    def create_mapping(self, data):
+    def fetch_data(self, url):
+        self.loaded = True
+        return get(url)
+
+    def map_data(self, data):
         cr = csv.DictReader(data.splitlines())
         for row in cr:
             key = row[self.key_field]
@@ -30,9 +34,8 @@ class Mapper:
 
     def lazy_load(func):
         def wrapped(self, *args, **kwargs):
-            if not self.data_fetched:
-                data = self.fetch_data()
-                self.create_mapping(data)
+            if not self.loaded:
+                self.load()
             return func(self, *args, **kwargs)
 
         return wrapped
@@ -44,6 +47,7 @@ class Mapper:
     def slug_to_key(func):
         def wrapped(self, k, *args, **kwargs):
             if k.startswith("/"):
+                kwargs["slug"] = k
                 k = k.split("/")[-1]
             return func(self, k, *args, **kwargs)
 
@@ -51,13 +55,13 @@ class Mapper:
 
     @lazy_load
     @slug_to_key
-    def get_url(self, k):
+    def get_url(self, k, slug=None):
         if k not in self.mapping:
             return None
-        return self.url_pattern % k
+        return self.url_pattern.format(key=k, slug=slug)
 
     @slug_to_key
-    def get_name(self, k):
+    def get_name(self, k, slug=None):
         return self.get_by_key(k)
 
     @lazy_load
@@ -76,34 +80,45 @@ class Mapper:
 
 
 class OrganisationMapper(Mapper):
-    dataset_url = "https://raw.githubusercontent.com/digital-land/organisation-dataset/master/collection/organisation.csv"
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/organisation-dataset/master/collection/organisation.csv"
+    ]
     key_field = "organisation"
 
 
 class BaseGeometryMapper(Mapper):
     @Mapper.slug_to_key
-    def get_geometry_url(self, k):
+    def get_geometry_url(self, k, slug=None):
         if k not in self.mapping:
             return None
-        return self.geometry_url_pattern % k
+        return self.geometry_url_pattern.format(key=k, slug=slug)
 
 
 class ParishMapper(BaseGeometryMapper):
-    dataset_url = "https://raw.githubusercontent.com/digital-land/parish-collection/main/dataset/parish.csv"
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/parish-collection/main/dataset/parish.csv"
+    ]
     key_field = "geography"
-    url_pattern = "https://digital-land.github.io/parish/%s"
-    geometry_url_pattern = "https://digital-land.github.io/parish/%s/geometry.geojson"
+    url_pattern = "https://digital-land.github.io/parish/{key}"
+    geometry_url_pattern = (
+        "https://digital-land.github.io/parish/{key}/geometry.geojson"
+    )
 
     def key_filter(self, k):
         return k.split(":")[-1]
 
 
 class BoundaryMapper(BaseGeometryMapper):
-    dataset_url = "https://raw.githubusercontent.com/digital-land/boundary-collection/master/index/local-authority-boundary.csv"
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/boundary-collection/master/index/local-authority-boundary.csv",
+        "https://raw.githubusercontent.com/digital-land/boundary-collection/master/index/parliamentary-boundary.csv",
+    ]
     key_field = "statistical-geography"
     value_field = "boundary"
-    url_pattern = "https://digital-land.github.io/organisation/local-authority-eng/%s"
-    geometry_url_pattern = "https://github.com/digital-land/boundary-collection/blob/master/collection/local-authority/%s/index.geojson"
+    url_pattern = (
+        "https://digital-land.github.io/organisation/local-authority-eng/{key}"
+    )
+    geometry_url_pattern = "https://github.com/digital-land/boundary-collection/blob/master/collection/local-authority/{key}/index.geojson"
 
     def get_name(self, k):
         return None
@@ -112,19 +127,21 @@ class BoundaryMapper(BaseGeometryMapper):
         return None  # This can be removed once we have pages for boundaries
 
     def get_geometry_url(self, k):
-        super().get_name(k)
+        return super().get_name(k)
 
 
 class DevelopmentPolicyAreaMapper(BaseGeometryMapper):
-    dataset_url = "https://raw.githubusercontent.com/digital-land/development-policy-area-collection/main/dataset/development-policy-area.csv"
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/development-policy-area-collection/main/dataset/development-policy-area.csv"
+    ]
     key_field = "development-policy-area"
-    url_pattern = "https://digital-land.github.io%s"
-    geometry_url_pattern = "https://digital-land.github.io%s/geometry.geojson"
+    url_pattern = "https://digital-land.github.io{slug}"
+    geometry_url_pattern = "https://digital-land.github.io{slug}/geometry.geojson"
 
-    def get_name(self, k):
-        result = super().get_name(k)
+    def get_name(self, slug):
+        result = super().get_name(slug)
         if not result:
-            return k.split("/")[-1]
+            return slug.split("/")[-1]
         return result
 
 
