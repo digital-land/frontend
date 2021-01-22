@@ -1,6 +1,7 @@
 {%- extends "digital-land-frontend/dlf-base.html" %}
 {%- from "digital-land-frontend/components/map/macro.html" import dlMap %}
 {%- from "digital-land-frontend/components/data-record/macro.html" import dlDataRecordPanel %}
+{%- from "digital-land-frontend/components/data-reference-cell/macro.html" import dlDataReferenceCell %}
 
 {%- set row_name = row['name'] if row['name'] else row['slug'] %}
 
@@ -41,23 +42,21 @@
         </dt>
         <dd class="govuk-summary-list__value">
         {%- if field == "organisation" %}
-        <a href="https://digital-land.github.io/organisation/{{row[field]|replace(':','/')}}" class="govuk-link">{{ row[field]|organisation_id_to_name }}</a>
-        <span title="Key in organisation dataset: {{ row[field] }}" class="govuk-!-font-size-16 secondary-text data-reference">(<span class="govuk-visually-hidden">Key in the organisation dataset is </span>{{ row[field] }})</span>
+            {{- dlDataReferenceCell({
+                "identifier": row[field],
+                "type": "Organisation",
+                "display_name": row[field]|organisation_id_to_name, 
+                "url": "https://digital-land.github.io/organisation/" + row[field]|replace(':','/')
+            }) -}}
         {%- elif field == "geographies" %}
-        {%- set geography_url = row[field]|geography_to_url %}
-        {%- set geography_name = row[field]|geography_to_name or row[field] %}
-        {%- if geography_url != None %}
-            <a href={{ geography_url }} class="govuk-link">
-        {%- endif %}
-            {{ geography_name }}
-        {%- if geography_url != None %}
-            </a><br>
-        {%- endif %}
-
-        {%- if geography_name != row[field] %}
-            <span title="Geography identifier: {{ row[field] }}" class="govuk-!-font-size-16 secondary-text data-reference">(<span class="govuk-visually-hidden">Geography identifier is </span>{{ row[field] }})</span>
-        {%- endif %}
-
+            {%- set geography_url = row[field]|geography_to_url -%}
+            {%- set geography_name = row[field]|geography_to_name or row[field] -%}
+            {{- dlDataReferenceCell({
+                "identifier": row[field],
+                "type": "Geography",
+                "display_name": geography_name, 
+                "url": geography_url
+            }) -}}
         {%- else %}
         {{ row[field] }}
         {%- endif %}
