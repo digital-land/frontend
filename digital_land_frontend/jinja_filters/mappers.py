@@ -108,9 +108,21 @@ class ParishMapper(BaseGeometryMapper):
         return k.split(":")[-1]
 
 
+class LocalAuthorityDistrictMapper(BaseGeometryMapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/local-authority-district-collection/main/dataset/local-authority-district.csv"
+    ]
+    key_field = "geography"
+    value_field = "name"
+    url_pattern = "https://digital-land.github.io/local-authority-district/{key}"
+    geometry_url_pattern = "https://raw.githubusercontent.com/digital-land/local-authority-district/main/docs/{key}/geometry.geojson"
+
+    def key_filter(self, k):
+        return k.split(":")[-1]
+
+
 class BoundaryMapper(BaseGeometryMapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/boundary-collection/master/index/local-authority-boundary.csv",
         "https://raw.githubusercontent.com/digital-land/boundary-collection/master/index/parliamentary-boundary.csv",
     ]
     key_field = "statistical-geography"
@@ -150,36 +162,43 @@ class GeographyMapper:
         # self.registered_mappers = [ParishMapper(), DevelopmentPolicyAreaMapper(), BoundaryMapper()]
         self.parish_mapper = ParishMapper()
         self.dev_policy_area_mapper = DevelopmentPolicyAreaMapper()
+        self.local_authority_district_mapper = LocalAuthorityDistrictMapper()
         self.boundary_mapper = BoundaryMapper()
 
-    def _find_mapper(self, k):
+    def _find_mappers(self, k):
         if k.startswith("/development-policy-area/"):
-            return self.dev_policy_area_mapper
+            return [self.dev_policy_area_mapper]
         elif k.startswith("/"):
             logging.warning("Unhandled geography key: %s", k)
-            return None
+            return []
         elif k.startswith("E04"):
-            return self.parish_mapper
+            return [self.parish_mapper]
         else:
-            return self.boundary_mapper
+            return [self.local_authority_district_mapper, self.boundary_mapper]
 
-    def with_mapper(func):
+    def with_mappers(func):
         def wrapped(self, k, *args, **kwargs):
-            mapper = self._find_mapper(k)
-            if not mapper:
+            mappers = self._find_mappers(k)
+            if not mappers:
                 return ""
-            return func(self, mapper, k, *args, **kwargs)
+            return func(self, mappers, k, *args, **kwargs)
 
         return wrapped
 
-    @with_mapper
-    def get_name(self, mapper, k):
-        return mapper.get_name(k)
+    @with_mappers
+    def _try_all_mappers(self, mappers, k, method):
+        for mapper in mappers:
+            func = getattr(mapper, method)
+            result = func(k)
+            if result:
+                return result
+        return None
 
-    @with_mapper
-    def get_url(self, mapper, k):
-        return mapper.get_url(k)
+    def get_name(self, k):
+        return self._try_all_mappers(k, "get_name")
 
-    @with_mapper
-    def get_geometry_url(self, mapper, k):
-        return mapper.get_geometry_url(k)
+    def get_url(self, k):
+        return self._try_all_mappers(k, "get_url")
+
+    def get_geometry_url(self, k):
+        return self._try_all_mappers(k, "get_geometry_url")
