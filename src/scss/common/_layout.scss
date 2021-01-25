@@ -1,6 +1,16 @@
 .dl-index-grid {
   @include govuk-clearfix;
 
+  .dl-index-item__head {
+    margin-bottom: 0;
+    padding-top: 0;
+  }
+
+  .dl-index-item__body {
+    margin-top: 0;
+    @include govuk-responsive-margin(1, "bottom");
+  }
+
   @include govuk-media-query($from: tablet) {
     display: grid;
     grid-template-columns: max-content minmax(auto, 30em);
@@ -17,14 +27,4 @@
       clear: both;
     }
   }
-}
-
-.dl-index-item__head {
-  margin-bottom: 0;
-  padding-top: 0;
-}
-
-.dl-index-item__body {
-  margin-top: 0;
-  @include govuk-responsive-margin(1, "bottom");
 }

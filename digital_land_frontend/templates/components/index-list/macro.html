@@ -1,0 +1,8 @@
+{% macro dlIndexList(params) %}
+<div class="dl-index-grid{% if params.classes %} {{ params.classes }}{% endif %}">
+{%- for item in params['items'] %}
+  <h4 class="dl-index-item__head govuk-heading-s govuk-!-font-weight-regular dl-break-word"><a class="govuk-link" href="{{ item['href'] }}">{{ item['reference'] }}</a></h4>
+  <p class="dl-index-item__body govuk-body">{{ item['text'] }}</p>
+{%- endfor -%}
+</div>
+{% endmacro %}
