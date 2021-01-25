@@ -11658,4 +11658,20 @@
   }
 }
 
+.dl-index-item__head {
+  margin-bottom: 0;
+  padding-top: 0;
+}
+
+.dl-index-item__body {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+@media (min-width: 40.0625em) {
+  .dl-index-item__body {
+    margin-bottom: 5px;
+  }
+}
+
 /*# sourceMappingURL=dl-frontend.css.map */
