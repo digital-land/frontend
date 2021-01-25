@@ -187,3 +187,24 @@ $using-helvetica: false;
     padding: 20px;
   }
 }
+
+.dl-index-grid {
+  @include govuk-clearfix;
+  @include govuk-media-query($from: tablet) {
+    display: grid;
+    grid-template-columns: max-content minmax(auto, 30em);
+
+    & * {
+      float: left; // fallback for browsers that dont support grid
+
+      &:nth-child(2n) {
+        padding-left: 10px;
+      }
+    }
+
+    .dl-index-item__head {
+      clear: both;
+    }
+  }
+}
+
