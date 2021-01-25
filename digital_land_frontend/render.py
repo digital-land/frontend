@@ -37,7 +37,6 @@ class Renderer:
         self.env = setup_jinja()
         self.index = defaultdict(lambda: {"count": 0, "references": set(), "items": []})
         self.index_template = self.env.get_template("index.html")
-        self.generic_index_template = self.env.get_template("generic_index.html")
         self.row_template = self.env.get_template("row.html")
 
         if url_root:
@@ -144,7 +143,7 @@ class Renderer:
                 slug = f"/{self.name}"
             self.render(
                 self.docs / path / "index.html",
-                self.index_template if path == "" else self.generic_index_template,
+                self.index_template,
                 index=i,
                 data_type=self.name,
                 breadcrumb=slug_to_breadcrumb(slug),
