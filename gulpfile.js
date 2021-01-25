@@ -12,6 +12,7 @@ const uglify = require('gulp-uglify')
 const del = require('del')
 const postcss = require('gulp-postcss')
 const autoprefixer = require('autoprefixer')
+const sourcemaps = require('gulp-sourcemaps')
 
 // set paths
 const config = {
@@ -41,11 +42,13 @@ cleanCSS.description = 'Delete old stylesheets files'
 const compileStylesheets = () =>
   gulp
     .src(config.scssPath + '/*.scss')
+    .pipe(sourcemaps.init())
     .pipe(
       sass({ outputStyle: 'expanded', includePaths: ['src/scss', 'node_modules/govuk-frontend/govuk'] })
     )
     .on('error', sass.logError)
     .pipe(postcss([autoprefixer({ grid: 'autoplace' })]))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(config.cssDestPath))
 
 // check .scss files against .sass-lint.yml config
