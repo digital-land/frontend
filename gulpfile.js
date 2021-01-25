@@ -10,6 +10,8 @@ const gulpif = require('gulp-if')
 const rename = require('gulp-rename')
 const uglify = require('gulp-uglify')
 const del = require('del')
+const postcss = require('gulp-postcss')
+const autoprefixer = require('autoprefixer')
 
 // set paths
 const config = {
@@ -43,6 +45,7 @@ const compileStylesheets = () =>
       sass({ outputStyle: 'expanded', includePaths: ['src/scss', 'node_modules/govuk-frontend/govuk'] })
     )
     .on('error', sass.logError)
+    .pipe(postcss([autoprefixer({ grid: 'autoplace' })]))
     .pipe(gulp.dest(config.cssDestPath))
 
 // check .scss files against .sass-lint.yml config
