@@ -1,0 +1,56 @@
+{% extends "digital-land-frontend/dlf-base.html" %}
+{%- from "digital-land-frontend/components/index-list/macro.html" import dlIndexList %}
+
+{%- block beforeContent -%}
+    {{ super() }}
+
+    {{- govukBreadcrumbs({
+    "items": [
+        {
+        "text": "Digital Land",
+        "href": "/"
+        } ] + breadcrumb
+    }) -}}
+{%- endblock -%}
+
+{% block content %}
+
+{% block indexTitle -%}
+<h1 class="govuk-heading-xl">{{ data_type|capitalize }}</h1>
+{%- endblock %}
+
+{% block indexDescription -%}
+{%- if index['group_type'] and index['group_type'] == "organisation" %}
+<p class="govuk-body">Showing {{ index['count'] }} records from {{ index['groups']|length }} organisation{{ "" if index['groups']|length == 1 else "s" }}.</p>
+{% endif -%}
+{%- endblock %}
+
+{% block indexList -%}
+{%- if index.groups %}
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+  {% for group in index['groups']  %}
+  <div class="govuk-accordion__section ">
+    <div class="govuk-accordion__section-header" id="{{ group }}">
+      <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-{{loop.index}}">
+          {{ group|organisation_id_to_name }}
+        </span>
+      </h2>
+    </div>
+    <div id="accordion-default-content-{{loop.index}}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-{{loop.index}}">
+      {{ dlIndexList({
+        "items": index.groups[group]['items'],
+        "data_type": data_type
+      }) }}
+    </div>
+  </div> 
+  {% endfor %}
+</div>  
+{%- else %}
+{{ dlIndexList({
+  "items": index["items"]
+}) }}
+{%- endif -%}
+{%- endblock %}
+
+{% endblock content %}

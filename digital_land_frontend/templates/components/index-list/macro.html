@@ -5,7 +5,9 @@
 {%- set ns = namespace(item_ref="", item_text="") %}
 
 {#- figure out what to use as reference -#}
-{%- if item['reference'] -%}
+{%- if params.data_type and item[params.data_type] -%}
+  {% set ns.item_ref = item[params.data_type] %}
+{%- elif item['reference'] -%}
   {% set ns.item_ref = item['reference'] %}
 {%- else -%}
   {% set ns.item_ref = item['slug']|clean_slug %}

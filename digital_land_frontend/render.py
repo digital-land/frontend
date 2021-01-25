@@ -10,8 +10,10 @@ import requests
 import shapely.wkt
 
 from digital_land_frontend.jinja import setup_jinja
-from digital_land_frontend.jinja_filters.mappers import (GeographyMapper,
-                                                         OrganisationMapper)
+from digital_land_frontend.jinja_filters.mappers import (
+    GeographyMapper,
+    OrganisationMapper,
+)
 
 
 class Renderer:
@@ -49,12 +51,12 @@ class Renderer:
             if row["organisation"]:
                 o = {
                     "name": self.organisation_mapper.get_by_key(row["organisation"]),
-                    "rows": [],
+                    "items": [],
                 }
                 by_organisation.setdefault(row["organisation"], o)
-                by_organisation[row["organisation"]]["rows"].append(row)
+                by_organisation[row["organisation"]]["items"].append(row)
             else:
-                by_organisation["no-organisation"]["rows"].append(row)
+                by_organisation["no-organisation"]["items"].append(row)
 
         result = OrderedDict(
             sorted(by_organisation.items(), key=lambda x: x[1]["name"])
@@ -105,7 +107,8 @@ class Renderer:
 
         self.index[""] = {
             "count": len(rows),
-            "organisation": self.by_organisation(rows),
+            "groups": self.by_organisation(rows),
+            "group_type": "organisation",
         }
 
         self.render_index_pages()
@@ -135,12 +138,16 @@ class Renderer:
 
     def render_index_pages(self):
         for path, i in self.index.items():
+            if path:
+                slug = f"/{self.name}/{path}"
+            else:
+                slug = f"/{self.name}"
             self.render(
                 self.docs / path / "index.html",
                 self.index_template if path == "" else self.generic_index_template,
                 index=i,
                 data_type=self.name,
-                breadcrumb=slug_to_breadcrumb(f"/{self.name}/{path}"),
+                breadcrumb=slug_to_breadcrumb(slug),
             )
 
     @staticmethod
