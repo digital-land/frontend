@@ -116,6 +116,7 @@ class Renderer:
             "groups": self.by_organisation(rows),
             "group_type": "organisation",
         }
+
         self.render_index_pages()
 
     def add_to_index(self, slug, row):
@@ -147,7 +148,6 @@ class Renderer:
                 slug = f"/{self.name}/{path}"
             else:
                 slug = f"/{self.name}"
-
             self.render(
                 self.docs / path / "index.html",
                 self.index_template,
