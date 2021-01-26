@@ -38,6 +38,7 @@ class Renderer:
         self.index = defaultdict(lambda: {"count": 0, "references": set(), "items": []})
         self.index_template = self.env.get_template("index.html")
         self.row_template = self.env.get_template("row.html")
+        self.organisation_map = {}
 
         if url_root:
             self.env.globals["urlRoot"] = url_root
@@ -45,20 +46,18 @@ class Renderer:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
 
     def by_organisation(self, rows):
-        by_organisation = {}
+        self.organisation_map = {}
         for row in rows:
-            if row["organisation"]:
-                o = {
-                    "name": self.organisation_mapper.get_by_key(row["organisation"]),
-                    "items": [],
-                }
-                by_organisation.setdefault(row["organisation"], o)
-                by_organisation[row["organisation"]]["items"].append(row)
+            if "organisation" in row and row["organisation"]:
+                self.add_row_to_organisation_map(row["organisation"], row)
+            elif "organisations" in row and row["organisations"]:
+                for organisation in row["organisations"].split(";"):
+                    self.add_row_to_organisation_map(organisation, row)
             else:
-                by_organisation["no-organisation"]["items"].append(row)
+                self.organisation_map["no-organisation"]["items"].append(row)
 
         result = OrderedDict(
-            sorted(by_organisation.items(), key=lambda x: x[1]["name"])
+            sorted(self.organisation_map.items(), key=lambda x: x[1]["name"])
         )
 
         if "no-organisation" in result:
@@ -66,6 +65,15 @@ class Renderer:
             result.move_to_end("no-organisation")
 
         return result
+
+    def add_row_to_organisation_map(self, organisation, row):
+        o = {
+            "name": self.organisation_mapper.get_by_key(organisation),
+            "items": [],
+        }
+        self.organisation_map.setdefault(organisation, o)
+        self.organisation_map[organisation]["items"].append(row)
+
 
     def render_pages(self):
         self.slugs = set()
