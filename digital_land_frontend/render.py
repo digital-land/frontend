@@ -47,13 +47,11 @@ class Renderer:
     def by_organisation(self, rows):
         by_organisation = {}
         for row in rows:
-            if row["organisation"]:
-                o = {
-                    "name": self.organisation_mapper.get_by_key(row["organisation"]),
-                    "items": [],
-                }
-                by_organisation.setdefault(row["organisation"], o)
-                by_organisation[row["organisation"]]["items"].append(row)
+            if "organisation" in row and row["organisation"]:
+                self.add_row_to_org_dict(row["organisation"], row, by_organisation)
+            elif "organisations" in row and row["organisations"]:
+                for organisation in row["organisations"].split(","):
+                    self.add_row_to_org_dict(organisation, row, by_organisation)
             else:
                 by_organisation["no-organisation"]["items"].append(row)
 
@@ -66,6 +64,15 @@ class Renderer:
             result.move_to_end("no-organisation")
 
         return result
+
+    def add_row_to_org_dict(self, organisation, row, organisation_dict):
+        o = {
+            "name": self.organisation_mapper.get_by_key(organisation),
+            "items": [],
+        }
+        organisation_dict.setdefault(organisation, o)
+        organisation_dict[organisation]["items"].append(row)
+
 
     def render_pages(self):
         self.slugs = set()
@@ -109,7 +116,6 @@ class Renderer:
             "groups": self.by_organisation(rows),
             "group_type": "organisation",
         }
-
         self.render_index_pages()
 
     def add_to_index(self, slug, row):
@@ -141,6 +147,7 @@ class Renderer:
                 slug = f"/{self.name}/{path}"
             else:
                 slug = f"/{self.name}"
+
             self.render(
                 self.docs / path / "index.html",
                 self.index_template,
