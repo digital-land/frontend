@@ -2,11 +2,9 @@ import csv
 import json
 import logging
 import re
-import sys
 from collections import OrderedDict, defaultdict
 from pathlib import Path
 
-import requests
 import shapely.wkt
 
 from digital_land_frontend.jinja import setup_jinja
