@@ -5,11 +5,11 @@
 
 {%- set row_name = row['name'] if row['name'] else row['slug'] %}
 
+{%- block pageTitle %}{{ row_name }} | {{ data_type|capitalize }} | Digital Land{% endblock -%}
+
 {%- block head %}
 {{ super() }}
-
 <script src="{{ staticPath|default('/static') }}/javascripts/dl-maps.js"></script>
-
 {%- endblock  %}
 
 {%- block beforeContent -%}

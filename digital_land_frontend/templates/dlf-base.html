@@ -4,6 +4,8 @@
 
 {% from "digital-land-frontend/components/page-feedback/macro.html" import dlfPageFeedback %}
 
+{%- block pageTitle %}Digital Land - Planning data you can find, use and trust{% endblock -%}
+
 {% block head %}
 	{%- block dlCss %}
 	<link href="{{ staticPath | default('/static') }}/stylesheets/dl-frontend.css" rel="stylesheet" />
