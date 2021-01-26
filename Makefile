@@ -1,5 +1,7 @@
 .PHONY: black black-check flake8 lint test
 
+all: lint test
+
 init:
 	pip install --upgrade pip setuptools
 	pip install -e .

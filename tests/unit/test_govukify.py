@@ -1,5 +1,3 @@
-import pytest
-
 from digital_land_frontend.markdown.govukify import govukify
 from digital_land_frontend.markdown.filter import compile_markdown
 

@@ -37,22 +37,28 @@ class Renderer:
         self.index_template = self.env.get_template("index.html")
         self.row_template = self.env.get_template("row.html")
         self.organisation_map = {}
+        self.organisation_slug_seen = set()
 
         if url_root:
             self.env.globals["urlRoot"] = url_root
         else:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
 
-    def by_organisation(self, rows):
-        self.organisation_map = {}
-        for row in rows:
-            if "organisation" in row and row["organisation"]:
-                self.add_row_to_organisation_map(row["organisation"], row)
-            elif "organisations" in row and row["organisations"]:
-                for organisation in row["organisations"].split(";"):
-                    self.add_row_to_organisation_map(organisation, row)
-            else:
-                self.organisation_map["no-organisation"]["items"].append(row)
+    def add_to_organisation_index(self, row):
+        if "organisation" in row and row["organisation"]:
+            self.add_row_to_organisation_map(row["organisation"], row)
+        elif "organisations" in row and row["organisations"]:
+            for organisation in row["organisations"].split(";"):
+                self.add_row_to_organisation_map(organisation, row)
+        else:
+            self.organisation_map["no-organisation"]["items"].append(row)
+
+    @property
+    def organisation_index(self):
+        for org, idx in self.organisation_map.items():
+            self.organisation_map[org]["items"] = sorted(
+                idx["items"], key=lambda x: AlphaNumericSort.alphanum(x["slug"])
+            )
 
         result = OrderedDict(
             sorted(self.organisation_map.items(), key=lambda x: x[1]["name"])
@@ -65,13 +71,17 @@ class Renderer:
         return result
 
     def add_row_to_organisation_map(self, organisation, row):
+        dupe_check_key = (organisation, row["slug"])
+        if dupe_check_key in self.organisation_slug_seen:
+            return
+
         o = {
             "name": self.organisation_mapper.get_by_key(organisation),
             "items": [],
         }
         self.organisation_map.setdefault(organisation, o)
         self.organisation_map[organisation]["items"].append(row)
-
+        self.organisation_slug_seen.add(dupe_check_key)
 
     def render_pages(self):
         self.slugs = set()
@@ -79,6 +89,8 @@ class Renderer:
         for idx, row in enumerate(csv.DictReader(open(self.dataset)), start=1):
             if not row["slug"]:
                 continue  # skip rows without a unique slug
+
+            self.add_to_organisation_index(row)
 
             if row["slug"] in self.slugs:
                 logging.warning("Duplicate slug found: %s", row["slug"])
@@ -112,7 +124,7 @@ class Renderer:
 
         self.index[""] = {
             "count": len(rows),
-            "groups": self.by_organisation(rows),
+            "groups": self.organisation_index,
             "group_type": "organisation",
         }
 
@@ -205,7 +217,7 @@ def slug_to_relative_path(slug, strip_prefix=None):
     if strip_prefix and slug.startswith(strip_prefix):
         slug = slug[len(strip_prefix) + 1 :]
 
-    logging.debug("<< " + strip_prefix + "   ./" + slug)
+    logging.debug("<< " + str(strip_prefix) + "   ./" + slug)
     return "./" + slug
 
 
@@ -223,3 +235,13 @@ def create_geometry_file(output_dir, row, field):
 def wkt_to_json_geometry(input_):
     shape = shapely.wkt.loads(input_)
     return shapely.geometry.mapping(shape)
+
+
+class AlphaNumericSort:
+    @staticmethod
+    def convert(text):
+        return int(text) if text.isdigit() else text
+
+    @classmethod
+    def alphanum(cls, key):
+        return [cls.convert(c) for c in re.split("([0-9]+)", key)]

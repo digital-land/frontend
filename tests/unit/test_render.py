@@ -1,6 +1,9 @@
 import pytest
 
-from digital_land_frontend.render import Renderer, slug_to_breadcrumb, slug_to_relative_path
+from digital_land_frontend.render import (
+    slug_to_breadcrumb,
+    slug_to_relative_path,
+)
 
 
 @pytest.mark.skip()
@@ -11,19 +14,19 @@ def test_add_to_index():
 
 
 def test_slug_to_relative_path():
-    slug = "/development-policy/local-authority-eng/BUC/avdlp-GP2"
+    slug = "local-authority-eng/BUC/avdlp-GP2"
 
     path = slug_to_relative_path(slug)
 
-    assert path == "local-authority-eng/BUC/avdlp-GP2"
+    assert path == "./local-authority-eng/BUC/avdlp-GP2"
 
 
 def test_slug_to_relative_path_strip_prefix():
     slug = "/development-policy/local-authority-eng/BUC/avdlp-GP2"
 
-    path = slug_to_relative_path(slug, strip_prefix="local-authority-eng")
+    path = slug_to_relative_path(slug, strip_prefix="development-policy/local-authority-eng")
 
-    assert path == "/BUC/avdlp-GP2"
+    assert path == "./BUC/avdlp-GP2"
 
 
 def test_slug_to_breadcrumb():
