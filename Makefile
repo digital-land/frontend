@@ -17,6 +17,6 @@ black-check:
 	black --check .
 
 flake8:
-	flake8 --exclude .venv .
+	flake8 --exclude==.venv,node_modules .
 
 lint: black-check flake8
