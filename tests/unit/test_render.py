@@ -24,7 +24,9 @@ def test_slug_to_relative_path():
 def test_slug_to_relative_path_strip_prefix():
     slug = "/development-policy/local-authority-eng/BUC/avdlp-GP2"
 
-    path = slug_to_relative_path(slug, strip_prefix="development-policy/local-authority-eng")
+    path = slug_to_relative_path(
+        slug, strip_prefix="development-policy/local-authority-eng"
+    )
 
     assert path == "./BUC/avdlp-GP2"
 
