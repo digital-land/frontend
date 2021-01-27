@@ -8,12 +8,11 @@ Frontend contains the code you need to start building a user interface for digit
 
 The easiest way to use digital-land-frontend is to install it with pip. We recommend working in a virtual environment.
 
-You will also need to install the ported govuk templates.
-
-To install both, run
+To install, run
 
     pip install -e git+https://github.com/digital-land/frontend.git#egg=digital_land_frontend
-    pip install -e git+https://github.com/digital-land/govuk-jinja-components.git#egg=govuk_jinja_components
+
+Install `digital-land-frontend` will also install the ported [govuk-jinja-components](https://github.com/digital-land/govuk-jinja-components)
 
 Then in your `render.py` or equivalent you'll need to register the templates (partials and macros) so that jinja knows they are available. You can do that with code similar to
 
@@ -57,7 +56,7 @@ If you need to recompile the digital land **javascripts**, run
 
 ### Update GOV.UK assets
 
-Fecth the latest release of [GOV.UK frontend](https://github.com/alphagov/govuk-frontend) with
+Fetch the latest release of [GOV.UK frontend](https://github.com/alphagov/govuk-frontend) with
 
     npm update govuk-frontend
 
