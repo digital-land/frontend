@@ -38,6 +38,7 @@ class Renderer:
         self.row_template = self.env.get_template("row.html")
         self.organisation_map = {}
         self.organisation_slug_seen = set()
+        self.slug_seen = set()
 
         if url_root:
             self.env.globals["urlRoot"] = url_root
@@ -71,6 +72,7 @@ class Renderer:
         return result
 
     def add_row_to_organisation_map(self, organisation, row):
+        self.slug_seen.add(row["slug"])
         dupe_check_key = (organisation, row["slug"])
         if dupe_check_key in self.organisation_slug_seen:
             return
@@ -123,7 +125,7 @@ class Renderer:
             self.slugs.add(row["slug"])
 
         self.index[""] = {
-            "count": len(rows),
+            "count": len(self.slug_seen),
             "groups": self.organisation_index,
             "group_type": "organisation",
         }
