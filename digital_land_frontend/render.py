@@ -62,7 +62,7 @@ class Renderer:
             )
 
         result = OrderedDict(
-            sorted(self.organisation_map.items(), key=lambda x: x[1]["name"])
+            sorted(self.organisation_map.items(), key=lambda x: x[1]["name"] or "")
         )
 
         if "no-organisation" in result:
