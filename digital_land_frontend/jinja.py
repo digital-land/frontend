@@ -6,6 +6,7 @@ from .filters import (
     geography_to_url_filter,
     geography_to_geometry_url_filter,
     strip_slug,
+    make_link,
 )
 
 
@@ -26,7 +27,7 @@ def setup_jinja():
             ),
         ]
     )
-    env = jinja2.Environment(loader=multi_loader)
+    env = jinja2.Environment(loader=multi_loader, autoescape=True)
 
     # register jinja filters
     env.filters["organisation_id_to_name"] = organisation_id_to_name_filter
@@ -34,6 +35,7 @@ def setup_jinja():
     env.filters["geography_to_url"] = geography_to_url_filter
     env.filters["geography_to_geometry_url"] = geography_to_geometry_url_filter
     env.filters["clean_slug"] = strip_slug
+    env.filters["make_link"] = make_link
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"
