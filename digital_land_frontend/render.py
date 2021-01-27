@@ -159,6 +159,10 @@ class Renderer:
                 slug = f"/{self.name}/{path}"
             else:
                 slug = f"/{self.name}"
+            if "items" in i:
+                i["items"] = sorted(
+                    i["items"], key=lambda x: AlphaNumericSort.alphanum(x["reference"])
+                )
             self.render(
                 self.docs / path / "index.html",
                 self.index_template,
