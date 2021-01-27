@@ -48,6 +48,17 @@
                 "display_name": row[field]|organisation_id_to_name, 
                 "url": "https://digital-land.github.io/organisation/" + row[field]|replace(':','/')
             }) -}}
+        {%- elif field == "organisations" %}
+            <ul class="govuk-list">
+            {% for org in row[field].split(';')  %}
+                <li>{{- dlDataReferenceCell({
+                    "identifier": org,
+                    "type": "Organisation",
+                    "display_name": org|organisation_id_to_name, 
+                    "url": "https://digital-land.github.io/organisation/" + org|replace(':','/')
+                }) -}}</li>
+            {% endfor %}
+            </ul>
         {%- elif field == "geographies" %}
             {%- set geography_url = row[field]|geography_to_url -%}
             {%- set geography_name = row[field]|geography_to_name or row[field] -%}
