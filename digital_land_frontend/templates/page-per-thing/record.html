@@ -99,7 +99,7 @@
     {%- endset %}
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+        <div class="{{ recordPanelContainerClass|default('govuk-grid-column-two-thirds') }}">
             {{ dlDataRecordPanel({
                 "identifier": row['site'] if row['site'] else row['slug'],
                 "resource": {
