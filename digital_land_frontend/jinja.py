@@ -5,6 +5,9 @@ from .filters import (
     geography_to_name_filter,
     geography_to_url_filter,
     geography_to_geometry_url_filter,
+    policy_to_name_filter,
+    policy_to_slug_filter,
+    policy_url_filter,
     strip_slug,
     make_link,
 )
@@ -34,6 +37,9 @@ def setup_jinja():
     env.filters["geography_to_name"] = geography_to_name_filter
     env.filters["geography_to_url"] = geography_to_url_filter
     env.filters["geography_to_geometry_url"] = geography_to_geometry_url_filter
+    env.filters["policy_to_name"] = policy_to_name_filter
+    env.filters["policy_to_slug"] = policy_to_slug_filter
+    env.filters["policy_url"] = policy_url_filter
     env.filters["clean_slug"] = strip_slug
     env.filters["make_link"] = make_link
 

@@ -3,7 +3,11 @@ import numbers
 import validators
 from jinja2 import evalcontextfilter, Markup
 
-from .jinja_filters.mappers import OrganisationMapper, GeographyMapper
+from .jinja_filters.mappers import (
+    OrganisationMapper,
+    GeographyMapper,
+    PolicyMapper,
+)
 
 
 def get_jinja_template_raw(template_file_path):
@@ -96,6 +100,36 @@ def geography_to_geometry_url_filter(id):
     """
 
     return geography_mapper.get_geometry_url(id)
+
+
+policy_mapper = PolicyMapper()
+
+
+def policy_to_name_filter(id):
+    """
+    Maps policy idenitifer to policy name
+
+    E.g. bmwlp-P1 -> Safeguarding Mineral Resources
+    """
+    return policy_mapper.get_name(id)
+
+
+def policy_to_slug_filter(id):
+    """
+    Maps policy idenitifer to slug
+
+    E.g. worminghallndp-NH1 -> /development-policy/local-authority-eng/BUC/worminghallndp-NH1
+    """
+    return policy_mapper.get_slug(id)
+
+
+def policy_url_filter(id):
+    """
+    Maps policy idenitifer to url
+
+    E.g. worminghallndp-NH1 -> https://digital-land.github.io/development-policy/local-authority-eng/BUC/worminghallndp-NH1
+    """
+    return policy_mapper.get_url(id)
 
 
 def strip_slug(s):

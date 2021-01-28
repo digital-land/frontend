@@ -11,6 +11,7 @@ class Mapper:
     def __init__(self):
         self.mapping = {}
         self.slug = {}
+        self.to_slug_mapping = {}
         self.loaded = False
 
     def load(self):
@@ -31,6 +32,7 @@ class Mapper:
 
             if row.get("slug", None):
                 self.slug[row["slug"]] = row[self.value_field]
+                self.to_slug_mapping[key] = row["slug"]
 
     def lazy_load(func):
         def wrapped(self, *args, **kwargs):
@@ -75,6 +77,10 @@ class Mapper:
             del self.mapping[current]
 
     @lazy_load
+    def get_slug(self, k):
+        return self.to_slug_mapping.get(k)
+
+    @lazy_load
     def all(self):
         return self.mapping
 
@@ -84,6 +90,33 @@ class OrganisationMapper(Mapper):
         "https://raw.githubusercontent.com/digital-land/organisation-dataset/master/collection/organisation.csv"
     ]
     key_field = "organisation"
+
+
+# class PolicyMapper:
+#     def __init__(self):
+#         self.to_name_mapper = PolicyNameMapper()
+#         self.to_slug_mapper = PolicySlugMapper()
+#         self.loaded = False
+
+
+class PolicyMapper(Mapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/development-policy-collection/main/dataset/development-policy.csv"
+    ]
+    key_field = "development-policy"
+    url_pattern = "https://digital-land.github.io{slug}"
+
+    def get_url(self, k):
+        return super().get_url(k, self.get_slug(k))
+
+
+# class PolicySlugMapper(Mapper):
+#     dataset_urls = [
+#         "https://raw.githubusercontent.com/digital-land/development-policy-collection/main/dataset/development-policy.csv"
+#     ]
+#     key_field = "development-policy"
+#     value_field = "slug"
+#     url_pattern = "https://digital-land.github.io{slug}"
 
 
 class BaseGeometryMapper(Mapper):
