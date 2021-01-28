@@ -90,6 +90,7 @@
 
 .dl-page-action-button {
   @extend %govuk-body-s;
+  display: inline-block;
   margin: govuk-spacing(0);
   padding: govuk-spacing(2);
   border: 1px solid $govuk-border-colour;
