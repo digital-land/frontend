@@ -1,4 +1,5 @@
 {%- extends "digital-land-frontend/dlf-base.html" %}
+{%- from "govuk-jinja-components/components/details/macro.jinja" import govukDetails %}
 {%- from "digital-land-frontend/components/map/macro.html" import dlMap %}
 {%- from "digital-land-frontend/components/data-record/macro.html" import dlDataRecordPanel %}
 {%- from "digital-land-frontend/components/data-reference-cell/macro.html" import dlDataReferenceCell %}
@@ -70,6 +71,24 @@
             }) -}}
         {%- elif field == "document-url" %}
             {{ row[field]|make_link }}
+        {%- elif field == "development-policies" %}
+            {%- set policyHTML -%}
+            <ul class="govuk-list">
+                {%- for policy in row[field].split(';')  %}
+                <li>{{- dlDataReferenceCell({
+                    "identifier": policy,
+                    "type": "Policy",
+                    "display_name": policy|policy_to_name, 
+                    "url": policy|policy_url
+                }) -}}</li>
+                {% endfor -%}
+            </ul>
+            {%- endset -%}
+            {% set policycount = row[field].split(';')|length %}
+            {{ govukDetails({
+                "summaryText": policycount|string + " polic" + "ies" if policycount != 1 else "y",
+                "html": policyHTML
+            }) }}
         {%- else %}
         {{ row[field] }}
         {%- endif %}
