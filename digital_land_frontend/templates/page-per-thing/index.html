@@ -75,12 +75,18 @@ GEOGRAPHIES: {{ index['geographies'] }}
     integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
     crossorigin=""></script>
 
-    {{ dlMap({
+    {#{{ dlMap({
         "id": "aMap",
         "classes": "govuk-!-margin-top-4 govuk-!-margin-bottom-2",
         "attributes": {
-        "data-geojson-urls": geographies
+            "data-geojson-urls": index['geographies']
         },
+        "height": "460"
+    }) }}#}
+
+    {{ dlMap({
+        "id": "aMap",
+        "classes": "govuk-!-margin-top-4 govuk-!-margin-bottom-2",
         "height": "460"
     }) }}
     
@@ -91,8 +97,13 @@ GEOGRAPHIES: {{ index['geographies'] }}
 
 {%- block bodyEnd %}
 {{ super() }}
+{%- if 'geographies' in index and index['geographies'] %}
 <script>
     const $mapElement = document.querySelector('[data-module="boundary-map"]')
-    const mapComponent = new DLMaps.Map($mapElement).init({})
+    const mapComponent = new DLMaps.Map($mapElement).init({
+        geojsonURLs: {{index['geographies']|tojson}}
+    })
+
 </script>
+{%- endif %}
 {%- endblock %}
