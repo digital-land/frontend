@@ -72,6 +72,7 @@
         {%- elif field == "document-url" %}
             {{ row[field]|make_link }}
         {%- elif field == "development-policies" %}
+            {%- if row[field] -%}
             {%- set policyHTML -%}
             <ul class="govuk-list">
                 {%- for policy in row[field].split(';')  %}
@@ -89,6 +90,7 @@
                 "summaryText": policycount|string + " polic" + "ies" if policycount != 1 else "y",
                 "html": policyHTML
             }) }}
+            {%- endif -%}
         {%- else %}
         {{ row[field] }}
         {%- endif %}
