@@ -152,6 +152,8 @@ class Renderer:
         }
         if row:
             index_entry["text"] = row["name"]
+            index_entry["geometry_url"] = build_geometry_path(index_entry["href"], row)
+
         self.index[stem]["items"].append(index_entry)
         self._add_to_index(stem)
 
@@ -164,6 +166,10 @@ class Renderer:
             if "items" in i:
                 i["items"] = sorted(
                     i["items"], key=lambda x: AlphaNumericSort.alphanum(x["reference"])
+                )
+            if path.find("YOR") >= 0:
+                i["geographies"] = list(
+                    filter(None, [i.get("geometry_url", None) for i in i["items"]])
                 )
             self.render(
                 self.docs / path / "index.html",
@@ -182,6 +188,14 @@ class Renderer:
 
 re_all_upper = re.compile(r"^[A-Z]*$")
 re_strip = re.compile(r"[^a-zA-Z]")
+
+
+def build_geometry_path(href, row):
+    if not row.get("geometry_url", None):
+        return None
+
+    path = row["geometry_url"]
+    return "/".join([href, path])
 
 
 def format_name(name):
