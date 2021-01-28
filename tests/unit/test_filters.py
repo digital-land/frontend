@@ -1,5 +1,3 @@
-import pytest
-
 from digital_land_frontend.filters import (
     policy_to_name_filter,
     policy_to_slug_filter,
