@@ -10,6 +10,7 @@ from .filters import (
     policy_url_filter,
     strip_slug,
     make_link,
+    is_list,
 )
 
 
@@ -42,6 +43,7 @@ def setup_jinja():
     env.filters["policy_url"] = policy_url_filter
     env.filters["clean_slug"] = strip_slug
     env.filters["make_link"] = make_link
+    env.filters["is_list"] = is_list
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"

@@ -135,3 +135,10 @@ def policy_url_filter(id):
 def strip_slug(s):
     parts = s.split("/")
     return parts[-1]
+
+
+def is_list(v):
+    """
+    Check if variable is list
+    """
+    return isinstance(v, list)
