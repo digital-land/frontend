@@ -33,7 +33,7 @@ def test_policy_url_filter():
 def test_is_list_filter_not_a_list():
     s = "not a list"
 
-    assert is_list(s) == False
+    assert not is_list(s)
 
 
 def test_is_list_filter_list():
@@ -43,4 +43,4 @@ def test_is_list_filter_list():
         "./3092/geometry.geojson",
     ]
 
-    assert is_list(s) == True
+    assert is_list(s)
