@@ -46,6 +46,11 @@
   }
 }
 
+.dlf-inset-card--top {
+  border-top: 2px solid govuk-colour("blue");
+  border-bottom: 0;
+}
+
 .dlf-inset-card--s {
   padding-bottom: govuk-spacing(3);
 
