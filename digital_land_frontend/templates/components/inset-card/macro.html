@@ -1,0 +1,10 @@
+{% macro dlInsetCard(params) %}
+<div class="dlf-inset-card{{ ' ' + params.classes if params.classes }}">
+  <div class="dlf-inset-card__header">
+    <div class="dlf-inset-card__title">{{ params.heading }}</div>
+  </div>
+  <div class="dlf-inset-card__body">
+    <a class="govuk-link govuk-link--no-underline" href="{{ params.href }}">{{ params.text }}</a>
+  </div>
+</div>
+{% endmacro %}
