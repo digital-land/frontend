@@ -47,12 +47,14 @@ class Renderer:
 
     def add_to_organisation_index(self, row):
         if "organisation" in row and row["organisation"]:
-            self.add_row_to_organisation_map(row["organisation"], row)
+            orgs = [row["organisation"]]
         elif "organisations" in row and row["organisations"]:
-            for organisation in row["organisations"].split(";"):
-                self.add_row_to_organisation_map(organisation, row)
+            orgs = row["organisations"].split(";")
         else:
-            self.organisation_map["no-organisation"]["items"].append(row)
+            orgs = ["no-organisation"]
+
+        for organisation in orgs:
+            self.add_row_to_organisation_map(organisation, row)
 
     @property
     def organisation_index(self):
@@ -66,7 +68,6 @@ class Renderer:
         )
 
         if "no-organisation" in result:
-            result["no-organisation"]["name"] = "No organisation"
             result.move_to_end("no-organisation")
 
         return result

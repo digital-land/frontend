@@ -69,8 +69,6 @@
                 "display_name": geography_name, 
                 "url": geography_url
             }) -}}
-        {%- elif field == "document-url" %}
-            {{ row[field]|make_link }}
         {%- elif field == "development-policies" %}
             {%- if row[field] -%}
             {%- set policyHTML -%}
@@ -92,7 +90,7 @@
             }) }}
             {%- endif -%}
         {%- else %}
-        {{ row[field] }}
+            {{ row[field]|make_link }}
         {%- endif %}
         </dd>
     </div>
