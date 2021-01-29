@@ -160,8 +160,10 @@ class Renderer:
         for path, i in self.index.items():
             if path:
                 slug = f"/{self.name}/{path}"
+                download_url = None
             else:
                 slug = f"/{self.name}"
+                download_url = f"https://raw.githubusercontent.com/digital-land/permitted-development-right/main/{self.dataset}"
             if "items" in i:
                 i["items"] = sorted(
                     i["items"], key=lambda x: AlphaNumericSort.alphanum(x["reference"])
@@ -172,6 +174,7 @@ class Renderer:
                 index=i,
                 data_type=self.name,
                 breadcrumb=slug_to_breadcrumb(slug),
+                download_url=download_url,
             )
 
     @staticmethod
