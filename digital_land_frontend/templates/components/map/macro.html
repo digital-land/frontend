@@ -13,7 +13,7 @@
         style="height: {{ height }};"
         {%- if params.arialabelledby %} aria-labelledby="{{ ariaId }}"{% endif -%}
         {% if params.attributes -%}
-        {%- for attribute, value in params.attributes.items() %} {{ attribute }}="{{ value }}"{% endfor %}
+        {%- for attribute, value in params.attributes.items() %} {{ attribute }}="{{ value if not value|is_list else value|join(';') }}"{% endfor %}
         {%- endif %}   
     >
         <noscript>To view this map, you need to enable JavaScript.</noscript>
