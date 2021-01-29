@@ -7,6 +7,8 @@ from .jinja_filters.mappers import (
     OrganisationMapper,
     GeographyMapper,
     PolicyMapper,
+    DevelopmentDocMapper,
+    PolicyToDocMapper,
 )
 
 
@@ -130,6 +132,39 @@ def policy_url_filter(id):
     E.g. worminghallndp-NH1 -> https://digital-land.github.io/development-policy/local-authority-eng/BUC/worminghallndp-NH1
     """
     return policy_mapper.get_url(id)
+
+
+policy_to_doc_mapper = PolicyToDocMapper()
+
+
+def policy_to_development_plan_filter(id):
+    """
+    Maps policy idenitifer to development plan document it is a part of
+
+    E.g. astonclintonndp-B1 -> neigh-plan-buc-astonclintonndp
+    """
+    return policy_to_doc_mapper.get_name(id)
+
+
+dev_doc_mapper = DevelopmentDocMapper()
+
+
+def dev_doc_to_name_filter(id):
+    """
+    Maps development plan document id to document name
+
+    E.g. neigh-plan-buc-astonclintonndp -> Aston Clinton Neighbourhood Plan 2013-2033
+    """
+    return dev_doc_mapper.get_name(id)
+
+
+def dev_doc_url_filter(id):
+    """
+    Maps development plan document id to url for document
+
+    E.g. neigh-plan-buc-astonclintonndp -> https://digital-land.github.io/development-plan-document/local-authority-eng/BUC/neigh-plan-buc-astonclintonndp
+    """
+    return dev_doc_mapper.get_url(id)
 
 
 def strip_slug(s):

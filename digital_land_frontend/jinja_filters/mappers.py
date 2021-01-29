@@ -92,13 +92,6 @@ class OrganisationMapper(Mapper):
     key_field = "organisation"
 
 
-# class PolicyMapper:
-#     def __init__(self):
-#         self.to_name_mapper = PolicyNameMapper()
-#         self.to_slug_mapper = PolicySlugMapper()
-#         self.loaded = False
-
-
 class PolicyMapper(Mapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/development-policy-collection/main/dataset/development-policy.csv"
@@ -110,13 +103,23 @@ class PolicyMapper(Mapper):
         return super().get_url(k, self.get_slug(k))
 
 
-# class PolicySlugMapper(Mapper):
-#     dataset_urls = [
-#         "https://raw.githubusercontent.com/digital-land/development-policy-collection/main/dataset/development-policy.csv"
-#     ]
-#     key_field = "development-policy"
-#     value_field = "slug"
-#     url_pattern = "https://digital-land.github.io{slug}"
+class DevelopmentDocMapper(Mapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/development-plan-document-collection/main/dataset/development-plan-document.csv"
+    ]
+    key_field = "development-plan-document"
+    url_pattern = "https://digital-land.github.io{slug}"
+
+    def get_url(self, k):
+        return super().get_url(k, self.get_slug(k))
+
+
+class PolicyToDocMapper(Mapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/slug-index/main/index/policy-to-doc-index.csv"
+    ]
+    key_field = "development-policy"
+    value_field = "development-plan-document"
 
 
 class BaseGeometryMapper(Mapper):

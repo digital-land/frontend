@@ -11,6 +11,9 @@ from .filters import (
     strip_slug,
     make_link,
     is_list,
+    policy_to_development_plan_filter,
+    dev_doc_to_name_filter,
+    dev_doc_url_filter,
 )
 
 
@@ -44,6 +47,9 @@ def setup_jinja():
     env.filters["clean_slug"] = strip_slug
     env.filters["make_link"] = make_link
     env.filters["is_list"] = is_list
+    env.filters["policy_to_development_plan"] = policy_to_development_plan_filter
+    env.filters["dev_doc_to_name"] = dev_doc_to_name_filter
+    env.filters["dev_doc_url"] = dev_doc_url_filter
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"
