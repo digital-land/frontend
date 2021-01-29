@@ -6,6 +6,7 @@ curlylint==0.12.0
 dataclasses
 decorator==4.4.2
 flake8
+frontmatter
 -e git+https://github.com/digital-land/govuk-jinja-components.git#egg=govuk_jinja_components
 Jinja2==2.11.2
 MarkupSafe==1.1.1
