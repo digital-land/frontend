@@ -33,93 +33,97 @@
     {%- endblock recordTitle %}
 {% endblock recordHead %}
 
-{% block recordTable %}
-    {%- set areaproperties %}
-    {%- for field in row.keys() %}
-    {%- if field not in ["id", "resource", "geometry", "geometry_url", "slug", "href"] %}
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-        {{- field }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-        {%- if field == "organisation" %}
-            {{- dlDataReferenceCell({
-                "identifier": row[field],
-                "type": "Organisation",
-                "display_name": row[field]|organisation_id_to_name, 
-                "url": "https://digital-land.github.io/organisation/" + row[field]|replace(':','/')
-            }) -}}
-        {%- elif field == "organisations" %}
-            <ul class="govuk-list">
-            {% for org in row[field].split(';')  %}
-                <li>{{- dlDataReferenceCell({
-                    "identifier": org,
-                    "type": "Organisation",
-                    "display_name": org|organisation_id_to_name, 
-                    "url": "https://digital-land.github.io/organisation/" + org|replace(':','/')
-                }) -}}</li>
-            {% endfor %}
-            </ul>
-        {%- elif field == "geographies" %}
-            {%- set geography_url = row[field]|geography_to_url -%}
-            {%- set geography_name = row[field]|geography_to_name or row[field] -%}
-            {{- dlDataReferenceCell({
-                "identifier": row[field],
-                "type": "Geography",
-                "display_name": geography_name, 
-                "url": geography_url
-            }) -}}
-        {%- elif field == "development-policies" %}
-            {%- if row[field] -%}
-            {%- set policyHTML -%}
-            <ul class="govuk-list">
-                {%- for policy in row[field].split(';')  %}
-                <li>{{- dlDataReferenceCell({
-                    "identifier": policy,
-                    "type": "Policy",
-                    "display_name": policy|policy_to_name, 
-                    "url": policy|policy_url
-                }) -}}</li>
-                {% endfor -%}
-            </ul>
-            {%- endset -%}
-            {% set policycount = row[field].split(';')|length %}
-            {{ govukDetails({
-                "summaryText": policycount|string + " polic" + "ies" if policycount != 1 else "y",
-                "html": policyHTML
-            }) }}
-            {%- endif -%}
-        {%- else %}
-            {{ row[field]|make_link }}
-        {%- endif %}
-        </dd>
-    </div>
-    {%- endif %}
-    {%- endfor %}
-    {%- endset %}
+{% block recordTableContainer %}
+<div class="govuk-grid-row">
 
-    <div class="govuk-grid-row">
-        <div class="{{ recordPanelContainerClass|default('govuk-grid-column-two-thirds') }}">
-            {%- if row['resource'] -%}
-            {{ dlDataRecordPanel({
-                "classes": "govuk-!-margin-bottom-6",
-                "identifier": row['site'] if row['site'] else row['slug'],
-                "resource": {
-                    "identifier": row['resource'],
-                    "url": "https://github.com/digital-land/" + data_type + "-collection/tree/main/transformed/" + data_type + "/" + row['resource'] + ".csv"
-                },
-                "html": areaproperties
-            }) }}
-            {%- else -%}
-            {{ dlDataRecordPanel({
-                "classes": "govuk-!-margin-bottom-6",
-                "identifier": row['site'] if row['site'] else row['slug'],
-                "html": areaproperties
-            }) }}
-            {%- endif -%}
+    {%- block recordTable %}
+    <div class="{{ recordPanelContainerClass|default('govuk-grid-column-two-thirds') }}">
+        {%- set areaproperties %}
+        {%- for field in row.keys() %}
+        {%- if field not in ["id", "resource", "geometry", "geometry_url", "slug", "href"] %}
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            {{- field }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+            {%- if field == "organisation" %}
+                {{- dlDataReferenceCell({
+                    "identifier": row[field],
+                    "type": "Organisation",
+                    "display_name": row[field]|organisation_id_to_name, 
+                    "url": "https://digital-land.github.io/organisation/" + row[field]|replace(':','/')
+                }) -}}
+            {%- elif field == "organisations" %}
+                <ul class="govuk-list">
+                {% for org in row[field].split(';')  %}
+                    <li>{{- dlDataReferenceCell({
+                        "identifier": org,
+                        "type": "Organisation",
+                        "display_name": org|organisation_id_to_name, 
+                        "url": "https://digital-land.github.io/organisation/" + org|replace(':','/')
+                    }) -}}</li>
+                {% endfor %}
+                </ul>
+            {%- elif field == "geographies" %}
+                {%- set geography_url = row[field]|geography_to_url -%}
+                {%- set geography_name = row[field]|geography_to_name or row[field] -%}
+                {{- dlDataReferenceCell({
+                    "identifier": row[field],
+                    "type": "Geography",
+                    "display_name": geography_name, 
+                    "url": geography_url
+                }) -}}
+            {%- elif field == "development-policies" %}
+                {%- if row[field] -%}
+                {%- set policyHTML -%}
+                <ul class="govuk-list">
+                    {%- for policy in row[field].split(';')  %}
+                    <li>{{- dlDataReferenceCell({
+                        "identifier": policy,
+                        "type": "Policy",
+                        "display_name": policy|policy_to_name, 
+                        "url": policy|policy_url
+                    }) -}}</li>
+                    {% endfor -%}
+                </ul>
+                {%- endset -%}
+                {% set policycount = row[field].split(';')|length %}
+                {{ govukDetails({
+                    "summaryText": policycount|string + " polic" + "ies" if policycount != 1 else "y",
+                    "html": policyHTML
+                }) }}
+                {%- endif -%}
+            {%- else %}
+                {{ row[field]|make_link }}
+            {%- endif %}
+            </dd>
         </div>
+        {%- endif %}
+        {%- endfor %}
+        {%- endset %}
+
+        {%- if row['resource'] -%}
+        {{ dlDataRecordPanel({
+            "classes": "govuk-!-margin-bottom-6",
+            "identifier": row['site'] if row['site'] else row['slug'],
+            "resource": {
+                "identifier": row['resource'],
+                "url": "https://github.com/digital-land/" + data_type + "-collection/tree/main/transformed/" + data_type + "/" + row['resource'] + ".csv"
+            },
+            "html": areaproperties
+        }) }}
+        {%- else -%}
+        {{ dlDataRecordPanel({
+            "classes": "govuk-!-margin-bottom-6",
+            "identifier": row['site'] if row['site'] else row['slug'],
+            "html": areaproperties
+        }) }}
+        {%- endif -%}
     </div>
-{% endblock recordTable %}
+            
+    {% endblock recordTable -%}
+</div>
+{% endblock recordTableContainer %}
 
 {% block recordGeometry -%}
     {%- if 'geometry_url' in row and row['geometry_url'] %}
