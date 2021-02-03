@@ -149,6 +149,10 @@ Map.prototype.zoomToLayer = function (layer) {
   this.map.fitBounds(layer.getBounds())
 }
 
+/**
+ * Extracts URLs from the data-geojson-urls attribute
+ * URLs added to the list - duplicates are ignored
+ */
 Map.prototype.extractURLS = function () {
   var urlsStr = this.$module.dataset.geojsonUrls
   var urlList = this.geojsonUrls
