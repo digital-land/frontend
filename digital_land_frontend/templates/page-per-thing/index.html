@@ -3,6 +3,16 @@
 
 {%- block pageTitle %}{{ data_type|capitalize }} | Digital Land{% endblock -%}
 
+<<<<<<< HEAD
+=======
+{%- block head %}
+{{ super() }}
+{%- block dlMapJS -%}
+<script src="{{ staticPath|default('/static') }}/javascripts/dl-maps.js"></script>
+{%- endblock dlMapJS -%}
+{%- endblock  %}
+
+>>>>>>> b9962eb (Add jinja blocks to page-per-thing index template)
 {%- block beforeContent -%}
     {{ super() }}
 
@@ -61,3 +71,22 @@
 {%- endblock %}
 
 {% endblock content %}
+
+{%- block bodyEnd %}
+{{ super() }}
+
+{% block initMapBlock %}
+{%- if 'geographies' in index and index['geographies'] %}
+<script>
+    const $mapElement = document.querySelector('[data-module="boundary-map"]')
+    // const mapComponent = new DLMaps.Map($mapElement).init({
+    //     geojsonURLs: {{index['geographies']|tojson}}
+    // })
+
+    const mapComponent = new DLMaps.Map($mapElement).init({})
+
+</script>
+{%- endif %}
+{% endblock initMapBlock %}
+
+{%- endblock %}
