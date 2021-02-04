@@ -23,21 +23,29 @@ class Renderer:
     def __init__(
         self,
         name,
-        dataset,
+        schema,
+        dataset_path,
         url_root=None,
         key_fields=["organisation", "site"],
+        group_type="organisation",
+        group_field="organisation",
+        group_list_field="organisations",
         docs="docs",
     ):
         self.name = name
-        self.dataset = dataset
+        self.schema = schema
+        self.dataset_path = dataset_path
         self.docs = Path(docs)
         self.key_fields = key_fields
+        self.group_type = group_type
+        self.group_field = group_field
+        self.group_list_field = group_list_field
         self.env = setup_jinja()
         self.index = defaultdict(lambda: {"count": 0, "references": set(), "items": []})
         self.index_template = self.env.get_template("index.html")
         self.row_template = self.env.get_template("row.html")
-        self.organisation_map = {}
-        self.organisation_slug_seen = set()
+        self.group_map = {}
+        self.group_slug_seen = set()
         self.slug_seen = set()
 
         if url_root:
@@ -45,55 +53,67 @@ class Renderer:
         else:
             self.env.globals["urlRoot"] = f"/{name.replace(' ', '-')}/"
 
-    def add_to_organisation_index(self, row):
-        if "organisation" in row and row["organisation"]:
-            orgs = [row["organisation"]]
-        elif "organisations" in row and row["organisations"]:
-            orgs = row["organisations"].split(";")
+    def add_to_group_index(self, row):
+        if self.group_type and self.group_field in row and row[self.group_field]:
+            groups = [row[self.group_field]]
+        elif (
+            self.group_type
+            and self.group_list_field in row
+            and row[self.group_list_field]
+        ):
+            groups = row[self.group_list_field].split(";")
         else:
-            orgs = ["no-organisation"]
+            groups = ["no-group"]
 
-        for organisation in orgs:
-            self.add_row_to_organisation_map(organisation, row)
+        for group in groups:
+            self.add_row_to_group_map(group, row)
 
     @property
-    def organisation_index(self):
-        for org, idx in self.organisation_map.items():
-            self.organisation_map[org]["items"] = sorted(
+    def group_index(self):
+        for org, idx in self.group_map.items():
+            self.group_map[org]["items"] = sorted(
                 idx["items"], key=lambda x: AlphaNumericSort.alphanum(x["slug"])
             )
 
         result = OrderedDict(
-            sorted(self.organisation_map.items(), key=lambda x: x[1]["name"] or "")
+            sorted(self.group_map.items(), key=lambda x: x[1]["name"] or "")
         )
 
-        if "no-organisation" in result:
-            result.move_to_end("no-organisation")
+        if "no-group" in result:
+            result.move_to_end("no-group")
 
         return result
 
-    def add_row_to_organisation_map(self, organisation, row):
+    def add_row_to_group_map(self, group, row):
         self.slug_seen.add(row["slug"])
-        dupe_check_key = (organisation, row["slug"])
-        if dupe_check_key in self.organisation_slug_seen:
+        dupe_check_key = (group, row["slug"])
+        if dupe_check_key in self.group_slug_seen:
             return
 
+        if self.group_type is None:
+            def name_map_func(name):
+                return name
+        elif self.group_type == "organisation":
+            name_map_func = self.organisation_mapper.get_by_key
+        else:
+            raise NotImplementedError("group_type %s not supported" % self.group_type)
+
         o = {
-            "name": self.organisation_mapper.get_by_key(organisation),
+            "name": name_map_func(group),
             "items": [],
         }
-        self.organisation_map.setdefault(organisation, o)
-        self.organisation_map[organisation]["items"].append(row)
-        self.organisation_slug_seen.add(dupe_check_key)
+        self.group_map.setdefault(group, o)
+        self.group_map[group]["items"].append(row)
+        self.group_slug_seen.add(dupe_check_key)
 
     def render_pages(self):
         self.slugs = set()
         rows = []
-        for idx, row in enumerate(csv.DictReader(open(self.dataset)), start=1):
+        for idx, row in enumerate(csv.DictReader(open(self.dataset_path)), start=1):
             if not row["slug"]:
                 continue  # skip rows without a unique slug
 
-            self.add_to_organisation_index(row)
+            self.add_to_group_index(row)
 
             if row["slug"] in self.slugs:
                 logging.warning("Duplicate slug found: %s", row["slug"])
@@ -119,6 +139,7 @@ class Renderer:
                 self.row_template,
                 row=row,
                 data_type=self.name,
+                schema=self.schema,
                 breadcrumb=breadcrumb,
             )
             rows.append(row)
@@ -127,8 +148,8 @@ class Renderer:
 
         self.index[""] = {
             "count": len(self.slug_seen),
-            "groups": self.organisation_index,
-            "group_type": "organisation",
+            "groups": self.group_index,
+            "group_type": self.group_type,
         }
 
         self.render_index_pages()
@@ -143,9 +164,16 @@ class Renderer:
             return
 
         stem, name = slug.rsplit("/", 1)
-        if name in self.index[stem]["references"]:
+        self.index[stem].setdefault(
+            "groups", {"no-group": {"items": [], "references": set()}}
+        )
+        self.index[stem].setdefault("count", 0)
+        self.index[stem].setdefault("group_type", None)
+
+        if name in self.index[stem]["groups"]["no-group"]["references"]:
             return
-        self.index[stem]["references"].add(name)
+
+        self.index[stem]["groups"]["no-group"]["references"].add(name)
         self.index[stem]["count"] += 1
         index_entry = {
             "reference": format_name(name) if not row else name,
@@ -153,7 +181,7 @@ class Renderer:
         }
         if row:
             index_entry["text"] = row["name"]
-        self.index[stem]["items"].append(index_entry)
+        self.index[stem]["groups"]["no-group"]["items"].append(index_entry)
         self._add_to_index(stem)
 
     def render_index_pages(self):
@@ -163,16 +191,18 @@ class Renderer:
                 download_url = None
             else:
                 slug = f"/{self.name}"
-                download_url = f"https://raw.githubusercontent.com/digital-land/permitted-development-right/main/{self.dataset}"
+                download_url = f"https://raw.githubusercontent.com/digital-land/permitted-development-right/main/{self.dataset_path}"
             if "items" in i:
                 i["items"] = sorted(
                     i["items"], key=lambda x: AlphaNumericSort.alphanum(x["reference"])
                 )
+            logging.debug("rendering %s", path)
             self.render(
                 self.docs / path / "index.html",
                 self.index_template,
                 index=i,
                 data_type=self.name,
+                schema=self.schema,
                 breadcrumb=slug_to_breadcrumb(slug),
                 download_url=download_url,
             )

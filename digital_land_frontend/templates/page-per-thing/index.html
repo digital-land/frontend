@@ -36,11 +36,13 @@
 {% block indexDescription -%}
 {%- if index['group_type'] and index['group_type'] == "organisation" %}
 <p class="govuk-body">Showing {{ index['count'] }} records from {{ index['groups']|length }} organisation{{ "" if index['groups']|length == 1 else "s" }}.</p>
+{%- else %}
+<p class="govuk-body">Showing {{ index['count'] }} records.</p>
 {% endif -%}
 {%- endblock %}
 
 {% block indexList -%}
-{%- if index.groups %}
+{%- if index['group_type'] %}
 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
   {% for group in index['groups']  %}
   <div class="govuk-accordion__section ">
@@ -62,7 +64,7 @@
 </div>  
 {%- else %}
 {{ dlIndexList({
-  "items": index["items"]
+  "items": index.groups["no-group"]["items"]
 }) }}
 {%- endif -%}
 {%- endblock %}

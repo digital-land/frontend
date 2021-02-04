@@ -46,11 +46,14 @@
             {{- field }}
             </dt>
             <dd class="govuk-summary-list__value">
-            {%- if field == "organisation" %}
+            {%- if field == schema %}
+                {# never translate the reference field #}
+                {{ row[field] }}
+            {%- elif field == "organisation" %}
                 {{- dlDataReferenceCell({
                     "identifier": row[field],
                     "type": "Organisation",
-                    "display_name": row[field]|organisation_id_to_name, 
+                    "display_name": row[field]|organisation_id_to_name or org, 
                     "url": "https://digital-land.github.io/organisation/" + row[field]|replace(':','/')
                 }) -}}
             {%- elif field == "organisations" %}
@@ -59,12 +62,12 @@
                     <li>{{- dlDataReferenceCell({
                         "identifier": org,
                         "type": "Organisation",
-                        "display_name": org|organisation_id_to_name, 
+                        "display_name": org|organisation_id_to_name or org, 
                         "url": "https://digital-land.github.io/organisation/" + org|replace(':','/')
                     }) -}}</li>
                 {% endfor %}
                 </ul>
-            {%- elif field == "geographies" %}
+            {%- elif field in ["geographies", "statistical-geography"] %}
                 {%- set geography_url = row[field]|geography_to_url -%}
                 {%- set geography_name = row[field]|geography_to_name or row[field] -%}
                 {{- dlDataReferenceCell({
@@ -127,9 +130,11 @@
 
 {% block recordGeometry -%}
     {%- if 'geometry_url' in row and row['geometry_url'] %}
-    {%- set geometry_url = row['geometry_url'] %}
+        {%- set geometry_url = row['geometry_url'] %}
     {%- elif 'geographies' in row and row['geographies'] %}
-    {%- set geometry_url = row['geographies']|geography_to_geometry_url %}
+        {%- set geometry_url = row['geographies']|geography_to_geometry_url %}
+    {%- elif 'statistical-geography' in row and row['statistical-geography'] %}
+        {%- set geometry_url = row['statistical-geography']|geography_to_geometry_url %}
     {%- endif %}
 
     {%- if geometry_url %}
