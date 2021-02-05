@@ -1,91 +1,92 @@
 {% extends "digital-land-frontend/dlf-base.html" %}
-{%- from "digital-land-frontend/components/index-list/macro.html" import dlIndexList %}
+{% from "digital-land-frontend/components/index-list/macro.html" import dlIndexList %}
 
-{%- block pageTitle %}{{ data_type|capitalize }} | Digital Land{% endblock -%}
+{% block pageTitle %}{{ data_type|capitalize }} | Digital Land{% endblock -%}
 
-{%- block head %}
-{{ super() }}
-{%- block dlMapJS -%}
-<script src="{{ staticPath|default('/static') }}/javascripts/dl-maps.js"></script>
-{%- endblock dlMapJS -%}
-{%- endblock  %}
+{% block head %}
+    {{ super() }}
+    {% block dlMapJS -%}
+        <script src="{{ staticPath|default('/static') }}/javascripts/dl-maps.js"></script>
+    {% endblock dlMapJS -%}
+{% endblock  %}
 
-{%- block beforeContent -%}
+{% block beforeContent -%}
     {{ super() }}
 
     {{- govukBreadcrumbs({
     "items": [
-        {
-        "text": "Digital Land",
-        "href": "/"
-        } ] + breadcrumb
+    {
+    "text": "Digital Land",
+    "href": "/"
+    } ] + breadcrumb
     }) -}}
-{%- endblock -%}
+{% endblock -%}
 
 {% block content %}
 
-{% block indexTitle -%}
-<h1 class="govuk-heading-xl">{{ data_type|capitalize|replace("-", " ") }}</h1>
-{% if download_url %}
-<div class="govuk-!-margin-bottom-9" style="margin-top: -15px;">
-    <a class="dl-page-action-button" href="{{download_url}}">Download dataset</a>
-</div>
-{% endif %}
-{%- endblock %}
+    {% block indexTitle -%}
+        <h1 class="govuk-heading-xl">{{ data_type|capitalize|replace("-", " ") }}</h1>
+        {% if download_url %}
+            <div class="govuk-!-margin-bottom-9" style="margin-top: -15px;">
+                <a class="dl-page-action-button" href="{{download_url}}">Download dataset</a>
+            </div>
+        {% endif %}
+    {% endblock %}
 
-{% block indexDescription -%}
-{%- if index['group_type'] and index['group_type'] == "organisation" %}
-<p class="govuk-body">Showing {{ index['count'] }} records from {{ index['groups']|length }} organisation{{ "" if index['groups']|length == 1 else "s" }}.</p>
-{%- else %}
-<p class="govuk-body">Showing {{ index['count'] }} records.</p>
-{% endif -%}
-{%- endblock %}
+    {% block indexDescription -%}
+        {% if index['group_type'] and index['group_type'] == "organisation" %}
+            <p class="govuk-body">Showing {{ index['count'] }} records from {{ index['groups']|length }} organisation{{ "" if index['groups']|length == 1 else "s" }}.</p>
+        {% else %}
+            <p class="govuk-body">Showing {{ index['count'] }} records.</p>
+        {% endif -%}
+    {% endblock %}
 
-{% block indexList -%}
-{%- if index['group_type'] %}
-<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
-  {% for group in index['groups']  %}
-  <div class="govuk-accordion__section ">
-    <div class="govuk-accordion__section-header" id="{{ group }}">
-      <h2 class="govuk-accordion__section-heading">
-        <span class="govuk-accordion__section-button" id="accordion-default-heading-{{loop.index}}">
-          {{ group|organisation_id_to_name }}
-        </span>
-      </h2>
-    </div>
-    <div id="accordion-default-content-{{loop.index}}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-{{loop.index}}">
-      {{ dlIndexList({
-        "items": index.groups[group]['items'],
-        "data_type": data_type
-      }) }}
-    </div>
-  </div> 
-  {% endfor %}
-</div>  
-{%- else %}
-{{ dlIndexList({
-  "items": index.groups["no-group"]["items"]
-}) }}
-{%- endif -%}
-{%- endblock %}
+    {% block indexList -%}
+        {% if index['group_type'] %}
+            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+                {% for group in index['groups']  %}
+                    <div class="govuk-accordion__section ">
+                        <div class="govuk-accordion__section-header" id="{{ group }}">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-{{loop.index}}">
+                                    {{ group|group_id_to_name(index['group_type']) }}
+                                </span>
+                            </h2>
+                        </div>
+                        <div id="accordion-default-content-{{loop.index}}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-{{loop.index}}">
+                            {{ dlIndexList({
+
+                            "items": index.groups[group]['items'],
+                            "data_type": data_type
+                            }) }}
+                        </div>
+                    </div> 
+                {% endfor %}
+            </div>  
+        {% else %}
+            {{ dlIndexList({
+            "items": index.groups["no-group"]["items"]
+            }) }}
+        {% endif -%}
+    {% endblock %}
 
 {% endblock content %}
 
-{%- block bodyEnd %}
-{{ super() }}
+{% block bodyEnd %}
+    {{ super() }}
 
-{% block initMapBlock %}
-{%- if 'geographies' in index and index['geographies'] %}
-<script>
-    const $mapElement = document.querySelector('[data-module="boundary-map"]')
-    // const mapComponent = new DLMaps.Map($mapElement).init({
-    //     geojsonURLs: {{index['geographies']|tojson}}
-    // })
+    {% block initMapBlock %}
+        {% if 'geographies' in index and index['geographies'] %}
+            <script>
+                const $mapElement = document.querySelector('[data-module="boundary-map"]')
+                                // const mapComponent = new DLMaps.Map($mapElement).init({
+                                //     geojsonURLs: {{index['geographies']|tojson}}
+                                // })
 
-    const mapComponent = new DLMaps.Map($mapElement).init({})
+                                const mapComponent = new DLMaps.Map($mapElement).init({})
 
-</script>
-{%- endif %}
-{% endblock initMapBlock %}
+            </script>
+        {% endif %}
+    {% endblock initMapBlock %}
 
-{%- endblock %}
+{% endblock %}
