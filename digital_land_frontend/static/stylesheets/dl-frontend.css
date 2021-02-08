@@ -6696,6 +6696,39 @@
   }
 }
 
+@media (min-width: 40.0625em) {
+  .dl-index-list tr > td:not(:first-of-type) {
+    padding-left: 10px;
+  }
+}
+
+.dl-index-list td {
+  display: block;
+}
+
+@media (min-width: 40.0625em) {
+  .dl-index-list td {
+    display: table-cell;
+    margin-bottom: 5px;
+  }
+}
+
+@media (min-width: 40.0625em) and (min-width: 40.0625em) {
+  .dl-index-list td {
+    margin-bottom: 5px;
+  }
+}
+
+.dl-index-list tr > td:last-of-type {
+  margin-bottom: 5px;
+}
+
+@media (min-width: 40.0625em) {
+  .dl-index-list tr > td:last-of-type {
+    margin-bottom: 5px;
+  }
+}
+
 .govuk-body-l, .markdown-output .govuk-body-l p {
   max-width: 30em !important;
 }

@@ -28,3 +28,26 @@
     }
   }
 }
+
+
+.dl-index-list {
+  tr > td:not(:first-of-type) {
+    @include govuk-media-query($from: tablet) {
+      padding-left: 10px;
+    }
+  }
+
+  td {
+    display: block;
+
+    @include govuk-media-query($from: tablet) {
+      display: table-cell;
+      @include govuk-responsive-margin(1, "bottom")
+    }
+
+  }
+
+  tr > td:last-of-type {
+    @include govuk-responsive-margin(1, "bottom")
+  }
+}
