@@ -91,8 +91,10 @@ class Renderer:
             return
 
         if self.group_type is None:
+
             def name_map_func(name):
                 return name
+
         elif self.group_type == "organisation":
             name_map_func = self.organisation_mapper.get_by_key
         else:
