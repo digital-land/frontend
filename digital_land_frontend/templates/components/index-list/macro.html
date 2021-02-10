@@ -29,9 +29,11 @@
   <td>
     <h4 class="govuk-heading-s govuk-!-font-weight-regular dl-break-word govuk-!-margin-bottom-0"><a class="govuk-link" href="{{ item['href'] }}">{{ ns.item_ref }}</a></h4>
   </td>
+  {% if ns.item_text is not none %}
   <td>
     <p class="govuk-body govuk-!-margin-bottom-0">{{ ns.item_text }}</p>
   </td>
+  {% endif %}
 </tr>
 {%- endfor -%}
 </tbody>
