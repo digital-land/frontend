@@ -81,12 +81,18 @@
                 {%- set policyHTML -%}
                 <ul class="govuk-list">
                     {%- for policy in row[field].split(';')  %}
-                    <li>{{- dlDataReferenceCell({
-                        "identifier": policy,
-                        "type": "Policy",
-                        "display_name": policy|policy_to_name, 
-                        "url": policy|policy_url
-                    }) -}}</li>
+                    <li>
+                    {% if policy|policy_to_name %}
+                        {{- dlDataReferenceCell({
+                            "identifier": policy,
+                            "type": "Policy",
+                            "display_name": policy|policy_to_name, 
+                            "url": policy|policy_url
+                        }) -}}
+                    {% else %}
+                    {{ policy }}
+                    {% endif %}
+                    </li>
                     {% endfor -%}
                 </ul>
                 {%- endset -%}
