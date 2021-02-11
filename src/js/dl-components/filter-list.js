@@ -1,5 +1,9 @@
 import '../../../node_modules/govuk-frontend/govuk/vendor/polyfills/Function/prototype/bind'
 
+function convertNodeListToArray (nl) {
+  return Array.prototype.slice.call(nl)
+}
+
 // Back to top module as seen in govuk-design-system
 // https://github.com/alphagov/collections/blob/e1f3c74facd889426d24ac730ed0057aa64e2801/app/assets/javascripts/organisation-list-filter.js
 function FilterList ($form) {
@@ -35,9 +39,6 @@ FilterList.prototype.filterViaTimeout = function (e) {
 }
 
 FilterList.prototype.filterList = function (e) {
-  function convertNodeListToArray (nl) {
-    return Array.prototype.slice.call(nl)
-  }
   const itemsToFilter = convertNodeListToArray(document.querySelectorAll('[data-filter="item"]'))
   const listsToFilter = convertNodeListToArray(document.querySelectorAll('[data-filter="list"]'))
   const searchTerm = e.target.value
@@ -54,12 +55,24 @@ FilterList.prototype.filterList = function (e) {
   this.updateListCounts(listsToFilter)
 }
 
+FilterList.prototype.termToMatchOn = function (item) {
+  const toConsider = item.querySelectorAll('[data-filter="match-content"]')
+  if (toConsider.length) {
+    const toConsiderArr = convertNodeListToArray(toConsider)
+    const toConsiderStrs = toConsiderArr.map(function (el) {
+      return el.textContent
+    })
+    return toConsiderStrs.join(';')
+  }
+  return item.querySelector('a').textContent
+}
+
 FilterList.prototype.matchSearchTerm = function (item, term) {
   // const itemLabels = item.dataset.filterItemLabels
-  const itemLabels = item.querySelector('a').textContent
+  const contentToMatchOn = this.termToMatchOn(item)
   item.classList.remove('js-hidden')
   var searchTermRegexp = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-  if (searchTermRegexp.exec(itemLabels) !== null) {
+  if (searchTermRegexp.exec(contentToMatchOn) !== null) {
     return false
   }
   return true
@@ -91,7 +104,7 @@ FilterList.prototype.updateListCounts = function (lists) {
 
   // if no results show message
   if (this.$noMatches) {
-    if (totalMatches == 0) {
+    if (totalMatches === 0) {
       this.$noMatches.classList.remove('js-hidden')
     } else {
       this.$noMatches.classList.add('js-hidden')

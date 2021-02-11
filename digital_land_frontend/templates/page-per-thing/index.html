@@ -33,18 +33,34 @@
         {% endif %}
     {% endblock %}
 
+    {% if items %}
+    <form class="filter-organisations-list__form filter-organisations-list__form--active govuk-!-margin-bottom-9" data-filter="form">
+        <label class="filter-list__label govuk-label govuk-!-font-weight-bold" for="filter-organisations-list">I'm looking for</label>
+        <input class="filter-list__input govuk-input" type="text" id="filter-organisations-list" placeholder="{{ filterInputPlaceholder|default('For example, Harrogate Borough Council') }}">
+    </form>
+    {% endif %}
+
+    <div class="js-no-filter-list-matches"><p class="govuk-body">No matches.</p></div> <!-- needs to go outside of index-list-wrapper -->
+    <div class="index-list-wrapper">
     {% block indexDescription -%}
         {% if group_field and group_field == "organisation" %}
             <p class="govuk-body">Showing {{ count }} records from {{ groups|length }} organisation{{ "" if groups|length == 1 else "s" }}.</p>
         {% else %}
-            <p class="govuk-body">Showing {{ count }} records.</p>
+            <div class="count-wrapper">
+                <p class="govuk-body" aria-hidden="true">Showing <span class="js-list-count">{{ count }}</span> records.</p>
+                <p class="govuk-visually-hidden">There are
+                    <span class="js-accessible-list-count">{{ count }}</span>
+                    records listed.
+                </p>
+            </div>
         {% endif -%}
     {% endblock %}
 
     {% block indexList -%}
         {% if items %}
             {{ dlIndexList({
-            "items": items
+            "items": items,
+            "filterable": True
             }) }}
         {% endif %}
 
@@ -71,6 +87,7 @@
             </div>  
         {% endif -%}
     {% endblock %}
+    </div>
 
 {% endblock content %}
 

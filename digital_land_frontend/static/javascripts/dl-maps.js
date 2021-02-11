@@ -527,8 +527,6 @@ const popupTemplate$1 =
 
 function processRecord (row, idField) {
   function getId (data) {
-    console.log(`looking for ${idField}`);
-    console.log(idField);
     return data[idField]
   }
   const templateFuncs = {
@@ -539,20 +537,15 @@ function processRecord (row, idField) {
 }
 
 function createPopup$1 (row, idField) {
-  console.log("idField", idField);
   return L.Util.template(popupTemplate$1, processRecord(row, idField))
 }
 
 /**
- * Converts brownfield geojson data into points and popups on the map
- * @param  {Object} geojson Set of geojson features
- * @param  {Object} options Options overriding defaults
- *    {Func} .onEachFeature Function to execute on each feature layer created
+ * Creates an onEachFeature function with understanding of the identifier field
+ * @param  {string} id the field name for the record identifier
  */
 function initOnEachFeature (id) {
   const identifierField = id || 'slug';
-
-  console.log("setting up onEachFeature with ", id);
 
   function onEachFeature (feature, layer) {
     var popupHTML = createPopup$1(feature.properties, identifierField);
