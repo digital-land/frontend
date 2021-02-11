@@ -1,5 +1,5 @@
 import csv
-import logging
+import re
 
 from ..caching import get
 
@@ -85,11 +85,54 @@ class Mapper:
         return self.mapping
 
 
+class GeneralMapper:
+    def __init__(self):
+        if len(self.mappers) == 0:
+            raise ValueError("no mappers")
+
+    def match_mapper(func):
+        def wrapped(self, k):
+            matched = False
+            for mapper in self.mappers:
+                if mapper.matcher.match(k):
+                    matched = True
+                    result = func(self, mapper, k)
+                    if result:
+                        return result
+
+            if not matched:
+                raise ValueError("no mapper found for key %s" % k)
+            return None
+
+        return wrapped
+
+    @match_mapper
+    def get_name(self, mapper, k):
+        return mapper.get_name(k)
+
+    @match_mapper
+    def get_url(self, mapper, k):
+        return mapper.get_url(k)
+
+
 class OrganisationMapper(Mapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/organisation-dataset/master/collection/organisation.csv"
     ]
     key_field = "organisation"
+    matcher = re.compile(r"^.*")
+
+
+class NeighbourhoodPlanAreaMapper(Mapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/neighbourhood-plan-area-collection/main/dataset/neighbourhood-plan-area.csv"
+    ]
+    key_field = "organisation"
+    matcher = re.compile(r"^neighbourhood-plan-area:")
+
+
+class GeneralOrganisationMapper(GeneralMapper):
+    mappers = [NeighbourhoodPlanAreaMapper(), OrganisationMapper()]
 
 
 class PolicyMapper(Mapper):
@@ -145,6 +188,7 @@ class ParishMapper(BaseGeometryMapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/parish-collection/main/dataset/parish.csv"
     ]
+    matcher = re.compile(r"^E04")
     key_field = "geography"
     url_pattern = "https://digital-land.github.io/parish/{key}"
     geometry_url_pattern = (
@@ -159,6 +203,7 @@ class LocalAuthorityDistrictMapper(BaseGeometryMapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/local-authority-district-collection/main/dataset/local-authority-district.csv"
     ]
+    matcher = re.compile(r"")
     key_field = "geography"
     value_field = "name"
     url_pattern = "https://digital-land.github.io/local-authority-district/{key}"
@@ -172,6 +217,7 @@ class BoundaryMapper(BaseGeometryMapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/boundary-collection/master/index/parliamentary-boundary.csv",
     ]
+    matcher = re.compile(r"")
     key_field = "statistical-geography"
     value_field = "boundary"
     url_pattern = (
@@ -193,6 +239,7 @@ class DevelopmentPolicyAreaMapper(BaseGeometryMapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/development-policy-area-collection/main/dataset/development-policy-area.csv"
     ]
+    matcher = re.compile(r"^/development-policy-area/")
     key_field = "development-policy-area"
     url_pattern = "https://digital-land.github.io{slug}"
     geometry_url_pattern = "https://digital-land.github.io{slug}/geometry.geojson"
@@ -204,48 +251,14 @@ class DevelopmentPolicyAreaMapper(BaseGeometryMapper):
         return result
 
 
-class GeographyMapper:
-    def __init__(self):
-        # self.registered_mappers = [ParishMapper(), DevelopmentPolicyAreaMapper(), BoundaryMapper()]
-        self.parish_mapper = ParishMapper()
-        self.dev_policy_area_mapper = DevelopmentPolicyAreaMapper()
-        self.local_authority_district_mapper = LocalAuthorityDistrictMapper()
-        self.boundary_mapper = BoundaryMapper()
+class GeographyMapper(GeneralMapper):
+    mappers = [
+        ParishMapper(),
+        DevelopmentPolicyAreaMapper(),
+        LocalAuthorityDistrictMapper(),
+        BoundaryMapper(),
+    ]
 
-    def _find_mappers(self, k):
-        if k.startswith("/development-policy-area/"):
-            return [self.dev_policy_area_mapper]
-        elif k.startswith("/"):
-            logging.warning("Unhandled geography key: %s", k)
-            return []
-        elif k.startswith("E04"):
-            return [self.parish_mapper]
-        else:
-            return [self.local_authority_district_mapper, self.boundary_mapper]
-
-    def with_mappers(func):
-        def wrapped(self, k, *args, **kwargs):
-            mappers = self._find_mappers(k)
-            if not mappers:
-                return ""
-            return func(self, mappers, k, *args, **kwargs)
-
-        return wrapped
-
-    @with_mappers
-    def _try_all_mappers(self, mappers, k, method):
-        for mapper in mappers:
-            func = getattr(mapper, method)
-            result = func(k)
-            if result:
-                return result
-        return None
-
-    def get_name(self, k):
-        return self._try_all_mappers(k, "get_name")
-
-    def get_url(self, k):
-        return self._try_all_mappers(k, "get_url")
-
-    def get_geometry_url(self, k):
-        return self._try_all_mappers(k, "get_geometry_url")
+    @GeneralMapper.match_mapper
+    def get_geometry_url(self, mapper, k):
+        return mapper.get_geometry_url(k)
