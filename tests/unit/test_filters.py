@@ -31,31 +31,22 @@ def test_policy_url_filter():
     )
 
 
-def test_is_list_filter_not_a_list():
+def test_is_list_filter():
     s = "not a list"
-
-    assert not is_list(s)
-
-
-def test_is_list_filter_list():
-    s = [
+    ss = [
         "./3090/geometry.geojson",
         "./3091/geometry.geojson",
         "./3092/geometry.geojson",
     ]
 
-    assert is_list(s)
+    assert not is_list(s)
+    assert is_list(ss)
 
 
 def test_plan_type_filter():
     s = "local-plan"
 
     assert plan_type_mapper_filter(s) == "Local Plan"
-
-
-def test_plan_type_filter_get_url():
-    s = "local-plan"
-
     assert (
         plan_type_mapper_filter(s, "url")
         == "https://digital-land.github.io/development-plan-type/local-plan"
