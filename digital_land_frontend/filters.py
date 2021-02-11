@@ -62,6 +62,13 @@ def commanum(v):
     return v
 
 
+def group_id_to_name_filter(id, group_type):
+    if group_type == "organisation":
+        return organisation_id_to_name_filter(id)
+    else:
+        raise NotImplementedError("group_type %s not implemented" % group_type)
+
+
 organisation_mapper = OrganisationMapper()
 
 

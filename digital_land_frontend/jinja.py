@@ -1,6 +1,7 @@
 import jinja2
 
 from .filters import (
+    group_id_to_name_filter,
     organisation_id_to_name_filter,
     geography_to_name_filter,
     geography_to_url_filter,
@@ -38,6 +39,7 @@ def setup_jinja():
     env = jinja2.Environment(loader=multi_loader, autoescape=True)
 
     # register jinja filters
+    env.filters["group_id_to_name"] = group_id_to_name_filter
     env.filters["organisation_id_to_name"] = organisation_id_to_name_filter
     env.filters["geography_to_name"] = geography_to_name_filter
     env.filters["geography_to_url"] = geography_to_url_filter
