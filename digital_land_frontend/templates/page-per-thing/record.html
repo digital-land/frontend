@@ -102,15 +102,17 @@
                     "html": policyHTML
                 }) }}
                 {%- endif -%}
-            {%- elif field == "development-plan-type" %}
-                {%- set type_url = row[field]|plan_type_mapper("slug") -%}
-                {%- set type_name = row[field]|plan_type_mapper -%}
-                {{- dlDataReferenceCell({
-                    "identifier": row[field],
-                    "type": "Plan type",
-                    "display_name": type_name, 
-                    "url": type_url
-                }) -}}
+            {%- elif field == "development-plan-types" %}
+                {%- for policy in row[field].split(';')  %}
+                    {%- set type_url = row[field]|plan_type_mapper("slug") -%}
+                    {%- set type_name = row[field]|plan_type_mapper -%}
+                    {{- dlDataReferenceCell({
+                        "identifier": row[field],
+                        "type": "Plan type",
+                        "display_name": type_name, 
+                        "url": type_url
+                    }) -}}
+                {% endfor %}
             {%- else %}
                 {{ row[field]|make_link }}
             {%- endif %}
