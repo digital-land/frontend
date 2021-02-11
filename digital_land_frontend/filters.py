@@ -177,7 +177,7 @@ def plan_type_mapper_filter(id, type="name"):
 
     E.g. local-plan -> Local plan
     """
-    if type == "slug":
+    if type == "url":
         return plan_type_mapper.get_url(id)
     return plan_type_mapper.get_name(id)
 

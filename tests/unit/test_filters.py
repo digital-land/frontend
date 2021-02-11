@@ -3,6 +3,7 @@ from digital_land_frontend.filters import (
     policy_to_slug_filter,
     policy_url_filter,
     is_list,
+    plan_type_mapper_filter,
 )
 
 
@@ -44,3 +45,18 @@ def test_is_list_filter_list():
     ]
 
     assert is_list(s)
+
+
+def test_plan_type_filter():
+    s = "local-plan"
+
+    assert plan_type_mapper_filter(s) == "Local Plan"
+
+
+def test_plan_type_filter_get_url():
+    s = "local-plan"
+
+    assert (
+        plan_type_mapper_filter(s, "url")
+        == "https://digital-land.github.io/development-plan-type/local-plan"
+    )
