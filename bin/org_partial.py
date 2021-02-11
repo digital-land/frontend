@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import jinja2
 
-from digital_land_frontend.jinja_filters.mappers import OrganisationMapper
+from digital_land_frontend.jinja_filters.mappers import GeneralOrganisationMapper
 
 
 def setup_jinja():
@@ -30,7 +30,7 @@ env = setup_jinja()
 organisation_autocomplete_template = env.get_template("organisation-autocomplete.html")
 
 # data for organisation autocomplete
-organisation_mapper = OrganisationMapper()
+organisation_mapper = GeneralOrganisationMapper()
 orgs = [{"value": k, "text": v} for k, v in organisation_mapper.all().items()]
 
 

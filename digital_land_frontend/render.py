@@ -10,7 +10,7 @@ import shapely.wkt
 from digital_land_frontend.jinja import setup_jinja
 from digital_land_frontend.jinja_filters.mappers import (
     GeographyMapper,
-    OrganisationMapper,
+    GeneralOrganisationMapper,
 )
 
 # TODO:
@@ -53,7 +53,7 @@ class JinjaRenderer:
 
 
 class Renderer:
-    organisation_mapper = OrganisationMapper()
+    organisation_mapper = GeneralOrganisationMapper()
     geography_mapper = GeographyMapper()
     translations = str.maketrans({"/": "-", " ": "", "(": "", ")": "", "'": ""})
     geometry_fields = ["geometry", "point"]
@@ -126,7 +126,7 @@ class Renderer:
                 return name
 
         elif self.group_field == "organisation":
-            name_map_func = self.organisation_mapper.get_by_key
+            name_map_func = self.organisation_mapper.get_name
         else:
             raise NotImplementedError("group_field %s not supported" % self.group_field)
 

@@ -4,7 +4,7 @@ import validators
 from jinja2 import evalcontextfilter, Markup
 
 from .jinja_filters.mappers import (
-    OrganisationMapper,
+    GeneralOrganisationMapper,
     GeographyMapper,
     PolicyMapper,
     DevelopmentDocMapper,
@@ -69,7 +69,7 @@ def group_id_to_name_filter(id, group_type):
         raise NotImplementedError("group_type %s not implemented" % group_type)
 
 
-organisation_mapper = OrganisationMapper()
+organisation_mapper = GeneralOrganisationMapper()
 
 
 def organisation_id_to_name_filter(id):
@@ -78,7 +78,7 @@ def organisation_id_to_name_filter(id):
 
     E.g. local-authority-eng:HAG -> Harrogate Borough Council
     """
-    return organisation_mapper.get_by_key(id)
+    return organisation_mapper.get_name(id)
 
 
 geography_mapper = GeographyMapper()
