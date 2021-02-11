@@ -9,6 +9,7 @@ from .jinja_filters.mappers import (
     PolicyMapper,
     DevelopmentDocMapper,
     PolicyToDocMapper,
+    PlanTypeMapper,
 )
 
 
@@ -165,6 +166,20 @@ def dev_doc_url_filter(id):
     E.g. neigh-plan-buc-astonclintonndp -> https://digital-land.github.io/development-plan-document/local-authority-eng/BUC/neigh-plan-buc-astonclintonndp
     """
     return dev_doc_mapper.get_url(id)
+
+
+plan_type_mapper = PlanTypeMapper()
+
+
+def plan_type_mapper_filter(id, type="name"):
+    """
+    Maps plan type ids to plan type names or urls
+
+    E.g. local-plan -> Local plan
+    """
+    if type == "slug":
+        return plan_type_mapper.get_url(id)
+    return plan_type_mapper.get_name(id)
 
 
 def strip_slug(s):

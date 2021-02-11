@@ -103,6 +103,17 @@ class PolicyMapper(Mapper):
         return super().get_url(k, self.get_slug(k))
 
 
+class PlanTypeMapper(Mapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/development-plan-type-collection/main/dataset/development-plan-type.csv"
+    ]
+    key_field = "development-plan-type"
+    url_pattern = "https://digital-land.github.io{slug}"
+
+    def get_url(self, k):
+        return super().get_url(k, self.get_slug(k))
+
+
 class DevelopmentDocMapper(Mapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/development-plan-document-collection/main/dataset/development-plan-document.csv"
