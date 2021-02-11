@@ -104,7 +104,7 @@
                 {%- endif -%}
             {%- elif field == "development-plan-types" %}
                 {%- for policy in row[field].split(';')  %}
-                    {%- set type_url = row[field]|plan_type_mapper("slug") -%}
+                    {%- set type_url = row[field]|plan_type_mapper("url") -%}
                     {%- set type_name = row[field]|plan_type_mapper -%}
                     {{- dlDataReferenceCell({
                         "identifier": row[field],
