@@ -69,7 +69,8 @@ $app-light-grey: #f8f8f8;
 }
 
 pre {
-  margin: 30px 0;
+  margin: 0 0 $govuk-gutter;
+  font-size: 16px;
   word-wrap: break-word;
 }
 
@@ -83,14 +84,14 @@ pre {
   }
 }
 
-code {
-  font-family: monospace;
-  line-height: govuk-em(25, 19);
-}
-
 pre,
 code {
-  @include govuk-font($size: 19);
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+code {
+  line-height: govuk-em(25, 19);
 }
 
 $code-block-text-colour: #dd1144;
