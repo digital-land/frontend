@@ -132,7 +132,9 @@ class NeighbourhoodPlanAreaMapper(Mapper):
 
 
 class GeneralOrganisationMapper(GeneralMapper):
-    mappers = [NeighbourhoodPlanAreaMapper(), OrganisationMapper()]
+    organisations = OrganisationMapper()
+    neighbourhood_plan_areas = NeighbourhoodPlanAreaMapper()
+    mappers = [neighbourhood_plan_areas, organisations]
 
 
 class PolicyMapper(Mapper):
