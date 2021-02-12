@@ -33,7 +33,7 @@
         {% endif %}
     {% endblock %}
 
-    {% if items %}
+    {% if items and items|length > 20 %}
     <form class="filter-organisations-list__form filter-organisations-list__form--active govuk-!-margin-bottom-9" data-filter="form">
         <label class="filter-list__label govuk-label govuk-!-font-weight-bold" for="filter-organisations-list">I'm looking for</label>
         <input class="filter-list__input govuk-input" type="text" id="filter-organisations-list" placeholder="{{ filterInputPlaceholder|default('For example, Harrogate Borough Council') }}">
@@ -104,7 +104,7 @@
     {% endblock initMapBlock %}
 
     {% block initFilteringBlock %}
-        {% if items %}
+        {% if items and items|length > 20 %}
         <script>
         // initialise list filter
         const $form = document.querySelector('[data-filter="form"]');
