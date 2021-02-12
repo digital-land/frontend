@@ -305,8 +305,10 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 .hljs-container {
   display: block;
   overflow-x: auto;
-  padding: 0.5em;
-  background-color: #f3f2f1;
+  max-width: 38em;
+  padding: 20px;
+  border: 1px solid #b1b4b6;
+  background-color: #f9f9f8;
   font-family: monospace;
 }
 

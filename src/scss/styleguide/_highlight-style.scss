@@ -7,8 +7,10 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 .hljs-container {
   display: block;
   overflow-x: auto;
-  padding: 0.5em;
-  background-color: govuk-colour("light-grey");
+  max-width: $dl-text-max-width;
+  padding: 20px;
+  border: 1px solid govuk-colour("mid-grey");
+  background-color: govuk-tint(govuk-colour("light-grey"), 50);
   font-family: monospace;
 }
 

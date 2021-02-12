@@ -8,3 +8,9 @@
 /// @access public
 
 $dl-full-page-width: 1920px !default;
+
+/// Max width of text content
+///
+/// @type Number
+/// @access public
+$dl-text-max-width: 38em;
