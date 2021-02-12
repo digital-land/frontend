@@ -85,8 +85,12 @@ pre {
 
 code {
   font-family: monospace;
-  font-size: 19px;
   line-height: govuk-em(25, 19);
+}
+
+pre,
+code {
+  @include govuk-font($size: 19);
 }
 
 $code-block-text-colour: #dd1144;

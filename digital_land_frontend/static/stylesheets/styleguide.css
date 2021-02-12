@@ -1250,8 +1250,42 @@ pre {
 
 code {
   font-family: monospace;
-  font-size: 19px;
   line-height: 1.31579em;
+}
+
+pre,
+code {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+@media print {
+  pre,
+  code {
+    font-family: sans-serif;
+  }
+}
+
+@media (min-width: 40.0625em) {
+  pre,
+  code {
+    font-size: 19px;
+    font-size: 1.1875rem;
+    line-height: 1.31579;
+  }
+}
+
+@media print {
+  pre,
+  code {
+    font-size: 14pt;
+    line-height: 1.15;
+  }
 }
 
 p code,
