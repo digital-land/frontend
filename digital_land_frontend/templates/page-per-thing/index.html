@@ -98,14 +98,22 @@
         {% if geographies is defined %}
             <script>
                 const $mapElement = document.querySelector('[data-module="boundary-map"]')
-                                // const mapComponent = new DLMaps.Map($mapElement).init({
-                                //     geojsonURLs: {{index['geographies']|tojson}}
-                                // })
-
-                                const mapComponent = new DLMaps.Map($mapElement).init({})
-
+                const mapComponent = new DLMaps.Map($mapElement).init({})
             </script>
         {% endif %}
     {% endblock initMapBlock %}
+
+    {% block initFilteringBlock %}
+        {% if items %}
+        <script>
+        // initialise list filter
+        const $form = document.querySelector('[data-filter="form"]');
+        new window.DLFrontend.FilterList($form).init({
+            list_section_selector: '.index-list-wrapper',
+            count_wrapper_selector: '.count-wrapper'
+        })
+        </script>
+        {% endif %}
+    {% endblock initFilteringBlock %}
 
 {% endblock %}
