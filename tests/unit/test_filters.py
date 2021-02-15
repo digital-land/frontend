@@ -1,32 +1,21 @@
 from digital_land_frontend.filters import (
-    policy_to_name_filter,
-    policy_to_slug_filter,
-    policy_url_filter,
+    policy_mapper_filter,
     is_list,
     plan_type_mapper_filter,
+    dev_doc_mapper_filter,
 )
 
 
-def test_policy_to_name_filter():
-    s = "bmwlp-P1"
-
-    assert policy_to_name_filter(s) == "Safeguarding Mineral Resources"
-
-
-def test_policy_to_url():
+def test_policy_mapper_filter():
     s = "worminghallndp-NH1"
 
+    assert policy_mapper_filter(s) == "New Houses"
     assert (
-        policy_to_slug_filter(s)
+        policy_mapper_filter(s, "slug")
         == "/development-policy/local-authority-eng/BUC/worminghallndp-NH1"
     )
-
-
-def test_policy_url_filter():
-    s = "worminghallndp-NH1"
-
     assert (
-        policy_url_filter(s)
+        policy_mapper_filter(s, "url")
         == "https://digital-land.github.io/development-policy/local-authority-eng/BUC/worminghallndp-NH1"
     )
 
@@ -50,4 +39,14 @@ def test_plan_type_filter():
     assert (
         plan_type_mapper_filter(s, "url")
         == "https://digital-land.github.io/development-plan-type/local-plan"
+    )
+
+
+def test_dev_doc_mapper_filter():
+    doc_id = "neigh-plan-buc-astonclintonndp"
+
+    assert dev_doc_mapper_filter(doc_id) == "Aston Clinton Neighbourhood Plan 2013-2033"
+    assert (
+        dev_doc_mapper_filter(doc_id, "url")
+        == "https://digital-land.github.io/development-plan-document/local-authority-eng/BUC/neigh-plan-buc-astonclintonndp"
     )

@@ -82,12 +82,12 @@
                 <ul class="govuk-list">
                     {%- for policy in row[field].split(';')  %}
                     <li>
-                    {% if policy|policy_to_name %}
+                    {% if policy|policy_mapper %}
                         {{- dlDataReferenceCell({
                             "identifier": policy,
                             "type": "Policy",
-                            "display_name": policy|policy_to_name, 
-                            "url": policy|policy_url
+                            "display_name": policy|policy_mapper, 
+                            "url": policy|policy_mapper("url")
                         }) -}}
                     {% else %}
                     {{ policy }}

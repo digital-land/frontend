@@ -115,31 +115,19 @@ def geography_to_geometry_url_filter(id):
 policy_mapper = PolicyMapper()
 
 
-def policy_to_name_filter(id):
+def policy_mapper_filter(id, type="name"):
     """
-    Maps policy idenitifer to policy name
+    Maps policy idenitifer to policy name, url or slug
 
     E.g. bmwlp-P1 -> Safeguarding Mineral Resources
+         worminghallndp-NH1 -> /development-policy/local-authority-eng/BUC/worminghallndp-NH1
+         worminghallndp-NH1 -> https://digital-land.github.io/development-policy/local-authority-eng/BUC/worminghallndp-NH1
     """
+    if type == "url":
+        return policy_mapper.get_url(id)
+    elif type == "slug":
+        return policy_mapper.get_slug(id)
     return policy_mapper.get_name(id)
-
-
-def policy_to_slug_filter(id):
-    """
-    Maps policy idenitifer to slug
-
-    E.g. worminghallndp-NH1 -> /development-policy/local-authority-eng/BUC/worminghallndp-NH1
-    """
-    return policy_mapper.get_slug(id)
-
-
-def policy_url_filter(id):
-    """
-    Maps policy idenitifer to url
-
-    E.g. worminghallndp-NH1 -> https://digital-land.github.io/development-policy/local-authority-eng/BUC/worminghallndp-NH1
-    """
-    return policy_mapper.get_url(id)
 
 
 policy_to_doc_mapper = PolicyToDocMapper()
@@ -157,22 +145,15 @@ def policy_to_development_plan_filter(id):
 dev_doc_mapper = DevelopmentDocMapper()
 
 
-def dev_doc_to_name_filter(id):
+def dev_doc_mapper_filter(id, type="name"):
     """
-    Maps development plan document id to document name
+    Maps development plan document id to document name or url
 
     E.g. neigh-plan-buc-astonclintonndp -> Aston Clinton Neighbourhood Plan 2013-2033
     """
+    if type == "url":
+        return dev_doc_mapper.get_url(id)
     return dev_doc_mapper.get_name(id)
-
-
-def dev_doc_url_filter(id):
-    """
-    Maps development plan document id to url for document
-
-    E.g. neigh-plan-buc-astonclintonndp -> https://digital-land.github.io/development-plan-document/local-authority-eng/BUC/neigh-plan-buc-astonclintonndp
-    """
-    return dev_doc_mapper.get_url(id)
 
 
 plan_type_mapper = PlanTypeMapper()
