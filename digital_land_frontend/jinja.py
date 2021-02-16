@@ -7,13 +7,13 @@ from .filters import (
     geography_to_name_filter,
     geography_to_url_filter,
     geography_to_geometry_url_filter,
-    policy_mapper_filter,
     strip_slug,
     make_link,
     is_list,
     policy_to_development_plan_filter,
-    dev_doc_mapper_filter,
-    plan_type_mapper_filter,
+    policy_mapper,
+    dev_doc_mapper,
+    plan_type_mapper,
     policy_category_mapper,
 )
 
@@ -44,13 +44,13 @@ def setup_jinja():
     env.filters["geography_to_name"] = geography_to_name_filter
     env.filters["geography_to_url"] = geography_to_url_filter
     env.filters["geography_to_geometry_url"] = geography_to_geometry_url_filter
-    env.filters["policy_mapper"] = policy_mapper_filter
     env.filters["clean_slug"] = strip_slug
     env.filters["make_link"] = make_link
     env.filters["is_list"] = is_list
     env.filters["policy_to_development_plan"] = policy_to_development_plan_filter
-    env.filters["dev_doc_mapper"] = dev_doc_mapper_filter
-    env.filters["plan_type_mapper"] = plan_type_mapper_filter
+    env.filters["policy_mapper"] = policy_mapper.filter
+    env.filters["dev_doc_mapper"] = dev_doc_mapper.filter
+    env.filters["plan_type_mapper"] = plan_type_mapper.filter
     env.filters["policy_category_mapper"] = policy_category_mapper.filter
 
     # set variables to make available to all templates

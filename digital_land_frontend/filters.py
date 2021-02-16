@@ -122,24 +122,6 @@ def geography_to_geometry_url_filter(id):
     return geography_mapper.get_geometry_url(id)
 
 
-policy_mapper = PolicyMapper()
-
-
-def policy_mapper_filter(id, type="name"):
-    """
-    Maps policy idenitifer to policy name, url or slug
-
-    E.g. bmwlp-P1 -> Safeguarding Mineral Resources
-         worminghallndp-NH1 -> /development-policy/local-authority-eng/BUC/worminghallndp-NH1
-         worminghallndp-NH1 -> https://digital-land.github.io/development-policy/local-authority-eng/BUC/worminghallndp-NH1
-    """
-    if type == "url":
-        return policy_mapper.get_url(id)
-    elif type == "slug":
-        return policy_mapper.get_slug(id)
-    return policy_mapper.get_name(id)
-
-
 policy_to_doc_mapper = PolicyToDocMapper()
 
 
@@ -150,34 +132,6 @@ def policy_to_development_plan_filter(id):
     E.g. astonclintonndp-B1 -> neigh-plan-buc-astonclintonndp
     """
     return policy_to_doc_mapper.get_name(id)
-
-
-dev_doc_mapper = DevelopmentDocMapper()
-
-
-def dev_doc_mapper_filter(id, type="name"):
-    """
-    Maps development plan document id to document name or url
-
-    E.g. neigh-plan-buc-astonclintonndp -> Aston Clinton Neighbourhood Plan 2013-2033
-    """
-    if type == "url":
-        return dev_doc_mapper.get_url(id)
-    return dev_doc_mapper.get_name(id)
-
-
-plan_type_mapper = PlanTypeMapper()
-
-
-def plan_type_mapper_filter(id, type="name"):
-    """
-    Maps plan type ids to plan type names or urls
-
-    E.g. local-plan -> Local plan
-    """
-    if type == "url":
-        return plan_type_mapper.get_url(id)
-    return plan_type_mapper.get_name(id)
 
 
 class MapperFilter:
@@ -192,7 +146,10 @@ class MapperFilter:
         return self.mapper.get_name(id)
 
 
+policy_mapper = MapperFilter(PolicyMapper())
 policy_category_mapper = MapperFilter(PolicyCategoryMapper())
+plan_type_mapper = MapperFilter(PlanTypeMapper())
+dev_doc_mapper = MapperFilter(DevelopmentDocMapper())
 
 
 def strip_slug(s):
