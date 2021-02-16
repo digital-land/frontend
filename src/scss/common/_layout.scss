@@ -42,7 +42,8 @@
 
     @include govuk-media-query($from: tablet) {
       display: table-cell;
-      @include govuk-responsive-margin(1, "bottom")
+      @include govuk-responsive-margin(1, "bottom");
+      vertical-align: top;
     }
 
   }

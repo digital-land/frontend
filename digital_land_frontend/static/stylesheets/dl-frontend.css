@@ -6710,6 +6710,7 @@
   .dl-index-list td {
     display: table-cell;
     margin-bottom: 5px;
+    vertical-align: top;
   }
 }
 
