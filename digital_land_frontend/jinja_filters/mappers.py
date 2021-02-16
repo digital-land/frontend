@@ -60,7 +60,7 @@ class Mapper:
     def get_url(self, k, slug=None):
         if k not in self.mapping:
             return None
-        return self.url_pattern.format(key=k, slug=slug)
+        return self.url_pattern.format(key=k.replace(":", "/"), slug=slug)
 
     @slug_to_key
     def get_name(self, k, slug=None):
@@ -119,6 +119,7 @@ class OrganisationMapper(Mapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/organisation-dataset/master/collection/organisation.csv"
     ]
+    url_pattern = "https://digital-land.github.io/organisation/{key}"
     key_field = "organisation"
     matcher = re.compile(r"^.*")
 
@@ -127,6 +128,7 @@ class NeighbourhoodPlanAreaMapper(Mapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/neighbourhood-plan-area-collection/main/dataset/neighbourhood-plan-area.csv"
     ]
+    url_pattern = "https://digital-land.github.io/{key}"
     key_field = "organisation"
     matcher = re.compile(r"^neighbourhood-plan-area:")
 

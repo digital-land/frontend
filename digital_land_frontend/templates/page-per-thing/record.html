@@ -54,7 +54,7 @@
                     "identifier": row[field],
                     "type": "Organisation",
                     "display_name": row[field]|organisation_id_to_name or org, 
-                    "url": "https://digital-land.github.io/organisation/" + row[field]|replace(':','/')
+                    "url": row[field]|organisation_id_to_url or None,
                 }) -}}
             {%- elif field == "organisations" %}
                 <ul class="govuk-list">
@@ -63,7 +63,7 @@
                         "identifier": org,
                         "type": "Organisation",
                         "display_name": org|organisation_id_to_name or org, 
-                        "url": "https://digital-land.github.io/organisation/" + org|replace(':','/')
+                        "url": row[field]|organisation_id_to_url or None,
                     }) -}}</li>
                 {% endfor %}
                 </ul>

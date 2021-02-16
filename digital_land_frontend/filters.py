@@ -82,6 +82,15 @@ def organisation_id_to_name_filter(id):
     return organisation_mapper.get_name(id)
 
 
+def organisation_id_to_url_filter(id):
+    """
+    Maps organistion id to the url of the organisation
+
+    E.g. local-authority-eng:HAG -> https://digital-land.github.io/organisation/local-authority-eng/HA"
+    """
+    return organisation_mapper.get_url(id)
+
+
 geography_mapper = GeographyMapper()
 
 
