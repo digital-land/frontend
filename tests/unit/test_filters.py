@@ -44,12 +44,12 @@ def test_plan_type_filter():
 
 
 def test_dev_doc_mapper_filter():
-    doc_id = "neigh-plan-buc-astonclintonndp"
+    doc_id = "neigh-plan-buc-buckinghamndp"
 
-    assert dev_doc_mapper_filter(doc_id) == "Aston Clinton Neighbourhood Plan 2013-2033"
+    assert dev_doc_mapper_filter(doc_id) == "Buckingham Neighbourhood Plan"
     assert (
         dev_doc_mapper_filter(doc_id, "url")
-        == "https://digital-land.github.io/development-plan-document/local-authority-eng/BUC/neigh-plan-buc-astonclintonndp"
+        == "https://digital-land.github.io/development-plan-document/neighbourhood-plan-area/buckingham/neigh-plan-buc-buckinghamndp"
     )
 
 
