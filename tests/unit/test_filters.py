@@ -3,6 +3,7 @@ from digital_land_frontend.filters import (
     is_list,
     plan_type_mapper_filter,
     dev_doc_mapper_filter,
+    policy_category_mapper,
 )
 
 
@@ -49,4 +50,14 @@ def test_dev_doc_mapper_filter():
     assert (
         dev_doc_mapper_filter(doc_id, "url")
         == "https://digital-land.github.io/development-plan-document/local-authority-eng/BUC/neigh-plan-buc-astonclintonndp"
+    )
+
+
+def test_policy_category_mapper_filter():
+    cat_id = "strategic-policy"
+
+    assert policy_category_mapper.filter(cat_id) == "Strategic policy"
+    assert (
+        policy_category_mapper.filter(cat_id, "url")
+        == "https://digital-land.github.io/development-policy-category/strategic-policy"
     )

@@ -113,6 +113,17 @@
                         "url": type_url
                     }) -}}
                 {% endfor %}
+            {%- elif field == "development-policy-categories" %}
+                {%- for category in row[field].split(';')  %}
+                    {%- set category_url = row[field]|policy_category_mapper("url") -%}
+                    {%- set category_name = row[field]|policy_category_mapper -%}
+                    {{- dlDataReferenceCell({
+                        "identifier": row[field],
+                        "type": "Plan type",
+                        "display_name": category_name, 
+                        "url": category_url
+                    }) -}}
+                {% endfor %}
             {%- else %}
                 {{ row[field]|make_link }}
             {%- endif %}

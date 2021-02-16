@@ -10,6 +10,7 @@ from .jinja_filters.mappers import (
     DevelopmentDocMapper,
     PolicyToDocMapper,
     PlanTypeMapper,
+    PolicyCategoryMapper,
 )
 
 
@@ -168,6 +169,21 @@ def plan_type_mapper_filter(id, type="name"):
     if type == "url":
         return plan_type_mapper.get_url(id)
     return plan_type_mapper.get_name(id)
+
+
+class MapperFilter:
+    def __init__(self, mapper):
+        self.mapper = mapper
+
+    def filter(self, id, type="name"):
+        if type == "url":
+            return self.mapper.get_url(id)
+        elif type == "slug":
+            return self.mapper.get_slug(id)
+        return self.mapper.get_name(id)
+
+
+policy_category_mapper = MapperFilter(PolicyCategoryMapper())
 
 
 def strip_slug(s):

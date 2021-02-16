@@ -13,6 +13,7 @@ from .filters import (
     policy_to_development_plan_filter,
     dev_doc_mapper_filter,
     plan_type_mapper_filter,
+    policy_category_mapper,
 )
 
 
@@ -48,6 +49,7 @@ def setup_jinja():
     env.filters["policy_to_development_plan"] = policy_to_development_plan_filter
     env.filters["dev_doc_mapper"] = dev_doc_mapper_filter
     env.filters["plan_type_mapper"] = plan_type_mapper_filter
+    env.filters["policy_category_mapper"] = policy_category_mapper.filter
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"
