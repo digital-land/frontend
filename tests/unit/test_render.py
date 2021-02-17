@@ -69,7 +69,10 @@ def dataset_multi_slug_reader(_dataset_reader):
 def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
     spy_renderer = SpyRenderer()
     renderer = Renderer(
-        "dataset-name", group_field="organisation", renderer=spy_renderer
+        "dataset-name",
+        "dataset-name",
+        group_field="organisation",
+        renderer=spy_renderer,
     )
     renderer.render(dataset_multi_slug_reader)
 

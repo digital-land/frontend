@@ -60,17 +60,17 @@ class Renderer:
 
     def __init__(
         self,
-        name,
+        pipeline_name,
+        key_field,
         url_root=None,
-        key_fields=["organisation", "site"],
         group_field="organisation",
         group_list_field="organisations",
         docs="docs",
         renderer=None,
     ):
-        self.name = name
+        self.pipeline_name = pipeline_name
         self.docs = Path(docs)
-        self.key_fields = key_fields
+        self.key_field = key_field
         self.group_field = group_field
         self.group_list_field = group_list_field
         self.index = defaultdict(lambda: {"count": 0, "references": set(), "items": []})
@@ -79,7 +79,7 @@ class Renderer:
         self.slug_seen = set()
 
         if not url_root:
-            url_root = f"/{name.replace(' ', '-')}/"
+            url_root = f"/{pipeline_name.replace(' ', '-')}/"
 
         self.renderer = renderer or JinjaRenderer(url_root, docs)
 
@@ -137,7 +137,7 @@ class Renderer:
         self.group_map.setdefault(group, o)
         reference = row["slug"].split("/")[-1]
         self.group_map[group]["items"].append(
-            self.index_entry(reference, row["name"], slug=row["slug"])
+            self.index_entry(reference, self.row_name(row), slug=row["slug"])
         )
         self.group_slug_seen.add(dupe_check_key)
 
@@ -173,14 +173,14 @@ class Renderer:
             self.renderer.render_row(
                 str(output_dir / "index.html"),
                 row=row,
-                data_type=self.name,
+                data_type=self.pipeline_name,
                 breadcrumb=breadcrumb,
             )
             rows.append(row)
             self.add_to_index(row["slug"], row)
             self.slugs.add(row["slug"])
 
-        root_index = {"data_type": self.name}
+        root_index = {"data_type": self.pipeline_name}
         if self.group_field:
             root_index["groups"] = self.group_index
         else:
@@ -215,7 +215,7 @@ class Renderer:
 
         reference = format_name(name) if not row else name
         href = slug_to_relative_href(slug, strip_prefix=stem)
-        text = row["name"] if row else None
+        text = self.row_name(row) if row else None
 
         self.index[stem]["items"].append(self.index_entry(reference, text, href))
         self._add_to_index(stem)
@@ -231,16 +231,16 @@ class Renderer:
     def render_index_pages(self):
         for path, i in self.index.items():
             if path:
-                slug = f"/{self.name}/{path}"
+                slug = f"/{self.pipeline_name}/{path}"
                 download_url = None
             else:
-                slug = f"/{self.name}"
-                download_url = f"https://raw.githubusercontent.com/digital-land/{self.name}/main/dataset/{self.name}.csv"
+                slug = f"/{self.pipeline_name}"
+                download_url = f"https://raw.githubusercontent.com/digital-land/{self.pipeline_name}/main/dataset/{self.pipeline_name}.csv"
             if "items" in i:
                 for item in i["items"]:
                     if "slug" in item:
                         item["href"] = slug_to_relative_href(
-                            item["slug"], "/".join([self.name, path])
+                            item["slug"], "/".join([self.pipeline_name, path])
                         )
                         del item["slug"]
                 i["items"] = sorted(
@@ -251,7 +251,7 @@ class Renderer:
                 for item in group.get("items", []):
                     if "slug" in item:
                         item["href"] = slug_to_relative_href(
-                            item["slug"], "/".join([self.name, path])
+                            item["slug"], "/".join([self.pipeline_name, path])
                         )
                         del item["slug"]
 
@@ -262,6 +262,11 @@ class Renderer:
                 breadcrumb=slug_to_breadcrumb(slug),
                 download_url=download_url,
             )
+
+    def row_name(self, row):
+        if "name" in row:
+            return row["name"]
+        return row[self.key_field]
 
 
 re_all_upper = re.compile(r"^[A-Z]*$")
