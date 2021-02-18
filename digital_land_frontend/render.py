@@ -135,7 +135,11 @@ class Renderer:
             "items": [],
         }
         self.group_map.setdefault(group, o)
-        reference = row["slug"].split("/")[-1]
+        reference = (
+            row[self.key_field]
+            if self.key_field in row.keys()
+            else row["slug"].split("/")[-1]
+        )
         self.group_map[group]["items"].append(
             self.index_entry(reference, self.row_name(row), slug=row["slug"])
         )
@@ -156,7 +160,7 @@ class Renderer:
             if row["slug"] in self.slugs:
                 logging.warning("Duplicate slug found: %s", row["slug"])
 
-            breadcrumb = slug_to_breadcrumb(row["slug"])
+            breadcrumb = slug_to_breadcrumb(row["slug"], row[self.key_field])
 
             path = "/".join(row["slug"].split("/")[2:])  # strip the prefix from slug
 
@@ -202,6 +206,11 @@ class Renderer:
             return
 
         stem, name = slug.rsplit("/", 1)
+
+        # safer to use tke key_field if available
+        if row:
+            name = row[self.key_field]
+
         self.index[stem].setdefault("items", [])
         self.index[stem].setdefault("references", set())
         self.index[stem].setdefault("count", 0)
@@ -279,7 +288,7 @@ def format_name(name):
     return re_strip.sub(" ", name).title()
 
 
-def slug_to_breadcrumb(slug):
+def slug_to_breadcrumb(slug, reference=None):
     logging.debug(">> slug_to_breadcumb(%s)", slug)
     next_relative_path = "../"
     breadcrumb = []
@@ -287,6 +296,8 @@ def slug_to_breadcrumb(slug):
     for part in slug.split("/")[-1:0:-1]:
         if first_item:
             text = part
+            if reference:
+                text = reference
         else:
             text = format_name(part)
 
