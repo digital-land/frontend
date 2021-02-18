@@ -46,6 +46,13 @@ def _dataset_reader():
             "organisation": "org-two",
             "blah": 1,
         },
+        {
+            "dataset-name": "REF/04",
+            "name": "item-four",
+            "slug": "/dataset-name/REF-04",
+            "organisation": "org-one",
+            "blah": 1,
+        },
     ]
     return data
 
@@ -53,7 +60,7 @@ def _dataset_reader():
 @pytest.fixture()
 def dataset_simple_slug_reader(_dataset_reader):
     return [
-        dict(row, slug=f"/dataset-name/{row['dataset-name']}")
+        dict(row, slug=f"/dataset-name/{row['dataset-name'].replace('/', '-')}")
         for row in _dataset_reader
     ]
 
@@ -61,7 +68,10 @@ def dataset_simple_slug_reader(_dataset_reader):
 @pytest.fixture()
 def dataset_multi_slug_reader(_dataset_reader):
     return [
-        dict(row, slug=f"/dataset-name/{row['organisation']}/{row['dataset-name']}")
+        dict(
+            row,
+            slug=f"/dataset-name/{row['organisation']}/{row['dataset-name'].replace('/', '-')}",
+        )
         for row in _dataset_reader
     ]
 
@@ -76,10 +86,10 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
     )
     renderer.render(dataset_multi_slug_reader)
 
-    assert len(spy_renderer.row_pages_rendered) == 3
+    assert len(spy_renderer.row_pages_rendered) == 4
     for row in dataset_multi_slug_reader:
         assert spy_renderer.row_pages_rendered[
-            f"docs/{row['organisation']}/{row['dataset-name']}/index.html"
+            f"docs/{row['organisation']}/{row['dataset-name'].replace('/', '-')}/index.html"
         ] == {
             "breadcrumb": [
                 {"href": "../../", "text": "Dataset Name"},
@@ -102,7 +112,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
     assert spy_renderer.index_pages_rendered["docs/index.html"] == {
         "data_type": "dataset-name",
         "breadcrumb": [{"text": "dataset-name"}],
-        "count": 3,
+        "count": 4,
         "download_url": "https://raw.githubusercontent.com/digital-land/dataset-name/main/dataset/dataset-name.csv",
         "group_field": "organisation",
         "groups": OrderedDict(
@@ -119,6 +129,11 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
                             "reference": "REF03",
                             "text": "item-three",
                             "href": "./org-one/REF03",
+                        },
+                        {
+                            "reference": "REF/04",
+                            "text": "item-four",
+                            "href": "./org-one/REF-04",
                         },
                     ],
                 },
@@ -138,14 +153,15 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
 
     assert spy_renderer.index_pages_rendered["docs/org-one/index.html"] == {
         "breadcrumb": [{"href": "../", "text": "Dataset Name"}, {"text": "org-one"}],
-        "count": 2,
+        "count": 3,
         "download_url": None,
         "group_field": None,
         "items": [
             {"href": "./REF01", "reference": "REF01", "text": "item-one"},
             {"href": "./REF03", "reference": "REF03", "text": "item-three"},
+            {"href": "./REF-04", "reference": "REF/04", "text": "item-four"},
         ],
-        "references": {"REF01", "REF03"},
+        "references": {"REF01", "REF03", "REF/04"},
     }
 
     assert spy_renderer.index_pages_rendered["docs/org-two/index.html"] == {
@@ -170,10 +186,10 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
     )
     renderer.render(dataset_simple_slug_reader)
 
-    assert len(spy_renderer.row_pages_rendered) == 3
+    assert len(spy_renderer.row_pages_rendered) == 4
     for row in dataset_simple_slug_reader:
         assert spy_renderer.row_pages_rendered[
-            f"docs/{row['dataset-name']}/index.html"
+            f"docs/{row['dataset-name'].replace('/', '-')}/index.html"
         ] == {
             "breadcrumb": [
                 {"href": "../", "text": "Dataset Name"},
@@ -188,7 +204,7 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
         "data_type": "dataset-name",
         "breadcrumb": [{"text": "dataset-name"}],
         "download_url": "https://raw.githubusercontent.com/digital-land/dataset-name/main/dataset/dataset-name.csv",
-        "count": 3,
+        "count": 4,
         "group_field": "organisation",
         "groups": OrderedDict(
             {
@@ -197,6 +213,11 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
                     "items": [
                         {"reference": "REF01", "text": "item-one", "href": "./REF01"},
                         {"reference": "REF03", "text": "item-three", "href": "./REF03"},
+                        {
+                            "reference": "REF/04",
+                            "text": "item-four",
+                            "href": "./REF-04",
+                        },
                     ],
                 },
                 "org-two": {
@@ -217,10 +238,10 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
     )
     renderer.render(dataset_simple_slug_reader)
 
-    assert len(spy_renderer.row_pages_rendered) == 3
+    assert len(spy_renderer.row_pages_rendered) == 4
     for row in dataset_simple_slug_reader:
         assert spy_renderer.row_pages_rendered[
-            f"docs/{row['dataset-name']}/index.html"
+            f"docs/{row['dataset-name'].replace('/', '-')}/index.html"
         ] == {
             "breadcrumb": [
                 {"href": "../", "text": "Dataset Name"},
@@ -235,12 +256,17 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
         "data_type": "dataset-name",
         "breadcrumb": [{"text": "dataset-name"}],
         "download_url": "https://raw.githubusercontent.com/digital-land/dataset-name/main/dataset/dataset-name.csv",
-        "count": 3,
+        "count": 4,
         "group_field": None,
         "items": [
             {"reference": "REF01", "text": "item-one", "href": "./REF01"},
             {"reference": "REF02", "text": "item-two", "href": "./REF02"},
             {"reference": "REF03", "text": "item-three", "href": "./REF03"},
+            {
+                "reference": "REF/04",
+                "text": "item-four",
+                "href": "./REF-04",
+            },
         ],
     }
 
@@ -265,8 +291,9 @@ def test_slug_to_relative_href_strip_prefix():
 
 def test_slug_to_breadcrumb():
     slug = "/development-policy/local-authority-eng/BUC/avdlp-GP2"
+    reference = "avdlp-GP2"
 
-    breadcrumb = slug_to_breadcrumb(slug)
+    breadcrumb = slug_to_breadcrumb(slug, reference)
 
     assert len(breadcrumb) == 4
     assert breadcrumb == [
