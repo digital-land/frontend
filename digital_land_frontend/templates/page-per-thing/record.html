@@ -124,6 +124,17 @@
                         "url": category_url
                     }) -}}
                 {% endfor %}
+            {%- elif field == "developer-agreement-type" %}
+                {%- for category in row[field].split(';')  %}
+                    {%- set category_url = row[field]|developer_agreement_type_mapper("url") -%}
+                    {%- set category_name = row[field]|developer_agreement_type_mapper -%}
+                    {{- dlDataReferenceCell({
+                        "identifier": row[field],
+                        "type": "Agreement type",
+                        "display_name": category_name, 
+                        "url": category_url
+                    }) -}}
+                {% endfor %}
             {%- else %}
                 {{ row[field]|make_link }}
             {%- endif %}
