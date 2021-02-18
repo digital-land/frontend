@@ -3,7 +3,6 @@
   <tbody>
 {%- for item in params['items'] -%}
 {%- set ns = namespace(item_ref="", item_text="") %}
-
 {#- figure out what to use as reference -#}
 {%- if params.data_type and item[params.data_type] -%}
   {% set ns.item_ref = item[params.data_type] %}
@@ -29,11 +28,11 @@
   <td>
     <h4 class="govuk-heading-s govuk-!-font-weight-regular dl-break-word govuk-!-margin-bottom-0"><a class="govuk-link" href="{{ item['href'] }}"{% if params.filterable %} data-filter="match-content"{% endif %}>{{ ns.item_ref }}</a></h4>
   </td>
-  {% if ns.item_text is not none %}
   <td>
+    {% if ns.item_text is not none and ns.item_text != ns.item_ref %}
     <p class="govuk-body govuk-!-margin-bottom-0"{% if params.filterable %} data-filter="match-content"{% endif %}>{{ ns.item_text }}</p>
+    {% endif %}
   </td>
-  {% endif %}
 </tr>
 {%- endfor -%}
 </tbody>
