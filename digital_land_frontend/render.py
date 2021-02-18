@@ -271,6 +271,9 @@ class Renderer:
             )
 
     def row_name(self, row):
+        if self.pipeline_name == "developer-agreement":
+            if row.get("developer-agreement-type") and row.get("planning-application"):
+                return f"{row['developer-agreement-type'].title()} agreement for planning application {row['planning-application']}"
         if "name" in row:
             return row["name"]
         return row[self.key_field]
