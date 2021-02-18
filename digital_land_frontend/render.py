@@ -136,9 +136,7 @@ class Renderer:
         }
         self.group_map.setdefault(group, o)
         reference = (
-            row[self.key_field]
-            if self.key_field in row.keys()
-            else row["slug"].split("/")[-1]
+            row[self.key_field] if self.key_field in row else row["slug"].split("/")[-1]
         )
         self.group_map[group]["items"].append(
             self.index_entry(reference, self.row_name(row), slug=row["slug"])
@@ -295,9 +293,7 @@ def slug_to_breadcrumb(slug, reference=None):
     first_item = True
     for part in slug.split("/")[-1:0:-1]:
         if first_item:
-            text = part
-            if reference:
-                text = reference
+            text = reference if reference else part
         else:
             text = format_name(part)
 
