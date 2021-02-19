@@ -15,6 +15,7 @@ from .filters import (
     dev_doc_mapper,
     plan_type_mapper,
     policy_category_mapper,
+    developer_agreement_mapper,
     developer_agreement_type_mapper,
 )
 
@@ -53,6 +54,7 @@ def setup_jinja():
     env.filters["dev_doc_mapper"] = dev_doc_mapper.filter
     env.filters["plan_type_mapper"] = plan_type_mapper.filter
     env.filters["policy_category_mapper"] = policy_category_mapper.filter
+    env.filters["developer_agreement_mapper"] = developer_agreement_mapper.filter
     env.filters[
         "developer_agreement_type_mapper"
     ] = developer_agreement_type_mapper.filter

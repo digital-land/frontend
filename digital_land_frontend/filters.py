@@ -12,6 +12,7 @@ from .jinja_filters.mappers import (
     PlanTypeMapper,
     PolicyCategoryMapper,
     DeveloperAgreementTypeMapper,
+    DeveloperAgreementMapper,
 )
 
 
@@ -152,6 +153,7 @@ policy_category_mapper = MapperFilter(PolicyCategoryMapper())
 plan_type_mapper = MapperFilter(PlanTypeMapper())
 dev_doc_mapper = MapperFilter(DevelopmentDocMapper())
 developer_agreement_type_mapper = MapperFilter(DeveloperAgreementTypeMapper())
+developer_agreement_mapper = MapperFilter(DeveloperAgreementMapper())
 
 
 def strip_slug(s):

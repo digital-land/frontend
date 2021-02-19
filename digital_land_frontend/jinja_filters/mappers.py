@@ -202,6 +202,18 @@ class DeveloperAgreementTypeMapper(Mapper):
         return super().get_url(k, self.get_slug(k))
 
 
+class DeveloperAgreementMapper(Mapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/developer-agreement-collection/main/dataset/developer-agreement.csv"
+    ]
+    key_field = "developer-agreement"
+    url_pattern = "https://digital-land.github.io{slug}"
+    value_field = "planning-application"  # developer agreements don't have a name field
+
+    def get_url(self, k):
+        return super().get_url(k, self.get_slug(k))
+
+
 class BaseGeometryMapper(Mapper):
     @Mapper.slug_to_key
     def get_geometry_url(self, k, slug=None):
