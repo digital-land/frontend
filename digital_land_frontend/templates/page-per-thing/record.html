@@ -46,7 +46,7 @@
             {{- field }}
             </dt>
             <dd class="govuk-summary-list__value">
-            {%- if field == schema %}
+            {%- if field == data_type %}
                 {# never translate the reference field #}
                 {{ row[field] }}
             {%- elif field == "organisation" %}
