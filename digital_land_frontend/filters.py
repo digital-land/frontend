@@ -180,11 +180,10 @@ class MapperRouter:
 
     def route(self, k, fieldname, type="name"):
         dataset = self.dataset(fieldname)
-        if dataset in self.mappers:
-            mapper = self.mappers[dataset]
-            return mapper.filter(k, type)
-        else:
+        if dataset not in self.mappers:
             raise ValueError("no mapper found for dataset %s" % dataset)
+        mapper = self.mappers[dataset]
+        return mapper.filter(k, type)
 
 
 category_mapper_router = MapperRouter(
