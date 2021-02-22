@@ -102,35 +102,13 @@
                     "html": policyHTML
                 }) }}
                 {%- endif -%}
-            {%- elif field == "development-plan-types" %}
-                {%- for policy in row[field].split(';')  %}
-                    {%- set type_url = row[field]|dl_category_mapper("development-plan-type", "url") -%}
-                    {%- set type_name = row[field]|dl_category_mapper("development-plan-type") -%}
-                    {{- dlDataReferenceCell({
-                        "identifier": row[field],
-                        "type": "Plan type",
-                        "display_name": type_name, 
-                        "url": type_url
-                    }) -}}
-                {% endfor %}
-            {%- elif field == "development-policy-categories" %}
+            {%- elif field in ["development-policy-categories", "developer-agreement-type", "development-plan-types"] %}
                 {%- for category in row[field].split(';')  %}
-                    {%- set category_url = row[field]|dl_category_mapper("development-policy-category", "url") -%}
-                    {%- set category_name = row[field]|dl_category_mapper("development-policy-category") -%}
+                    {%- set category_url = row[field]|dl_category_mapper(field, "url") -%}
+                    {%- set category_name = row[field]|dl_category_mapper(field) -%}
                     {{- dlDataReferenceCell({
                         "identifier": row[field],
-                        "type": "Plan type",
-                        "display_name": category_name, 
-                        "url": category_url
-                    }) -}}
-                {% endfor %}
-            {%- elif field == "developer-agreement-type" %}
-                {%- for category in row[field].split(';')  %}
-                    {%- set category_url = row[field]|dl_category_mapper("developer-agreement-type", "url") -%}
-                    {%- set category_name = row[field]|dl_category_mapper("developer-agreement-type") -%}
-                    {{- dlDataReferenceCell({
-                        "identifier": row[field],
-                        "type": "Agreement type",
+                        "type": field,
                         "display_name": category_name, 
                         "url": category_url
                     }) -}}

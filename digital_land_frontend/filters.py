@@ -15,6 +15,8 @@ from .jinja_filters.mappers import (
     DeveloperAgreementMapper,
 )
 
+from digital_land.specification import Specification
+
 
 def get_jinja_template_raw(template_file_path):
     if template_file_path:
@@ -157,12 +159,27 @@ developer_agreement_mapper = MapperFilter(DeveloperAgreementMapper())
 
 
 class MapperRouter:
+    specification_path = "specification"
+
     def __init__(self, mappers):
         if len(mappers) == 0:
             raise ValueError("no mappers provided")
         self.mappers = mappers
+        self.specification = self.load_specification()
 
-    def route(self, k, dataset, type="name"):
+    def load_specification(self):
+        if os.path.isdir(self.specification_path):
+            return Specification(self.specification_path)
+        return None
+
+    def dataset(self, fieldname):
+        if self.specification is None:
+            return fieldname
+        parent = self.specification.field_parent(fieldname)
+        return fieldname if parent == "category" else parent
+
+    def route(self, k, fieldname, type="name"):
+        dataset = self.dataset(fieldname)
         if dataset in self.mappers:
             mapper = self.mappers[dataset]
             return mapper.filter(k, type)
