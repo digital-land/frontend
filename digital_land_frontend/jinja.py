@@ -17,6 +17,7 @@ from .filters import (
     policy_category_mapper,
     developer_agreement_mapper,
     developer_agreement_type_mapper,
+    category_mapper_router,
 )
 
 
@@ -58,6 +59,7 @@ def setup_jinja():
     env.filters[
         "developer_agreement_type_mapper"
     ] = developer_agreement_type_mapper.filter
+    env.filters["dl_category_mapper"] = category_mapper_router.route
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"

@@ -104,8 +104,8 @@
                 {%- endif -%}
             {%- elif field == "development-plan-types" %}
                 {%- for policy in row[field].split(';')  %}
-                    {%- set type_url = row[field]|plan_type_mapper("url") -%}
-                    {%- set type_name = row[field]|plan_type_mapper -%}
+                    {%- set type_url = row[field]|dl_category_mapper("development-plan-type", "url") -%}
+                    {%- set type_name = row[field]|dl_category_mapper("development-plan-type") -%}
                     {{- dlDataReferenceCell({
                         "identifier": row[field],
                         "type": "Plan type",
@@ -115,8 +115,8 @@
                 {% endfor %}
             {%- elif field == "development-policy-categories" %}
                 {%- for category in row[field].split(';')  %}
-                    {%- set category_url = row[field]|policy_category_mapper("url") -%}
-                    {%- set category_name = row[field]|policy_category_mapper -%}
+                    {%- set category_url = row[field]|dl_category_mapper("development-policy-category", "url") -%}
+                    {%- set category_name = row[field]|dl_category_mapper("development-policy-category") -%}
                     {{- dlDataReferenceCell({
                         "identifier": row[field],
                         "type": "Plan type",
@@ -126,8 +126,8 @@
                 {% endfor %}
             {%- elif field == "developer-agreement-type" %}
                 {%- for category in row[field].split(';')  %}
-                    {%- set category_url = row[field]|developer_agreement_type_mapper("url") -%}
-                    {%- set category_name = row[field]|developer_agreement_type_mapper -%}
+                    {%- set category_url = row[field]|dl_category_mapper("developer-agreement-type", "url") -%}
+                    {%- set category_name = row[field]|dl_category_mapper("developer-agreement-type") -%}
                     {{- dlDataReferenceCell({
                         "identifier": row[field],
                         "type": "Agreement type",

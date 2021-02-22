@@ -156,6 +156,29 @@ developer_agreement_type_mapper = MapperFilter(DeveloperAgreementTypeMapper())
 developer_agreement_mapper = MapperFilter(DeveloperAgreementMapper())
 
 
+class MapperRouter:
+    def __init__(self, mappers):
+        if len(mappers) == 0:
+            raise ValueError("no mappers provided")
+        self.mappers = mappers
+
+    def route(self, k, dataset, type="name"):
+        if dataset in self.mappers:
+            mapper = self.mappers[dataset]
+            return mapper.filter(k, type)
+        else:
+            raise ValueError("no mapper found for dataset %s" % dataset)
+
+
+category_mapper_router = MapperRouter(
+    {
+        "development-policy-category": policy_category_mapper,
+        "development-plan-type": plan_type_mapper,
+        "developer-agreement-type": developer_agreement_type_mapper,
+    }
+)
+
+
 def strip_slug(s):
     parts = s.split("/")
     return parts[-1]
