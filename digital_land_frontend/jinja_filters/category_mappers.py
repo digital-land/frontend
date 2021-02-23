@@ -10,3 +10,14 @@ class ContributionPurposeMapper(Mapper):
 
     def get_url(self, k):
         return super().get_url(k, self.get_slug(k))
+
+
+class ContributionFundingStatusMapper(Mapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/contribution-funding-status/main/dataset/contribution-funding-status.csv"
+    ]
+    key_field = "contribution-funding-status"
+    url_pattern = "https://digital-land.github.io{slug}"
+
+    def get_url(self, k):
+        return super().get_url(k, self.get_slug(k))

@@ -15,7 +15,10 @@ from .jinja_filters.mappers import (
     DeveloperAgreementMapper,
 )
 
-from .jinja_filters.category_mappers import ContributionPurposeMapper
+from .jinja_filters.category_mappers import (
+    ContributionPurposeMapper,
+    ContributionFundingStatusMapper,
+)
 
 from digital_land.specification import Specification
 
@@ -159,6 +162,7 @@ dev_doc_mapper = MapperFilter(DevelopmentDocMapper())
 developer_agreement_type_mapper = MapperFilter(DeveloperAgreementTypeMapper())
 developer_agreement_mapper = MapperFilter(DeveloperAgreementMapper())
 contribution_purpose_mapper = MapperFilter(ContributionPurposeMapper())
+contribution_funding_status_mapper = MapperFilter(ContributionFundingStatusMapper())
 
 
 class MapperRouter:
@@ -195,6 +199,7 @@ category_mapper_router = MapperRouter(
         "development-plan-type": plan_type_mapper,
         "developer-agreement-type": developer_agreement_type_mapper,
         "contribution-purpose": contribution_purpose_mapper,
+        "contribution-funding-status": contribution_funding_status_mapper,
     }
 )
 
