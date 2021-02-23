@@ -102,7 +102,7 @@
                     "html": policyHTML
                 }) }}
                 {%- endif -%}
-            {%- elif field in ["development-policy-categories", "developer-agreement-type", "development-plan-types"] %}
+            {%- elif field in ["development-policy-categories", "developer-agreement-type", "development-plan-types", "contribution-purpose"] %}
                 {%- for category in row[field].split(';')  %}
                     {%- set category_url = row[field]|dl_category_mapper(field, "url") -%}
                     {%- set category_name = row[field]|dl_category_mapper(field) -%}

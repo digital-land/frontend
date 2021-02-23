@@ -15,6 +15,8 @@ from .jinja_filters.mappers import (
     DeveloperAgreementMapper,
 )
 
+from .jinja_filters.category_mappers import ContributionPurposeMapper
+
 from digital_land.specification import Specification
 
 
@@ -156,6 +158,7 @@ plan_type_mapper = MapperFilter(PlanTypeMapper())
 dev_doc_mapper = MapperFilter(DevelopmentDocMapper())
 developer_agreement_type_mapper = MapperFilter(DeveloperAgreementTypeMapper())
 developer_agreement_mapper = MapperFilter(DeveloperAgreementMapper())
+contribution_purpose_mapper = MapperFilter(ContributionPurposeMapper())
 
 
 class MapperRouter:
@@ -191,6 +194,7 @@ category_mapper_router = MapperRouter(
         "development-policy-category": policy_category_mapper,
         "development-plan-type": plan_type_mapper,
         "developer-agreement-type": developer_agreement_type_mapper,
+        "contribution-purpose": contribution_purpose_mapper,
     }
 )
 
