@@ -15,6 +15,8 @@ from .jinja_filters.mappers import (
     DeveloperAgreementMapper,
 )
 
+from digital_land.specification import Specification
+
 
 def get_jinja_template_raw(template_file_path):
     if template_file_path:
@@ -154,6 +156,43 @@ plan_type_mapper = MapperFilter(PlanTypeMapper())
 dev_doc_mapper = MapperFilter(DevelopmentDocMapper())
 developer_agreement_type_mapper = MapperFilter(DeveloperAgreementTypeMapper())
 developer_agreement_mapper = MapperFilter(DeveloperAgreementMapper())
+
+
+class MapperRouter:
+    specification_path = "specification"
+
+    def __init__(self, mappers):
+        if len(mappers) == 0:
+            raise ValueError("no mappers provided")
+        self.mappers = mappers
+        self.specification = self.load_specification()
+
+    def load_specification(self):
+        if os.path.isdir(self.specification_path):
+            return Specification(self.specification_path)
+        return None
+
+    def dataset(self, fieldname):
+        if self.specification is None:
+            return fieldname
+        parent = self.specification.field_parent(fieldname)
+        return fieldname if parent == "category" else parent
+
+    def route(self, k, fieldname, type="name"):
+        dataset = self.dataset(fieldname)
+        if dataset not in self.mappers:
+            raise ValueError("no mapper found for dataset %s" % dataset)
+        mapper = self.mappers[dataset]
+        return mapper.filter(k, type)
+
+
+category_mapper_router = MapperRouter(
+    {
+        "development-policy-category": policy_category_mapper,
+        "development-plan-type": plan_type_mapper,
+        "developer-agreement-type": developer_agreement_type_mapper,
+    }
+)
 
 
 def strip_slug(s):
