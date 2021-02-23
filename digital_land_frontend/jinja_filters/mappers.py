@@ -181,6 +181,18 @@ class DeveloperAgreementMapper(Mapper):
         return super().get_url(k, self.get_slug(k))
 
 
+class DeveloperAgreementContributionMapper(Mapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/developer-agreement-contribution-collection/main/dataset/developer-agreement-contribution.csv"
+    ]
+    key_field = "developer-agreement-contribution"
+    url_pattern = "https://digital-land.github.io{slug}"
+    value_field = "developer-agreement-contribution"  # developer agreement contributions don't have a name field
+
+    def get_url(self, k):
+        return super().get_url(k, self.get_slug(k))
+
+
 class BaseGeometryMapper(Mapper):
     @Mapper.slug_to_key
     def get_geometry_url(self, k, slug=None):

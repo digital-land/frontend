@@ -10,6 +10,7 @@ from .jinja_filters.mappers import (
     DevelopmentDocMapper,
     PolicyToDocMapper,
     DeveloperAgreementMapper,
+    DeveloperAgreementContributionMapper,
 )
 
 from .jinja_filters.category_mappers import (
@@ -161,6 +162,9 @@ plan_type_mapper = MapperFilter(PlanTypeMapper())
 dev_doc_mapper = MapperFilter(DevelopmentDocMapper())
 developer_agreement_type_mapper = MapperFilter(DeveloperAgreementTypeMapper())
 developer_agreement_mapper = MapperFilter(DeveloperAgreementMapper())
+developer_agreement_contribution_mapper = MapperFilter(
+    DeveloperAgreementContributionMapper()
+)
 contribution_purpose_mapper = MapperFilter(ContributionPurposeMapper())
 contribution_funding_status_mapper = MapperFilter(ContributionFundingStatusMapper())
 
