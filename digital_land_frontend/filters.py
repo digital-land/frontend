@@ -9,15 +9,15 @@ from .jinja_filters.mappers import (
     PolicyMapper,
     DevelopmentDocMapper,
     PolicyToDocMapper,
-    PlanTypeMapper,
-    PolicyCategoryMapper,
-    DeveloperAgreementTypeMapper,
     DeveloperAgreementMapper,
 )
 
 from .jinja_filters.category_mappers import (
     ContributionPurposeMapper,
     ContributionFundingStatusMapper,
+    PlanTypeMapper,
+    PolicyCategoryMapper,
+    DeveloperAgreementTypeMapper,
 )
 
 from digital_land.specification import Specification
