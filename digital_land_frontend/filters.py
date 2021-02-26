@@ -1,6 +1,7 @@
 import os
 import numbers
 import validators
+from datetime import datetime
 from jinja2 import evalcontextfilter, Markup
 
 from .jinja_filters.mappers import (
@@ -220,8 +221,20 @@ def is_list(v):
     return isinstance(v, list)
 
 
+def is_historical(record):
+    if not type(record) is dict:
+        raise ValueError("record is not a dict")
+    if not "end-date" in record.keys():
+        raise ValueError("record does not contain end-date value")
+    if record["end-date"] == "":
+        return False
+    today = datetime.now()
+    end_date = datetime.strptime(record["end-date"], "%Y-%m-%d")
+    return end_date < today
+
+
 def contains_historical(l):
     if not is_list(l):
         raise ValueError("value provided is not a list")
-    with_end_date = [i for i in l if not i["end-date"] == ""]
+    with_end_date = [i for i in l if is_historical(i)]
     return len(with_end_date) > 0

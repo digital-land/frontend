@@ -8,6 +8,7 @@ from digital_land_frontend.filters import (
     policy_category_mapper,
     category_mapper_router,
     contains_historical,
+    is_historical,
 )
 
 
@@ -105,6 +106,18 @@ def test_mapper_router_unmatched_key():
         category_mapper_router.route("local-plan", "bad-key")
 
 
+def test_is_historical():
+    with pytest.raises(ValueError, match=r"does not contain end-date"):
+        is_historical({})
+
+    with pytest.raises(ValueError, match=r"not a dict"):
+        is_historical("")
+
+    assert is_historical({"name": "blah", "end-date": ""}) is False
+    assert is_historical({"name": "blah", "end-date": "2036-02-01"}) is False
+    assert is_historical({"name": "blah", "end-date": "2021-02-01"}) is True
+
+
 @pytest.fixture()
 def _item_data():
     data = [{"name": "blah1", "end-date": ""}, {"name": "blah2", "end-date": ""}]
@@ -116,6 +129,11 @@ def test_contains_historical(_item_data):
 
     _item_data.append({"name": "blah3", "end-date": "2021-02-02"})
     assert contains_historical(_item_data) is True
+
+
+def test_contains_historical_future_date(_item_data):
+    _item_data.append({"name": "blah3", "end-date": "2036-02-02"})
+    assert contains_historical(_item_data) is False
 
 
 def test_contains_historical_not_a_list():

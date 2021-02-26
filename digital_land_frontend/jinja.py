@@ -10,6 +10,7 @@ from .filters import (
     strip_slug,
     make_link,
     is_list,
+    is_historical,
     contains_historical,
     policy_to_development_plan_filter,
     policy_mapper,
@@ -52,6 +53,7 @@ def setup_jinja():
     env.filters["clean_slug"] = strip_slug
     env.filters["make_link"] = make_link
     env.filters["is_list"] = is_list
+    env.filters["is_historical"] = is_historical
     env.filters["contains_historical"] = contains_historical
     env.filters["policy_to_development_plan"] = policy_to_development_plan_filter
     env.filters["policy_mapper"] = policy_mapper.filter
