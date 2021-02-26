@@ -218,3 +218,10 @@ def is_list(v):
     Check if variable is list
     """
     return isinstance(v, list)
+
+
+def contains_historical(l):
+    if not is_list(l):
+        raise ValueError("value provided is not a list")
+    with_end_date = [i for i in l if not i["end-date"] == ""]
+    return len(with_end_date) > 0

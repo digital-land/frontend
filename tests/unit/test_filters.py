@@ -7,6 +7,7 @@ from digital_land_frontend.filters import (
     dev_doc_mapper,
     policy_category_mapper,
     category_mapper_router,
+    contains_historical,
 )
 
 
@@ -102,3 +103,21 @@ def test_mapper_router_filter():
 def test_mapper_router_unmatched_key():
     with pytest.raises(ValueError, match=r"^no mapper found"):
         category_mapper_router.route("local-plan", "bad-key")
+
+
+@pytest.fixture()
+def _item_data():
+    data = [{"name": "blah1", "end-date": ""}, {"name": "blah2", "end-date": ""}]
+    return data
+
+
+def test_contains_historical(_item_data):
+    assert contains_historical(_item_data) is False
+
+    _item_data.append({"name": "blah3", "end-date": "2021-02-02"})
+    assert contains_historical(_item_data) is True
+
+
+def test_contains_historical_not_a_list():
+    with pytest.raises(ValueError, match=r"not a list"):
+        contains_historical("bad value")
