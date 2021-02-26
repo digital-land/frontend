@@ -31,6 +31,7 @@ def _dataset_reader():
             "slug": "/dataset-name/REF01",
             "organisation": "org-one",
             "blah": 1,
+            "end-date": "",
         },
         {
             "dataset-name": "REF03",
@@ -38,6 +39,7 @@ def _dataset_reader():
             "slug": "/dataset-name/REF03",
             "organisation": "org-one",
             "blah": 1,
+            "end-date": "",
         },
         {
             "dataset-name": "REF02",
@@ -45,6 +47,7 @@ def _dataset_reader():
             "slug": "/dataset-name/REF02",
             "organisation": "org-two",
             "blah": 1,
+            "end-date": "",
         },
         {
             "dataset-name": "REF/04",
@@ -52,6 +55,7 @@ def _dataset_reader():
             "slug": "/dataset-name/REF-04",
             "organisation": "org-one",
             "blah": 1,
+            "end-date": "2021-02-02",
         },
     ]
     return data
@@ -124,16 +128,19 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
                             "reference": "REF01",
                             "text": "item-one",
                             "href": "./org-one/REF01",
+                            "end-date": "",
                         },
                         {
                             "reference": "REF03",
                             "text": "item-three",
                             "href": "./org-one/REF03",
+                            "end-date": "",
                         },
                         {
                             "reference": "REF/04",
                             "text": "item-four",
                             "href": "./org-one/REF-04",
+                            "end-date": "2021-02-02",
                         },
                     ],
                 },
@@ -144,6 +151,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
                             "reference": "REF02",
                             "text": "item-two",
                             "href": "./org-two/REF02",
+                            "end-date": "",
                         }
                     ],
                 },
@@ -157,9 +165,24 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
         "download_url": None,
         "group_field": None,
         "items": [
-            {"href": "./REF01", "reference": "REF01", "text": "item-one"},
-            {"href": "./REF03", "reference": "REF03", "text": "item-three"},
-            {"href": "./REF-04", "reference": "REF/04", "text": "item-four"},
+            {
+                "href": "./REF01",
+                "reference": "REF01",
+                "text": "item-one",
+                "end-date": "",
+            },
+            {
+                "href": "./REF03",
+                "reference": "REF03",
+                "text": "item-three",
+                "end-date": "",
+            },
+            {
+                "href": "./REF-04",
+                "reference": "REF/04",
+                "text": "item-four",
+                "end-date": "2021-02-02",
+            },
         ],
         "references": {"REF01", "REF03", "REF/04"},
     }
@@ -170,7 +193,12 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
         "download_url": None,
         "group_field": None,
         "items": [
-            {"href": "./REF02", "reference": "REF02", "text": "item-two"},
+            {
+                "href": "./REF02",
+                "reference": "REF02",
+                "text": "item-two",
+                "end-date": "",
+            },
         ],
         "references": {"REF02"},
     }
@@ -211,19 +239,35 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
                 "org-one": {
                     "text": "org-one",
                     "items": [
-                        {"reference": "REF01", "text": "item-one", "href": "./REF01"},
-                        {"reference": "REF03", "text": "item-three", "href": "./REF03"},
+                        {
+                            "reference": "REF01",
+                            "text": "item-one",
+                            "href": "./REF01",
+                            "end-date": "",
+                        },
+                        {
+                            "reference": "REF03",
+                            "text": "item-three",
+                            "href": "./REF03",
+                            "end-date": "",
+                        },
                         {
                             "reference": "REF/04",
                             "text": "item-four",
                             "href": "./REF-04",
+                            "end-date": "2021-02-02",
                         },
                     ],
                 },
                 "org-two": {
                     "text": "org-two",
                     "items": [
-                        {"reference": "REF02", "text": "item-two", "href": "./REF02"}
+                        {
+                            "reference": "REF02",
+                            "text": "item-two",
+                            "href": "./REF02",
+                            "end-date": "",
+                        }
                     ],
                 },
             }
@@ -259,13 +303,29 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
         "count": 4,
         "group_field": None,
         "items": [
-            {"reference": "REF01", "text": "item-one", "href": "./REF01"},
-            {"reference": "REF02", "text": "item-two", "href": "./REF02"},
-            {"reference": "REF03", "text": "item-three", "href": "./REF03"},
+            {
+                "reference": "REF01",
+                "text": "item-one",
+                "href": "./REF01",
+                "end-date": "",
+            },
+            {
+                "reference": "REF02",
+                "text": "item-two",
+                "href": "./REF02",
+                "end-date": "",
+            },
+            {
+                "reference": "REF03",
+                "text": "item-three",
+                "href": "./REF03",
+                "end-date": "",
+            },
             {
                 "reference": "REF/04",
                 "text": "item-four",
                 "href": "./REF-04",
+                "end-date": "2021-02-02",
             },
         ],
     }

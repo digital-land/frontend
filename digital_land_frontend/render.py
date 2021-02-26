@@ -139,7 +139,12 @@ class Renderer:
             row[self.key_field] if self.key_field in row else row["slug"].split("/")[-1]
         )
         self.group_map[group]["items"].append(
-            self.index_entry(reference, self.row_name(row), slug=row["slug"])
+            self.index_entry(
+                reference,
+                self.row_name(row),
+                slug=row["slug"],
+                end_date=row["end-date"],
+            )
         )
         self.group_slug_seen.add(dupe_check_key)
 
@@ -224,14 +229,26 @@ class Renderer:
         href = slug_to_relative_href(slug, strip_prefix=stem)
         text = self.row_name(row) if row else None
 
-        self.index[stem]["items"].append(self.index_entry(reference, text, href))
+        self.index[stem]["items"].append(
+            self.index_entry(reference, text, href, end_date=row["end-date"])
+        )
         self._add_to_index(stem)
 
-    def index_entry(self, reference, text, href=None, slug=None):
+    def index_entry(self, reference, text, href=None, slug=None, end_date=""):
         if href:
-            return {"reference": reference, "text": text, "href": href}
+            return {
+                "reference": reference,
+                "text": text,
+                "href": href,
+                "end-date": end_date,
+            }
         elif slug:
-            return {"reference": reference, "text": text, "slug": slug}
+            return {
+                "reference": reference,
+                "text": text,
+                "slug": slug,
+                "end-date": end_date,
+            }
         else:
             raise ValueError("index entry requires href or slug")
 
