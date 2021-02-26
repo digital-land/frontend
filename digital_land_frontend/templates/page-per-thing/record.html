@@ -48,7 +48,7 @@
             <dd class="govuk-summary-list__value">
             {%- if field == data_type %}
                 {# never translate the reference field #}
-                {{ row[field] }}
+                <span class="dl-select-all">{{ row[field] }}</span>
             {%- elif field == "organisation" %}
                 {{- dlDataReferenceCell({
                     "identifier": row[field],

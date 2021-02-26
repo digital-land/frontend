@@ -71,3 +71,7 @@ a {
   background-color: govuk-colour("light-grey");
   line-height: govuk-em(25, 19);
 }
+
+.dl-select-all {
+  user-select: all;
+}
