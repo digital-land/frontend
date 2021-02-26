@@ -51,4 +51,9 @@
   tr > td:last-of-type {
     @include govuk-responsive-margin(1, "bottom")
   }
+
+  .historical-item a {
+    color: govuk-color("black");
+    text-decoration-style: dashed;
+  }
 }
