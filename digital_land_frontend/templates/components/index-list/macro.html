@@ -24,9 +24,16 @@
   {% set ns.item_text = item['text'] %}
 {%- endif -%}
 
-<tr{% if params.filterable %} data-filter="item"{% endif %}>
+{% set contains_historical = params['items']|contains_historical %}
+
+<tr class="{% if item|is_historical %} historical-item{% endif %}" {% if params.filterable %} data-filter="item"{% endif %}>
   <td>
-    <h4 class="govuk-heading-s govuk-!-font-weight-regular dl-break-word govuk-!-margin-bottom-0"><a class="govuk-link" href="{{ item['href'] }}"{% if params.filterable %} data-filter="match-content"{% endif %}>{{ ns.item_ref }}</a></h4>
+    <h4 class="govuk-heading-s govuk-!-font-weight-regular dl-break-word govuk-!-margin-bottom-0">
+      <a class="govuk-link" href="{{ item['href'] }}"{% if params.filterable %} data-filter="match-content"{% endif %}>{{ ns.item_ref }}</a>
+      {% if item|is_historical %}
+      <span class="govuk-visually-hidden">This record is </span><strong class="govuk-tag govuk-tag--grey">historical</strong>
+      {% endif %}
+    </h4>
   </td>
   <td>
     {% if ns.item_text is not none and ns.item_text != ns.item_ref %}
