@@ -224,7 +224,7 @@ def is_list(v):
 def is_historical(record):
     if not type(record) is dict:
         raise ValueError("record is not a dict")
-    if not "end-date" in record.keys():
+    if "end-date" not in record.keys():
         raise ValueError("record does not contain end-date value")
     if record["end-date"] == "":
         return False
@@ -233,8 +233,8 @@ def is_historical(record):
     return end_date < today
 
 
-def contains_historical(l):
-    if not is_list(l):
+def contains_historical(lst):
+    if not is_list(lst):
         raise ValueError("value provided is not a list")
-    with_end_date = [i for i in l if is_historical(i)]
+    with_end_date = [i for i in lst if is_historical(i)]
     return len(with_end_date) > 0
