@@ -228,9 +228,10 @@ class Renderer:
         reference = format_name(name) if not row else name
         href = slug_to_relative_href(slug, strip_prefix=stem)
         text = self.row_name(row) if row else None
+        end_date = row.get("end-date", "") if row else ""
 
         self.index[stem]["items"].append(
-            self.index_entry(reference, text, href, end_date=row["end-date"])
+            self.index_entry(reference, text, href, end_date=end_date)
         )
         self._add_to_index(stem)
 
