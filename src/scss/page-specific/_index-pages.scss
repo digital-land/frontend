@@ -1,0 +1,12 @@
+
+
+.index-group__count {
+  display: block;
+  color: govuk-colour("dark-grey");
+  @include govuk-font($size: 14);
+  //padding-left: 8px;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

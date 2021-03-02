@@ -50,10 +50,7 @@ $using-helvetica: false;
 @import "components/local-plan";
 
 // import styles that are specific to certain digital land pages
-@import "page-specific/collections";
-@import "page-specific/hugo/hugo-pages";
-@import "page-specific/local-plans-prototype";
-@import "page-specific/local-plans";
+@import "page-specific/all";
 
 // import components from elsewhere e.g. MOJ
 @import "vendor-components/moj-sortable-table";
@@ -155,7 +152,8 @@ $using-helvetica: false;
     }
   }
 
-  .js-hidden {
+  .js-hidden,
+  .js-hidden--historical {
     display: none;
     visibility: hidden;
   }
