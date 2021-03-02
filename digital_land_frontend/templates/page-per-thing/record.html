@@ -8,11 +8,6 @@
 
 {%- block pageTitle %}{{ row_name }} | {{ data_type|capitalize }} | Digital Land{% endblock -%}
 
-{%- block head %}
-{{ super() }}
-<script src="{{ staticPath|default('/static') }}/javascripts/dl-maps.js"></script>
-{%- endblock  %}
-
 {%- block beforeContent -%}
     {{ super() }}
 
@@ -174,6 +169,7 @@
 
     {%- if geometry_url %}
 
+    {# firstly include all assets needed for maps #}
     {% include 'digital-land-frontend/partials/dl-map-assets.html' %}
 
     <h2 class="govuk-heading-m">Geographical area</h2>
