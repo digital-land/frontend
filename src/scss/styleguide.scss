@@ -94,7 +94,7 @@ code {
   line-height: govuk-em(25, 19);
 }
 
-$code-block-text-colour: #dd1144;
+$code-block-text-colour: govuk-shade(govuk-colour("red"), 25);
 $code-block-bg-colour: #f8f8f8;
 
 %code {
@@ -111,6 +111,10 @@ li {
     @extend %code;
     font-size: 19px;
   }
+}
+
+.dl-code {
+  @extend %code;
 }
 
 // List items on index page
