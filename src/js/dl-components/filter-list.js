@@ -10,6 +10,7 @@ function FilterList ($form) {
   this.$form = $form
   this.filterTimeout = null
   this.$noMatches = document.querySelector('.js-no-filter-list-matches')
+  console.log("defo here")
 }
 
 FilterList.prototype.init = function (params) {
@@ -100,6 +101,10 @@ FilterList.prototype.updateListCounts = function (lists) {
     }
 
     totalMatches += matchingCount
+
+    console.log("fire event")
+    var filteredEvent = new CustomEvent('list:filtered')
+    list.dispatchEvent(filteredEvent)
   })
 
   // if no results show message

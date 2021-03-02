@@ -4,6 +4,7 @@ import SelectedCounter from './dl-components/selected-counter'
 import ScrollableTables from './dl-components/scrollable-table'
 import LinkableTable from './dl-components/linkable-table'
 import FilterList from './dl-components/filter-list'
+import FilterHistorical from './dl-components/filter-historical'
 import InputCopy from './dl-components/input-copy'
 import FilterTimelineByDate from './dl-components/filter-timeline-by-date'
 import AppTabs from './dl-components/app-tabs'
@@ -25,6 +26,7 @@ export {
   ScrollableTables,
   LinkableTable,
   FilterList,
+  FilterHistorical,
   InputCopy,
   FilterTimelineByDate,
   AppTabs,

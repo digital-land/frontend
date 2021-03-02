@@ -1,5 +1,7 @@
 {% macro dlIndexList(params) %}
-<table class="dl-index-list{% if params.classes %} {{ params.classes }}{% endif %}"{% if params.filterable %} data-filter="list"{% endif %}>
+<table class="dl-index-list{% if params.classes %} {{ params.classes }}{% endif %}"
+  {% if params.filterable %} data-filter="list"{% endif %}
+  {% if params.attributes -%}{%- for attribute, value in params.attributes.items() %} {{ attribute }}='{{ value }}'{% endfor %}{%- endif %}>
   <tbody>
 {%- for item in params['items'] -%}
 {%- set ns = namespace(item_ref="", item_text="") %}
@@ -26,7 +28,7 @@
 
 {% set contains_historical = params['items']|contains_historical %}
 
-<tr class="{% if item|is_historical %} historical-item{% endif %}" {% if params.filterable %} data-filter="item"{% endif %}>
+<tr class="{% if item|is_historical %} historical-item{% endif %}" {% if params.filterable %} data-filter="item"{% endif %} data-historical-item="{{ 'true' if item|is_historical else 'false' }}">
   <td>
     <h4 class="govuk-heading-s govuk-!-font-weight-regular dl-break-word govuk-!-margin-bottom-0">
       <a class="govuk-link" href="{{ item['href'] }}"{% if params.filterable %} data-filter="match-content"{% endif %}>{{ ns.item_ref }}</a>
