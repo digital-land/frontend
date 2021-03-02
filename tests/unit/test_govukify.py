@@ -41,3 +41,8 @@ def test_markdown_table():
 </tbody>
 </table>"""
     )
+
+
+def test_markdown_code():
+    s = "`.class`"
+    assert '<code class="dl-code">.class</code>' in compile_markdown(s)

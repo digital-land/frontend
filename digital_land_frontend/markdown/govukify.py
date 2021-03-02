@@ -31,4 +31,6 @@ def govukify(html):
     html = html.replace("<th>", '<th scope="row" class="govuk-table__header">')
     html = html.replace("<td>", '<td class="govuk-table__cell">')
 
+    html = html.replace("<code>", '<code class="dl-code">')
+
     return html
