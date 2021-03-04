@@ -37,7 +37,7 @@
     <div class="{{ recordPanelContainerClass|default('govuk-grid-column-two-thirds') }}">
         {%- set areaproperties %}
         {%- for field in row.keys() %}
-        {%- if field not in ["id", "resource", "geometry", "geometry_url", "slug", "href"] %}
+        {%- if field not in ["id", "resource", "geometry", "point", "geometry_url", "slug", "href"] %}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
             {{- field }}
