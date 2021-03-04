@@ -86,7 +86,7 @@ gulp.task('js:compile', () => {
 
 gulp.task('js-map:compile', () => {
   return gulp
-    .src(['src/js/dl-maps.js'])
+    .src(['src/js/dl-maps.js', 'src/js/dl-maps/Leaflet.recentre.js'])
     .pipe(
       rollup({
         // set the 'window' global
@@ -132,6 +132,9 @@ const copyVendorJS = () =>
 const copyCookieJS = () =>
   gulp.src('src/js/dl-cookies.js').pipe(gulp.dest(`${config.jsDestPath}/`))
 
+const copyImagesForStylesheets = () =>
+  gulp.src('src/images/**/*').pipe(gulp.dest(config.cssDestPath))
+
 // Tasks to expose to CLI
 // ======================
 const latestVendorAssets = gulp.parallel(
@@ -146,7 +149,8 @@ const latestStylesheets = gulp.series(
   cleanCSS,
   lintSCSS,
   compileStylesheets,
-  copyVendorStylesheets
+  copyVendorStylesheets,
+  copyImagesForStylesheets
 )
 latestStylesheets.description = 'Generate the latest stylesheets'
 
