@@ -1,4 +1,5 @@
 import csv
+import logging
 import re
 
 from ..caching import get
@@ -16,6 +17,7 @@ class Mapper:
 
     def load(self):
         for url in self.dataset_urls:
+            logging.debug("mapping data for %s", url)
             self.map_data(self.fetch_data(url))
 
     def fetch_data(self, url):
@@ -194,6 +196,8 @@ class DeveloperAgreementContributionMapper(Mapper):
 
 
 class BaseGeometryMapper(Mapper):
+    key_field = "geography"
+
     @Mapper.slug_to_key
     def get_geometry_url(self, k, slug=None):
         if k not in self.mapping:
@@ -203,7 +207,7 @@ class BaseGeometryMapper(Mapper):
 
 class ParishMapper(BaseGeometryMapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/parish-collection/main/dataset/parish.csv"
+        "https://media.githubusercontent.com/media/digital-land/parish-collection/main/dataset/parish.csv"
     ]
     matcher = re.compile(r"^E04")
     key_field = "geography"
@@ -221,7 +225,6 @@ class LocalAuthorityDistrictMapper(BaseGeometryMapper):
         "https://raw.githubusercontent.com/digital-land/local-authority-district-collection/main/dataset/local-authority-district.csv"
     ]
     matcher = re.compile(r"")
-    key_field = "geography"
     value_field = "name"
     url_pattern = "https://digital-land.github.io/local-authority-district/{key}"
     geometry_url_pattern = "https://raw.githubusercontent.com/digital-land/local-authority-district/main/docs/{key}/geometry.geojson"
@@ -257,7 +260,6 @@ class DevelopmentPolicyAreaMapper(BaseGeometryMapper):
         "https://raw.githubusercontent.com/digital-land/development-policy-area-collection/main/dataset/development-policy-area.csv"
     ]
     matcher = re.compile(r"^/development-policy-area/")
-    key_field = "development-policy-area"
     url_pattern = "https://digital-land.github.io{slug}"
     geometry_url_pattern = "https://digital-land.github.io{slug}/geometry.geojson"
 
