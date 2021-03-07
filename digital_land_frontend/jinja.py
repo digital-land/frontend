@@ -21,6 +21,7 @@ from .filters import (
     developer_agreement_type_mapper,
     category_mapper_router,
     developer_agreement_contribution_mapper,
+    get_geometry_url_filter,
 )
 
 
@@ -55,6 +56,7 @@ def setup_jinja():
     env.filters["is_list"] = is_list
     env.filters["is_historical"] = is_historical
     env.filters["contains_historical"] = contains_historical
+    env.filters["get_geometry_url"] = get_geometry_url_filter
     env.filters["policy_to_development_plan"] = policy_to_development_plan_filter
     env.filters["policy_mapper"] = policy_mapper.filter
     env.filters["dev_doc_mapper"] = dev_doc_mapper.filter

@@ -238,3 +238,13 @@ def contains_historical(lst):
         raise ValueError("value provided is not a list")
     with_end_date = [i for i in lst if is_historical(i)]
     return len(with_end_date) > 0
+
+
+def get_geometry_url_filter(record):
+    if "geometry_url" in record and record["geometry_url"]:
+        return record["geometry_url"]
+    if "geographies" in record and record["geographies"]:
+        return geography_to_geometry_url_filter(record["geographies"])
+    if "statistical-geography" in record and record["statistical-geography"]:
+        return geography_to_geometry_url_filter(record["statistical-geography"])
+    return None

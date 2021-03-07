@@ -7,6 +7,10 @@
 {%- from "digital-land-frontend/components/data-reference-cell/macro.html" import dlDataReferenceCell %}
 
 {%- set row_name = row['name'] if row['name'] else row['slug'] %}
+{% set geometry_url = row|get_geometry_url %}
+{% if geometry_url %}
+    {% set includesMap = true %}
+{% endif %}
 
 {%- block pageTitle %}{{ row_name }} | {{ data_type|capitalize }} | Digital Land{% endblock -%}
 
@@ -161,18 +165,7 @@
 {% endblock recordTableContainer %}
 
 {% block recordGeometry -%}
-    {%- if 'geometry_url' in row and row['geometry_url'] %}
-        {%- set geometry_url = row['geometry_url'] %}
-    {%- elif 'geographies' in row and row['geographies'] %}
-        {%- set geometry_url = row['geographies']|geography_to_geometry_url %}
-    {%- elif 'statistical-geography' in row and row['statistical-geography'] %}
-        {%- set geometry_url = row['statistical-geography']|geography_to_geometry_url %}
-    {%- endif %}
-
     {%- if geometry_url %}
-
-    {# firstly include all assets needed for maps #}
-    {% include 'digital-land-frontend/partials/dl-map-assets.html' %}
 
     <h2 class="govuk-heading-m">Geographical area</h2>
 

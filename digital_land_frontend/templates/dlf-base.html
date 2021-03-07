@@ -8,6 +8,13 @@
 
 {% block head %}
 	<meta name="digital-land:template" content="{{ templateName|default('dlf-base.html') }}">
+
+	{% block dlMapAssets %}
+		{%- if includesMap -%}
+			{% include 'digital-land-frontend/partials/dl-map-assets.html' %}
+		{%- endif %}
+	{% endblock %}
+
 	{%- block dlCss %}
 	<link href="{{ staticPath | default('/static') }}/stylesheets/dl-frontend.css" rel="stylesheet" />
 
@@ -15,10 +22,6 @@
 	<link href="{{ staticPath|default('/static') }}/stylesheets/vendor/govuk-accessible-autocomplete.min.css" rel="stylesheet" media="all" />
 	{%- endif %}
 	{% endblock dlCss -%}
-
-{%- if includesMap -%}
-{% include 'digital-land-frontend/partials/dl-map-assets.html' %}
-{%- endif %}
 
 {%- block dlHead %}{% endblock -%}
 
