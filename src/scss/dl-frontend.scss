@@ -17,7 +17,6 @@ $using-helvetica: false;
 @import "common/dl-header";
 @import "common/icons";
 @import "common/images";
-@import "common/layout";
 @import "common/typography";
 
 // import Digital Land components
@@ -48,6 +47,7 @@ $using-helvetica: false;
 @import "components/timeline";
 @import "components/data-item";
 @import "components/local-plan";
+@import "components/index-list";
 
 // import styles that are specific to certain digital land pages
 @import "page-specific/all";
