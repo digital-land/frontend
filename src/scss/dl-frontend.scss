@@ -13,34 +13,7 @@ $using-helvetica: false;
 @import "common/all";
 
 // import Digital Land components
-@import "components/page-feedback";
-@import "components/back-to-top";
-@import "components/buttons";
-@import "components/contribution-bar";
-@import "components/data-record";
-@import "components/data-tables";
-@import "components/definition-lists";
-@import "components/hero";
-@import "components/tags";
-@import "components/panels";
-@import "components/task-list";
-@import "components/lists";
-@import "components/contents";
-@import "components/govuk-search";
-@import "components/dl-info-text";
-@import "components/related-items";
-@import "components/highlight-box";
-@import "components/pagination";
-@import "components/filter-group";
-@import "components/charts";
-@import "components/maps";
-@import "components/section-separators";
-@import "components/summary-cards";
-@import "components/technical-summary-card";
-@import "components/timeline";
-@import "components/data-item";
-@import "components/local-plan";
-@import "components/index-list";
+@import "components/all";
 
 // import styles that are specific to certain digital land pages
 @import "page-specific/all";
