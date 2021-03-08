@@ -10,14 +10,7 @@ $using-helvetica: false;
 @import "settings/measurements";
 
 // Import common Digital Land styles
-@import "common/colours";
-@import "common/helvetica-fixes";
-@import "common/mhclg-branding";
-@import "common/site-full-width-container";
-@import "common/dl-header";
-@import "common/icons";
-@import "common/images";
-@import "common/typography";
+@import "common/all";
 
 // import Digital Land components
 @import "components/page-feedback";
