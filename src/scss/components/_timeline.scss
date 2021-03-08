@@ -34,7 +34,7 @@
 }
 
 .dl-timeline {
-  @include dl-timeline();
+  @include dl-timeline;
 
   .dl-timeline__entry-heading {
     line-height: 1;
@@ -51,7 +51,7 @@
 
 .dl-timeline:after,
 .dl-timeline__entry:before {
-  @include dl-timeline-circle();
+  @include dl-timeline-circle;
 }
 
 $stopper-width: 14px;
