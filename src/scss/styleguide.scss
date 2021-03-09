@@ -87,7 +87,7 @@ pre {
 pre,
 code {
   font-family: monospace, monospace;
-  font-size: 1em;
+  font-size: 16px;
 }
 
 code {
@@ -102,7 +102,8 @@ $code-block-bg-colour: #f8f8f8;
 
   color: $code-block-text-colour;
   background-color: $code-block-bg-colour;
-  font-family: monospace;
+  font-family: monospace, monospace;
+  font-size: 100%;
 }
 
 p,
