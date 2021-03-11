@@ -48,26 +48,25 @@ $navigation-height: 53px;
         color: $govuk-focus-text-colour;
       }
     }
+  }
+}
 
-    a {
-      display: inline-block;
-      @include govuk-typography-weight-bold; // Override .govuk-link weight
-      color: $govuk-link-colour;
-      text-decoration: none;
+.app-nav__link {
+  @include govuk-typography-weight-bold; // Override .govuk-link weight
+  color: $govuk-link-colour;
+  text-decoration: none;
 
-      &:visited {
-        color: $govuk-link-colour;
-      }
+  &:visited {
+    color: $govuk-link-colour;
+  }
 
-      &:hover:not(:focus):not(:active) {
-        text-decoration: underline;
-      }
+  &:hover:not(:focus):not(:active) {
+    text-decoration: underline;
+  }
 
-      &:focus {
-        @include govuk-focused-text;
-        color: $govuk-focus-text-colour;
-      }
-    }
+  &:focus {
+    @include govuk-focused-text;
+    color: $govuk-focus-text-colour;
   }
 }
 
