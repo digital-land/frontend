@@ -46,3 +46,82 @@
     @include govuk-focused-text;
   }
 }
+
+.dlf-feedback__wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 govuk-spacing(3);
+
+  @include govuk-media-query($from: tablet) {
+    padding: 0 govuk-spacing(6);
+  }
+}
+
+.dlf-feedback {
+  margin-top: $govuk-gutter;
+  border-bottom: 1px solid govuk-colour("white");
+  background: govuk-colour("white");
+
+  @include govuk-media-query($from: tablet) {
+    margin-top: $govuk-gutter * 2;
+	}
+}
+
+.dlf-feedback__prompt {
+  display: table;
+  width: 100%;
+  outline: 0;
+  color: govuk-colour("white");
+  background-color: govuk-colour("blue");
+}
+
+.dlf-feedback__prompt-content,
+.dlf-feedback__prompt-action {
+  box-sizing: border-box;
+  padding: 25px 25px 25px 25px;
+  border-bottom: 1px solid govuk-colour("white");
+  text-align: center;
+  @include govuk-font(19, $weight: bold);
+  @include govuk-media-query($from: tablet) {
+    display: table-cell;
+    width: 50%;
+    text-align: left;
+    @include govuk-font(16, $weight: bold);
+  }
+}
+
+.dlf-feedback__prompt-content {
+  vertical-align: middle;
+}
+
+.dlf-feedback__prompt-content__text {
+  font-weight: 400;
+}
+
+.dlf-feedback__prompt-action {
+  vertical-align: bottom;
+  @include govuk-media-query($from: tablet) {
+    text-align: right;
+  }
+}
+
+.dlf-feedback__prompt__link {
+  min-width: 100px;
+  margin-bottom: 0;
+  border: 1px govuk-colour("white") solid;
+  background: transparent;
+  box-shadow: 0 2px 0 govuk-colour("white");
+  @include govuk-font(19);
+
+  @include govuk-media-query($from: tablet) {
+    @include govuk-font(16);
+  }
+
+  &:hover {
+    // sass-lint:disable-block no-duplicate-properties
+    // backup style for browsers that don't support rgba
+    background: govuk-colour("black");
+    background: rgba(govuk-colour("black"), .2);
+  }
+}
+

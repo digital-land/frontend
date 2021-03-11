@@ -1,0 +1,18 @@
+{% macro dlFeedback(params) %}
+<div class="dlf-feedback__wrapper{{ ' ' + params.classes if params.classes }}">
+    <div class="dlf-feedback">
+        <div class="dlf-feedback__prompt">
+            <div class="dlf-feedback__prompt-content">
+                {% if params.html %}
+                    {{ params.html|safe }}
+                {% else %}
+                <span class="dlf-feedback__prompt-content__text">{{ params.text }}</span>
+                {% endif %}
+            </div>
+            <div class="dlf-feedback__prompt-action">
+                <a href="{{ params.action.href }}" class="govuk-button dlf-feedback__prompt__link">{{ params.action.text }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
