@@ -191,11 +191,12 @@
 
 {% block feedbackPrompt %}
     {%- from "digital-land-frontend/components/feedback/macro.html" import dlFeedback %}
+    {% set subject = "Feedback on " + row_name + " - " + data_type  %}
     {{ dlFeedback({
         "text": "Spotted an issue? Let us know so we can improve the data.",
         "action": {
             "text": "There is something wrong with the data",
-            "href": "DigitalLand@communities.gov.uk"
+            "href": "mailto:digitalLand@communities.gov.uk?subject=" + subject
         }
         })
     }}
