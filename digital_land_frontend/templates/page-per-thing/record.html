@@ -170,7 +170,7 @@
     <h2 class="govuk-heading-m">Geographical area</h2>
 
     {{ dlMap({
-        "id": "aMap",
+        "id": "dlMap",
         "classes": "govuk-!-margin-top-4 govuk-!-margin-bottom-2",
         "attributes": {
         "data-geojson-urls": geometry_url
@@ -188,6 +188,18 @@
 {%- endblock %}
 
 {% block recordEnd %}{% endblock recordEnd %}
+
+{% block feedbackPrompt %}
+    {%- from "digital-land-frontend/components/feedback/macro.html" import dlFeedback %}
+    {{ dlFeedback({
+        "text": "Spotted an issue? Let us know so we can improve the data.",
+        "action": {
+            "text": "There is something wrong with the data",
+            "href": "DigitalLand@communities.gov.uk"
+        }
+        })
+    }}
+{% endblock %}
 
 {%- block bodyEnd %}
 {{ super() }}
