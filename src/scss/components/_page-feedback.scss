@@ -55,11 +55,14 @@
   @include govuk-media-query($from: tablet) {
     padding: 0 govuk-spacing(6);
   }
+
+  & + .govuk-footer {
+    border-top: 10px solid govuk-colour("blue");
+  }
 }
 
 .dlf-feedback {
   margin-top: $govuk-gutter;
-  border-bottom: 1px solid govuk-colour("white");
   background: govuk-colour("white");
 
   @include govuk-media-query($from: tablet) {
