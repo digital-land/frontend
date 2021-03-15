@@ -8881,6 +8881,10 @@
   }
 }
 
+.highlight-box--cta p:last-child {
+  margin-bottom: 0;
+}
+
 .dlf-pagination {
   display: block;
   margin: 45px 0 30px;

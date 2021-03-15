@@ -93,4 +93,8 @@
 .highlight-box--cta {
   @include dlf-highlight-box-base;
   @include govuk-font($size: 19);
+
+  p:last-child {
+    margin-bottom: 0;
+  }
 }
