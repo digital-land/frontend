@@ -100,7 +100,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
                 {"href": "../", "text": row["organisation"].replace("-", " ").title()},
                 {"text": row["dataset-name"]},
             ],
-            "data_type": "dataset-name",
+            "pipeline_name": "dataset-name",
             "row": row,
         }
 
@@ -114,7 +114,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
     )
 
     assert spy_renderer.index_pages_rendered["docs/index.html"] == {
-        "data_type": "dataset-name",
+        "pipeline_name": "dataset-name",
         "breadcrumb": [{"text": "dataset-name"}],
         "count": 4,
         "download_url": "https://raw.githubusercontent.com/digital-land/dataset-name/main/dataset/dataset-name.csv",
@@ -223,13 +223,13 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
                 {"href": "../", "text": "Dataset Name"},
                 {"text": row["dataset-name"]},
             ],
-            "data_type": "dataset-name",
+            "pipeline_name": "dataset-name",
             "row": row,
         }
 
     assert len(spy_renderer.index_pages_rendered) == 1
     assert spy_renderer.index_pages_rendered["docs/index.html"] == {
-        "data_type": "dataset-name",
+        "pipeline_name": "dataset-name",
         "breadcrumb": [{"text": "dataset-name"}],
         "download_url": "https://raw.githubusercontent.com/digital-land/dataset-name/main/dataset/dataset-name.csv",
         "count": 4,
@@ -291,13 +291,13 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
                 {"href": "../", "text": "Dataset Name"},
                 {"text": row["dataset-name"]},
             ],
-            "data_type": "dataset-name",
+            "pipeline_name": "dataset-name",
             "row": row,
         }
 
     assert len(spy_renderer.index_pages_rendered) == 1
     assert spy_renderer.index_pages_rendered["docs/index.html"] == {
-        "data_type": "dataset-name",
+        "pipeline_name": "dataset-name",
         "breadcrumb": [{"text": "dataset-name"}],
         "download_url": "https://raw.githubusercontent.com/digital-land/dataset-name/main/dataset/dataset-name.csv",
         "count": 4,
