@@ -185,7 +185,11 @@ class MapperRouter:
         return None
 
     def dataset(self, fieldname):
+        # no specification
         if self.specification is None:
+            return fieldname
+        # fieldname not in set of fields
+        if self.specification and fieldname not in self.specification.field.keys():
             return fieldname
         parent = self.specification.field_parent(fieldname)
         return fieldname if parent == "category" else parent
@@ -247,4 +251,14 @@ def get_geometry_url_filter(record):
         return geography_to_geometry_url_filter(record["geographies"])
     if "statistical-geography" in record and record["statistical-geography"]:
         return geography_to_geometry_url_filter(record["statistical-geography"])
+    return None
+
+
+def key_field_filter(record, pipeline_name):
+    specification_path = "specification"
+    if os.path.isdir(specification_path):
+        spec = Specification(specification_path)
+        schema = spec.pipeline[pipeline_name]["schema"]
+        key_field = spec.key_field(schema)
+        return record.get(key_field)
     return None
