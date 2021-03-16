@@ -12,7 +12,7 @@
     {% set includesMap = true %}
 {% endif %}
 
-{%- block pageTitle %}{{ row_name }} | {{ data_type|capitalize }} | Digital Land{% endblock -%}
+{%- block pageTitle %}{{ row_name }} | {{ pipeline_name|capitalize }} | Digital Land{% endblock -%}
 
 {%- block beforeContent -%}
     {{ super() }}
@@ -29,7 +29,7 @@
 
 {% block recordHead %}
     {% block recordTitle -%}
-    <span class="govuk-caption-xl">{{ data_type }}</span>
+    <span class="govuk-caption-xl">{{ pipeline_name }}</span>
     <h1 class="govuk-heading-xl">{{ row_name }}</h1>
     {%- endblock recordTitle %}
 {% endblock recordHead %}
@@ -47,7 +47,7 @@
             {{- field }}
             </dt>
             <dd class="govuk-summary-list__value">
-            {%- if field == data_type %}
+            {%- if field == pipeline_name %}
                 {# never translate the reference field #}
                 <span class="dl-select-all">{{ row[field] }}</span>
             {%- elif field == "organisation" %}
@@ -147,7 +147,7 @@
             "identifier": row['site'] if row['site'] else row['slug'],
             "resource": {
                 "identifier": row['resource'],
-                "url": "https://github.com/digital-land/" + data_type + "-collection/tree/main/transformed/" + data_type + "/" + row['resource'] + ".csv"
+                "url": "https://github.com/digital-land/" + pipeline_name + "-collection/tree/main/transformed/" + pipeline_name + "/" + row['resource'] + ".csv"
             },
             "html": areaproperties
         }) }}
@@ -191,7 +191,7 @@
 
 {% block feedbackPrompt %}
     {%- from "digital-land-frontend/components/feedback/macro.html" import dlFeedback %}
-    {% set subject = "Feedback on " + row_name + " - " + data_type  %}
+    {% set subject = "Feedback on " + row_name + " - " + pipeline_name  %}
     {{ dlFeedback({
         "text": "Spotted an issue? Let us know so we can improve the data.",
         "action": {

@@ -180,14 +180,14 @@ class Renderer:
             self.renderer.render_row(
                 str(output_dir / "index.html"),
                 row=row,
-                data_type=self.pipeline_name,
+                pipeline_name=self.pipeline_name,
                 breadcrumb=breadcrumb,
             )
             rows.append(row)
             self.add_to_index(row["slug"], row)
             self.slugs.add(row["slug"])
 
-        root_index = {"data_type": self.pipeline_name}
+        root_index = {"pipeline_name": self.pipeline_name}
         if self.group_field:
             root_index["groups"] = self.group_index
         else:
