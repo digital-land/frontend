@@ -6,6 +6,10 @@
 
 {%- block pageTitle %}Digital Land - Planning data you can find, use and trust{% endblock -%}
 
+{% block headIcons %}
+	{% include 'digital-land-frontend/partials/dl-favicons.html' %}
+{% endblock %}
+
 {% block head %}
 	<meta name="digital-land:template" content="{{ templateName|default('dlf-base.html') }}">
 
@@ -39,7 +43,7 @@
 
 {% block footer %}
 	{% block feedbackPrompt %}{% endblock feedbackPrompt %}
-  {% include 'digital-land-frontend/partials/dl-footer-code.html' %}
+  	{% include 'digital-land-frontend/partials/dl-footer-code.html' %}
 {% endblock %}
 
 {% block bodyEnd %}
