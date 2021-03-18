@@ -6,8 +6,8 @@
 {%- for item in params['items'] -%}
 {%- set ns = namespace(item_ref="", item_text="") %}
 {#- figure out what to use as reference -#}
-{%- if params.data_type and item[params.data_type] -%}
-  {% set ns.item_ref = item[params.data_type] %}
+{%- if params.pipeline_name and item[params.pipeline_name] -%}
+  {% set ns.item_ref = item[params.pipeline_name] %}
 {%- elif item['reference'] -%}
   {% set ns.item_ref = item['reference'] %}
 {%- else -%}

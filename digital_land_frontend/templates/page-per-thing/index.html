@@ -3,7 +3,7 @@
 
 {% from "digital-land-frontend/components/index-list/macro.html" import dlIndexList %}
 
-{% block pageTitle %}{{ data_type|capitalize }} | Digital Land{% endblock -%}
+{% block pageTitle %}{{ pipeline_name|capitalize }} | Digital Land{% endblock -%}
 
 {% block head %}
     {{ super() }}
@@ -27,12 +27,12 @@
 {% block content %}
 
     {% block indexTitle -%}
-        <h1 class="govuk-heading-xl">{{ data_type|capitalize|replace("-", " ") }}</h1>
+        <h1 class="govuk-heading-xl">{{ pipeline_name|capitalize|replace("-", " ") }}</h1>
         {% if download_url %}
             <div class="govuk-!-margin-bottom-9" style="margin-top: -15px;">
                 <a class="dl-page-action-button" href="{{download_url}}">Download dataset</a>
             </div>
-        {% endif %}
+        {% endif %}        
     {% endblock %}
 
     {% if items and items|length > 20 %}
@@ -102,7 +102,7 @@
                     <div id="accordion-default-content-{{loop.index}}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-{{loop.index}}">
                         {{ dlIndexList({
                             "items": groups[group]['items'],
-                            "data_type": data_type,
+                            "pipeline_name": pipeline_name,
                             "attributes": {
                                 "data-historical": "list"
                             }
