@@ -49,3 +49,42 @@
     }
   }
 }
+
+.sticky-footer-banner__container {
+  position: sticky;
+  bottom: 0;
+  background: govuk-colour("light-grey");
+  box-shadow: 0 0 2px govuk-colour("dark-grey");
+}
+
+.sticky-footer-banner {
+  display: flex;
+  padding: 10px 0;
+  justify-content: space-between;
+}
+
+.sfb-r {
+  text-align: right;
+}
+
+
+.dl-sticky-banner__container {
+  padding: 0 govuk-spacing(3);
+
+  @include govuk-media-query($from: tablet) {
+    padding: 0 govuk-spacing(6);
+  }
+}
+
+.dl-sticky-banner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+.dl-sticky-banner--fixed {
+  position: sticky;
+  bottom: 0;
+  background: govuk-colour("light-grey");
+  box-shadow: 0 0 2px govuk-colour("dark-grey");
+}

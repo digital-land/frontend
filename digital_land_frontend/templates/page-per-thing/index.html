@@ -27,7 +27,7 @@
 {% block content %}
 
     {% block indexTitle -%}
-        <h1 class="govuk-heading-xl">{{ pipeline_name|capitalize|replace("-", " ") }}</h1>
+        <h1 id="index-title" class="govuk-heading-xl">{{ pipeline_name|capitalize|replace("-", " ") }}</h1>
         {% if download_url %}
             <div class="govuk-!-margin-bottom-9" style="margin-top: -15px;">
                 <a class="dl-page-action-button" href="{{download_url}}">Download dataset</a>
@@ -116,8 +116,35 @@
 
 {% endblock content %}
 
+{% block footer %}
+<div class="dl-sticky-banner__container" data-module="sticky-banner">
+    <div class="dl-sticky-banner">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <a href="#index-title" class="govuk-link">
+                    <svg role="presentation" focusable="false" class="back-to-top__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
+                        <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
+                    </svg>
+                    Back to top
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ super() }}
+{% endblock %}
+
 {% block bodyEnd %}
     {{ super() }}
+
+    <script>
+        const $bttBanner = document.querySelector('[data-module="sticky-banner"]')
+        const bttComponent = new DLFrontend.BackToTop($bttBanner).init({
+            endElementSelector: '.govuk-footer',
+            startElementSelector: '#index-title',
+            fixClass: 'dl-sticky-banner--fixed'
+        })
+    </script>
 
     {% block initMapBlock %}
         {% if geographies is defined %}
