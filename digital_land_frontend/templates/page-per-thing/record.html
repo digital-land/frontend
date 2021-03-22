@@ -193,16 +193,15 @@
     {%- from "digital-land-frontend/components/feedback/macro.html" import dlFeedback %}
     {% set key_field = row|key_field(pipeline_name) %}
     {% set subject = "Feedback on (" + key_field + ") " + row_name + " -- " + pipeline_name  %}
-    <div class="dlf-feedback__wrapper">
     {{ dlFeedback({
         "text": "Spotted an issue? Let us know so we can improve the data.",
         "action": {
             "text": "There is something wrong with the data",
             "href": "mailto:digitalLand@communities.gov.uk?subject=" + subject
-        }
+        },
+        "container": true
         })
     }}
-    </div>
 {% endblock %}
 
 {%- block bodyEnd %}

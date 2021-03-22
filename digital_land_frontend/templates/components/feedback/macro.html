@@ -1,4 +1,5 @@
 {% macro dlFeedback(params) %}
+{% set feedbackPromptHTML %}
 <div class="dlf-feedback{{ ' ' + params.classes if params.classes }}">
     <div class="dlf-feedback__prompt">
         <div class="dlf-feedback__prompt-content">
@@ -15,4 +16,12 @@
         {% endif %}
     </div>
 </div>
+{% endset %}
+{% if params.container -%}
+<div class="dlf-feedback__wrapper">
+    {{ feedbackPromptHTML }}
+</div>
+{%- else %}
+{{ feedbackPromptHTML }}
+{%- endif %}
 {% endmacro %}
