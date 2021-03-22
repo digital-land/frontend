@@ -10,7 +10,9 @@ from digital_land.repository.entry_repository import EntryRepository
 
 from digital_land_frontend.jinja import setup_jinja
 from digital_land_frontend.jinja_filters.mappers import (
-    GeneralOrganisationMapper, GeographyMapper)
+    GeneralOrganisationMapper,
+    GeographyMapper,
+)
 
 # TODO:
 #   - add group_field to specification
