@@ -29,6 +29,10 @@
 	}
 }
 
+.dlf-feedback--flush {
+  margin-top: 0;
+}
+
 .dlf-feedback__prompt {
   display: table;
   width: 100%;
@@ -110,5 +114,28 @@
   &:focus {
     color: $govuk-text-colour;
     @include govuk-focused-text;
+  }
+}
+
+.dlf-feedback--stacked {
+  margin-top: 0;
+
+  .dlf-feedback__prompt-content,
+  .dlf-feedback__prompt-action {
+    display: block;
+    width: 100%;
+    border-bottom: 0;
+  }
+
+  .dlf-feedback__prompt-content {
+    text-align: center;
+  }
+
+  .dlf-feedback__prompt-action {
+    padding-top: 0;
+
+    .dlf-feedback__prompt__link {
+      display: block;
+    }
   }
 }
