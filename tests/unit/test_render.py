@@ -1,6 +1,8 @@
 from collections import OrderedDict
 
 import pytest
+from digital_land.model.entity import Entity
+from digital_land.model.entry import Entry
 
 from digital_land_frontend.render import (
     Renderer,
@@ -32,6 +34,7 @@ def _dataset_reader():
             "organisation": "org-one",
             "blah": 1,
             "end-date": "",
+            "entry-date": "2021-01-01",
         },
         {
             "dataset-name": "REF03",
@@ -40,6 +43,7 @@ def _dataset_reader():
             "organisation": "org-one",
             "blah": 1,
             "end-date": "",
+            "entry-date": "2021-01-01",
         },
         {
             "dataset-name": "REF02",
@@ -48,6 +52,7 @@ def _dataset_reader():
             "organisation": "org-two",
             "blah": 1,
             "end-date": "",
+            "entry-date": "2021-01-01",
         },
         {
             "dataset-name": "REF/04",
@@ -56,6 +61,7 @@ def _dataset_reader():
             "organisation": "org-one",
             "blah": 1,
             "end-date": "2021-02-02",
+            "entry-date": "2021-01-01",
         },
     ]
     return data
@@ -64,19 +70,38 @@ def _dataset_reader():
 @pytest.fixture()
 def dataset_simple_slug_reader(_dataset_reader):
     return [
-        dict(row, slug=f"/dataset-name/{row['dataset-name'].replace('/', '-')}")
-        for row in _dataset_reader
+        Entity(
+            [
+                Entry(
+                    dict(
+                        row,
+                        slug=f"/dataset-name/{row['dataset-name'].replace('/', '-')}",
+                    ),
+                    "abc123",
+                    idx,
+                )
+            ]
+        )
+        for idx, row in enumerate(_dataset_reader)
     ]
 
 
 @pytest.fixture()
 def dataset_multi_slug_reader(_dataset_reader):
     return [
-        dict(
-            row,
-            slug=f"/dataset-name/{row['organisation']}/{row['dataset-name'].replace('/', '-')}",
+        Entity(
+            [
+                Entry(
+                    dict(
+                        row,
+                        slug=f"/dataset-name/{row['organisation']}/{row['dataset-name'].replace('/', '-')}",
+                    ),
+                    "abc123",
+                    idx,
+                )
+            ]
         )
-        for row in _dataset_reader
+        for idx, row in enumerate(_dataset_reader)
     ]
 
 
@@ -91,7 +116,8 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
     renderer.render(dataset_multi_slug_reader)
 
     assert len(spy_renderer.row_pages_rendered) == 4
-    for row in dataset_multi_slug_reader:
+    for entity in dataset_multi_slug_reader:
+        row = entity.snapshot()
         assert spy_renderer.row_pages_rendered[
             f"docs/{row['organisation']}/{row['dataset-name'].replace('/', '-')}/index.html"
         ] == {
@@ -102,6 +128,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
             ],
             "pipeline_name": "dataset-name",
             "row": row,
+            "entity": entity,
         }
 
     assert len(spy_renderer.index_pages_rendered) == 3
@@ -215,7 +242,8 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
     renderer.render(dataset_simple_slug_reader)
 
     assert len(spy_renderer.row_pages_rendered) == 4
-    for row in dataset_simple_slug_reader:
+    for entity in dataset_simple_slug_reader:
+        row = entity.snapshot()
         assert spy_renderer.row_pages_rendered[
             f"docs/{row['dataset-name'].replace('/', '-')}/index.html"
         ] == {
@@ -225,6 +253,7 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
             ],
             "pipeline_name": "dataset-name",
             "row": row,
+            "entity": entity,
         }
 
     assert len(spy_renderer.index_pages_rendered) == 1
@@ -283,7 +312,8 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
     renderer.render(dataset_simple_slug_reader)
 
     assert len(spy_renderer.row_pages_rendered) == 4
-    for row in dataset_simple_slug_reader:
+    for entity in dataset_simple_slug_reader:
+        row = entity.snapshot()
         assert spy_renderer.row_pages_rendered[
             f"docs/{row['dataset-name'].replace('/', '-')}/index.html"
         ] == {
@@ -293,6 +323,7 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
             ],
             "pipeline_name": "dataset-name",
             "row": row,
+            "entity": entity,
         }
 
     assert len(spy_renderer.index_pages_rendered) == 1
