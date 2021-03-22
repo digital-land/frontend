@@ -164,16 +164,6 @@
 </div>
 {% endblock recordTableContainer %}
 
-{%- block entryHistory %}
-<h2 class="govuk-heading-m">History</h2>
-<table>
-    <tr><td>resource</td><td>line</td><td>entry-date</td><td>data</td></tr>
-    {%- for entry in entity.change_history() %}
-    <tr><td>{{ entry.resource }}</td><td>{{ entry.line_num }}</td><td>{{ entry.entry_date.isoformat() }}</td><td>{{ entry.data }}</td></tr>
-    {%- endfor %}
-</table>
-{%- endblock %}
-
 {% block recordGeometry -%}
     {%- if geometry_url %}
 
@@ -194,6 +184,52 @@
     
     {%- endif %}
 {%- endblock recordGeometry %}
+
+{%- block entryHistory %}
+<h2 class="govuk-heading-m govuk-!-margin-top-9">History</h2>
+{% set fields = entity.all_fields() %}
+<div class="data-table__wrapper" data-module="data-table">
+<div class="data-table-left-shadow with-transition"></div>
+<div class="wide-table">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>entry-date</th>
+                <th>resource</th>
+                <th>line</th>
+                {% for f in fields %}
+                <th>{{ f }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {%- for entry in entity.change_history() %}
+            <tr>
+                <td>{{ entry.entry_date.isoformat() }}</td>
+                <td>{{ entry.resource }}</td>
+                <td>{{ entry.line_num }}</td>
+                {% for f in fields %}
+                {% if entry.data[f] %}
+                    {% if f == "geometry" %}
+                    <td class="data-table__notes-cell">
+                        {{ govukDetails({
+                            "summaryText": "See WKT",
+                            "text": entry.data[f]
+                        }) }}
+                    </td>
+                    {% else %}
+                    <td>{{ entry.data[f] }}</td> 
+                    {% endif %}
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {%- endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="data-table-right-shadow visible with-transition"></div>
+</div>
+{%- endblock %}
 
 {%- endblock %}
 
@@ -223,5 +259,15 @@
     const mapComponent = new DLMaps.Map($mapElement).init({})
 </script>
 {% endblock -%}
+
+{% block initDataTables %}
+<script>
+    // Initialise back to top
+    var $data_tables = document.querySelectorAll('[data-module*="data-table"]')
+    $data_tables.forEach(data_table => {
+        new window.DLFrontend.ScrollableTables(data_table).init()
+    })
+</script>
+{% endblock initDataTables %}
 
 {%- endblock %}
