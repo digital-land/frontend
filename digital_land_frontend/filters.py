@@ -233,6 +233,10 @@ def is_historical(record):
     if record["end-date"] == "":
         return False
     today = datetime.now()
+
+    if not record.get("end-date", None):
+        return False
+
     end_date = datetime.strptime(record["end-date"], "%Y-%m-%d")
     return end_date < today
 

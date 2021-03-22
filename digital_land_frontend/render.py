@@ -1,4 +1,3 @@
-import csv
 import json
 import logging
 import re
@@ -6,12 +5,12 @@ from collections import OrderedDict, defaultdict
 from pathlib import Path
 
 import shapely.wkt
+from digital_land.model.entity import Entity
+from digital_land.repository.entry_repository import EntryRepository
 
 from digital_land_frontend.jinja import setup_jinja
 from digital_land_frontend.jinja_filters.mappers import (
-    GeographyMapper,
-    GeneralOrganisationMapper,
-)
+    GeneralOrganisationMapper, GeographyMapper)
 
 # TODO:
 #   - add group_field to specification
@@ -143,18 +142,26 @@ class Renderer:
                 reference,
                 self.row_name(row),
                 slug=row["slug"],
-                end_date=row["end-date"],
+                end_date=row.get("end-date", None),
             )
         )
         self.group_slug_seen.add(dupe_check_key)
 
     def render_dataset(self, dataset_path):
-        self.render(csv.DictReader(open(dataset_path)))
+        repo = EntryRepository(dataset_path)
+        entities = repo.list_entities()
+        reader = (Entity(repo.find_by_entity(entity)) for entity in entities)
+        self.render(reader)
 
     def render(self, reader):
         self.slugs = set()
         rows = []
-        for idx, row in enumerate(reader, start=1):
+        for idx, entity in enumerate(reader, start=1):
+            row = entity.snapshot()
+
+            if not row:
+                continue  # Sometimes there are no active entries (all in the future)
+
             if not row["slug"]:
                 continue  # skip rows without a unique slug
 
@@ -180,6 +187,7 @@ class Renderer:
             self.renderer.render_row(
                 str(output_dir / "index.html"),
                 row=row,
+                entity=entity,
                 pipeline_name=self.pipeline_name,
                 breadcrumb=breadcrumb,
             )

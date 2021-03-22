@@ -164,6 +164,16 @@
 </div>
 {% endblock recordTableContainer %}
 
+{%- block entryHistory %}
+<h2 class="govuk-heading-m">History</h2>
+<table>
+    <tr><td>resource</td><td>line</td><td>entry-date</td><td>data</td></tr>
+    {%- for entry in entity.change_history() %}
+    <tr><td>{{ entry.resource }}</td><td>{{ entry.line_num }}</td><td>{{ entry.entry_date.isoformat() }}</td><td>{{ entry.data }}</td></tr>
+    {%- endfor %}
+</table>
+{%- endblock %}
+
 {% block recordGeometry -%}
     {%- if geometry_url %}
 
