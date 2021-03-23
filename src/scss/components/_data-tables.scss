@@ -271,6 +271,13 @@ $triangle-size: 8px;
   }
 }
 
+// TO DO: add function to output multiple min-width classes
+$cell-multiplier: 50px;
+
+.data-table__cell--min-width-4 {
+  min-width: $cell-multiplier * 4;
+}
+
 .issue__part__label {
   flex-shrink: 0;
 }

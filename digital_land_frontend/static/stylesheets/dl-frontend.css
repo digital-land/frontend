@@ -7897,6 +7897,10 @@
   min-width: 30em;
 }
 
+.data-table__cell--min-width-4 {
+  min-width: 200px;
+}
+
 .issue__part__label {
   -ms-flex-negative: 0;
       flex-shrink: 0;
