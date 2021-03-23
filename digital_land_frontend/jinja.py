@@ -23,6 +23,7 @@ from .filters import (
     developer_agreement_contribution_mapper,
     get_geometry_url_filter,
     key_field_filter,
+    github_line_num_filter,
 )
 
 
@@ -72,6 +73,7 @@ def setup_jinja():
     ] = developer_agreement_type_mapper.filter
     env.filters["dl_category_mapper"] = category_mapper_router.route
     env.filters["key_field"] = key_field_filter
+    env.filters["github_line_num"] = github_line_num_filter
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"
