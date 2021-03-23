@@ -212,7 +212,7 @@
                 {% for f in fields %}
                 {% if entry.data[f] %}
                     {% if f == "geometry" %}
-                    <td class="data-table__notes-cell">
+                    <td class="data-table__notes-cell" style="min-width: 200px;"><!-- style is temporary until I move it to scss -->
                         {{ govukDetails({
                             "summaryText": "See WKT",
                             "text": entry.data[f]
