@@ -8,6 +8,7 @@ import FilterHistorical from './dl-components/filter-historical'
 import InputCopy from './dl-components/input-copy'
 import FilterTimelineByDate from './dl-components/filter-timeline-by-date'
 import AppTabs from './dl-components/app-tabs'
+import SubNavTabs from './dl-components/sub-nav-tabs'
 
 import utils from './helpers/utils.js'
 
@@ -30,5 +31,6 @@ export {
   InputCopy,
   FilterTimelineByDate,
   AppTabs,
+  SubNavTabs,
   utils
 }
