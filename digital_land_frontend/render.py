@@ -62,6 +62,7 @@ class Renderer:
     def __init__(
         self,
         pipeline_name,
+        schema,
         key_field,
         url_root=None,
         group_field="organisation",
@@ -70,6 +71,7 @@ class Renderer:
         renderer=None,
     ):
         self.pipeline_name = pipeline_name
+        self.schema = schema
         self.docs = Path(docs)
         self.key_field = key_field
         self.group_field = group_field
@@ -152,7 +154,9 @@ class Renderer:
     def render_dataset(self, dataset_path):
         repo = EntryRepository(dataset_path)
         entities = repo.list_entities()
-        reader = (Entity(repo.find_by_entity(entity)) for entity in entities)
+        reader = (
+            Entity(repo.find_by_entity(entity), self.schema) for entity in entities
+        )
         self.render(reader)
 
     def render(self, reader):
