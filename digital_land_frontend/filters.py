@@ -266,3 +266,7 @@ def key_field_filter(record, pipeline_name):
         key_field = spec.key_field(schema)
         return record.get(key_field)
     return None
+
+
+def github_line_num_filter(n):
+    return str(int(n) + 1)

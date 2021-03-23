@@ -204,7 +204,7 @@
         </thead>
         <tbody>
             {%- for entry in entity.change_history() %}
-            {%- set resource_url = "https://github.com/digital-land/" + pipeline_name + "-collection/tree/main/transformed/" + pipeline_name + "/" + entry.resource + ".csv" %}
+            {%- set resource_url = "https://github.com/digital-land/" + pipeline_name + "-collection/tree/main/transformed/" + pipeline_name + "/" + entry.resource + ".csv#L" + entry.line_num|github_line_num %}
             <tr>
                 <td>{{ entry.entry_date.isoformat() }}</td>
                 <td><a href="{{ resource_url }}">{{ entry.resource|truncate(15) }}</a></td>
