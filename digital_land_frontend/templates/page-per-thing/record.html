@@ -25,6 +25,7 @@
         } ] + breadcrumb
     }) -}}
 {%- endblock -%}
+
 {%- block content %}
 
 {% block recordHead %}
@@ -34,6 +35,33 @@
     {%- endblock recordTitle %}
 {% endblock recordHead %}
 
+<div class="govuk-tabs" data-module="dlf-subnav">
+    <h2 class="govuk-tabs__title">
+      Contents
+    </h2>
+    <nav class="dlf-subnav" aria-label="Sub navigation">
+        <ul class="dlf-subnav__list">
+            <li class="dlf-subnav__list-item dlf-subnav__list-item--selected">
+                <a class="dlf-subnav__list-item__link" href="#record" data-module-sub-nav="tab">
+                Record
+                </a>
+            </li>
+            <li class="dlf-subnav__list-item">
+                <a class="dlf-subnav__list-item__link" href="#history" data-module-sub-nav="tab">
+                History
+                </a>
+            </li>
+            {%- if provenance %}
+            <li class="dlf-subnav__list-item">
+                <a class="dlf-subnav__list-item__link" href="#provenance" data-module-sub-nav="tab">
+                Provenance
+                </a>
+            </li>
+            {% endif -%}
+        </ul>
+    </nav>
+
+<div id="record">
 {% block recordTableContainer %}
 <div class="govuk-grid-row">
 
@@ -164,7 +192,9 @@
 </div>
 {% endblock recordTableContainer %}
 
-<a href="https://digital-land.github.io/specification/schema/{{ entity.schema }}/">View the schema for {{ entity.schema }}</a>
+<p class="govuk-body">
+    <a href="https://digital-land.github.io/specification/schema/{{ entity.schema }}/">View the {{ entity.schema }} schema</a>
+</p>
 
 {% block recordGeometry -%}
     {%- if geometry_url %}
@@ -186,7 +216,9 @@
     
     {%- endif %}
 {%- endblock recordGeometry %}
+</div>
 
+<div id="history">
 {%- block entryHistory %}
 <h2 class="govuk-heading-m govuk-!-margin-top-9">History</h2>
 {% set fields = entity.all_fields() %}
@@ -232,9 +264,16 @@
 </div>
 <div class="data-table-right-shadow visible with-transition"></div>
 </div>
-{%- endblock %}
+{%- endblock entryHistory %}
+</div>
 
-{%- endblock %}
+{%- if provenance %}
+<div id="provenance">
+    <h2 class="govuk-heading-m govuk-!-margin-top-9">Provenance</h2>
+</div>
+{% endif -%}
+
+{%- endblock content %}
 
 {% block recordEnd %}{% endblock recordEnd %}
 
@@ -272,5 +311,10 @@
     })
 </script>
 {% endblock initDataTables %}
+
+<script>
+    const $subNavTabs = document.querySelector('[data-module="dlf-subnav"]')
+    const subNavTabsComponent = new DLFrontend.SubNavTabs($subNavTabs).init({})
+</script>
 
 {%- endblock %}
