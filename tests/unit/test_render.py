@@ -80,7 +80,8 @@ def dataset_simple_slug_reader(_dataset_reader):
                     "abc123",
                     idx,
                 )
-            ]
+            ],
+            "conservation-area",
         )
         for idx, row in enumerate(_dataset_reader)
     ]
@@ -99,7 +100,8 @@ def dataset_multi_slug_reader(_dataset_reader):
                     "abc123",
                     idx,
                 )
-            ]
+            ],
+            "conservation-area",
         )
         for idx, row in enumerate(_dataset_reader)
     ]
@@ -109,6 +111,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
     spy_renderer = SpyRenderer()
     renderer = Renderer(
         "dataset-name",
+        "schema-name",
         "dataset-name",
         group_field="organisation",
         renderer=spy_renderer,
@@ -235,6 +238,7 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
     spy_renderer = SpyRenderer()
     renderer = Renderer(
         "dataset-name",
+        "schema-name",
         "dataset-name",
         group_field="organisation",
         renderer=spy_renderer,
@@ -307,7 +311,11 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
 def test_render_with_no_index_grouping(dataset_simple_slug_reader):
     spy_renderer = SpyRenderer()
     renderer = Renderer(
-        "dataset-name", "dataset-name", group_field=None, renderer=spy_renderer
+        "dataset-name",
+        "schema-name",
+        "dataset-name",
+        group_field=None,
+        renderer=spy_renderer,
     )
     renderer.render(dataset_simple_slug_reader)
 
