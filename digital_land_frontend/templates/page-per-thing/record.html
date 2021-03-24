@@ -5,6 +5,7 @@
 {%- from "digital-land-frontend/components/map/macro.html" import dlMap %}
 {%- from "digital-land-frontend/components/data-record/macro.html" import dlDataRecordPanel %}
 {%- from "digital-land-frontend/components/data-reference-cell/macro.html" import dlDataReferenceCell %}
+{%- from "digital-land-frontend/components/data-table/macro.html" import dlDataTableWrapper %}
 
 {%- set row_name = row['name'] if row['name'] else row['slug'] %}
 {% set geometry_url = row|get_geometry_url %}
@@ -222,48 +223,47 @@
 {%- block entryHistory %}
 <h2 class="govuk-heading-m govuk-!-margin-top-9">History</h2>
 {% set fields = entity.all_fields() %}
-<div class="data-table__wrapper" data-module="data-table">
-<div class="data-table-left-shadow with-transition"></div>
-<div class="wide-table">
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>entry-date</th>
-                <th>resource</th>
-                <th>line</th>
-                {% for f in fields %}
-                <th>{{ f }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {%- for entry in entity.change_history() %}
-            {%- set resource_url = "https://github.com/digital-land/" + pipeline_name + "-collection/tree/main/transformed/" + pipeline_name + "/" + entry.resource + ".csv#L" + entry.line_num|github_line_num %}
-            <tr>
-                <td>{{ entry.entry_date.isoformat() }}</td>
-                <td><a href="{{ resource_url }}">{{ entry.resource|truncate(15) }}</a></td>
-                <td>{{ entry.line_num }}</td>
-                {% for f in fields %}
-                {% if entry.data[f] %}
-                    {% if f == "geometry" %}
-                    <td class="data-table__notes-cell data-table__cell--min-width-4">
-                        {{ govukDetails({
-                            "summaryText": "See WKT",
-                            "text": entry.data[f]
-                        }) }}
-                    </td>
-                    {% else %}
-                    <td>{{ entry.data[f] }}</td> 
-                    {% endif %}
+{% set tableHTML -%}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>entry-date</th>
+            <th>resource</th>
+            <th>line</th>
+            {% for f in fields %}
+            <th>{{ f }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {%- for entry in entity.change_history() %}
+        {%- set resource_url = "https://github.com/digital-land/" + pipeline_name + "-collection/tree/main/transformed/" + pipeline_name + "/" + entry.resource + ".csv#L" + entry.line_num|github_line_num %}
+        <tr>
+            <td>{{ entry.entry_date.isoformat() }}</td>
+            <td><a href="{{ resource_url }}">{{ entry.resource|truncate(15) }}</a></td>
+            <td>{{ entry.line_num }}</td>
+            {% for f in fields %}
+            {% if entry.data[f] %}
+                {% if f == "geometry" %}
+                <td class="data-table__notes-cell data-table__cell--min-width-4">
+                    {{ govukDetails({
+                        "summaryText": "See WKT",
+                        "text": entry.data[f]
+                    }) }}
+                </td>
+                {% else %}
+                <td>{{ entry.data[f] }}</td> 
                 {% endif %}
-                {% endfor %}
-            </tr>
-            {%- endfor %}
-        </tbody>
-    </table>
-</div>
-<div class="data-table-right-shadow visible with-transition"></div>
-</div>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {%- endfor %}
+    </tbody>
+</table>
+{% endset -%}
+{{ dlDataTableWrapper({
+    "tableHTML": tableHTML
+}) }}
 {%- endblock entryHistory %}
 </div>
 
