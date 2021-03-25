@@ -20,6 +20,17 @@ from digital_land_frontend.jinja_filters.mappers import (
 #   - clean up template logic now that we always provide href, text and reference
 
 
+def generate_download_link(pipeline_name):
+    urls = {
+        "contribution-funding-status": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/contribution-funding-status.csv",
+        "contribution-purpose": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/contribution-purpose.csv",
+        "developer-agreement-type": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement-type.csv",
+    }
+    if pipeline_name in urls:
+        return urls[pipeline_name]
+    return f"https://raw.githubusercontent.com/digital-land/{pipeline_name}-collection/main/dataset/{pipeline_name}.csv"
+
+
 class JinjaRenderer:
     def __init__(self, url_root, docs="docs"):
         self.docs = docs
@@ -274,7 +285,7 @@ class Renderer:
                 download_url = None
             else:
                 slug = f"/{self.pipeline_name}"
-                download_url = f"https://raw.githubusercontent.com/digital-land/{self.pipeline_name}/main/dataset/{self.pipeline_name}.csv"
+                download_url = generate_download_link(self.pipeline_name)
             if "items" in i:
                 for item in i["items"]:
                     if "slug" in item:

@@ -8,6 +8,7 @@ from digital_land_frontend.render import (
     Renderer,
     slug_to_breadcrumb,
     slug_to_relative_href,
+    generate_download_link,
 )
 
 
@@ -401,3 +402,16 @@ def test_slug_to_breadcrumb():
         {"text": "BUC", "href": "../"},
         {"text": "avdlp-GP2"},
     ]
+
+
+def test_generate_download_link():
+    # test url to a normal collection
+    assert (
+        generate_download_link("development-plan-document")
+        == "https://raw.githubusercontent.com/digital-land/development-plan-document-collection/main/dataset/development-plan-document.csv"
+    )
+    # test url to dataset within another collection
+    assert (
+        generate_download_link("developer-agreement-type")
+        == "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement-type.csv"
+    )
