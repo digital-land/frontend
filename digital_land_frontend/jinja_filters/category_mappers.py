@@ -36,7 +36,7 @@ class PlanTypeMapper(Mapper):
 
 class PolicyCategoryMapper(Mapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/development-policy-category/main/dataset/development-policy-category.csv"
+        "https://raw.githubusercontent.com/digital-land/development-policy-category-collection/main/dataset/development-policy-category.csv"
     ]
     key_field = "development-policy-category"
     url_pattern = "https://digital-land.github.io{slug}"
