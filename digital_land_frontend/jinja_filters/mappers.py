@@ -198,6 +198,7 @@ class DeveloperAgreementContributionMapper(Mapper):
 class BaseGeometryMapper(Mapper):
     key_field = "geography"
 
+    @Mapper.lazy_load
     @Mapper.slug_to_key
     def get_geometry_url(self, k, slug=None):
         if k not in self.mapping:
