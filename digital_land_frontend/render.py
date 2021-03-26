@@ -24,6 +24,9 @@ def generate_download_link(pipeline_name):
     urls = {
         "contribution-funding-status": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/contribution-funding-status.csv",
         "contribution-purpose": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/contribution-purpose.csv",
+        "developer-agreement": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement.csv",
+        "developer-agreement-contribution": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement-contribution.csv",
+        "developer-agreement-transaction": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement-transaction.csv",
         "developer-agreement-type": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement-type.csv",
     }
     if pipeline_name in urls:
