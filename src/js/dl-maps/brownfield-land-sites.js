@@ -114,14 +114,12 @@ function optionalFields (data) {
 }
 
 function processSiteData (row) {
-  console.log(row)
   const templateFuncs = {
     ifCoords: ifCoords,
     isRange: isRange,
     hasEndDate: hasEndDate,
     datesSection: datesSection,
     orgLink: linkToOrg,
-    resourceTrunc: utils.truncate(row.resource, 9),
     optionalFields: optionalFields
   }
   return Object.assign(row, templateFuncs)
@@ -166,10 +164,8 @@ function loadBrownfieldSites (map, url, groupName, options) {
   const groupNameCC = utils.toCamelCase(groupName)
   // check to see if already loaded data
   if (!Object.prototype.hasOwnProperty.call(map.featureGroups, groupNameCC)) {
-    console.log('fetch from url', url)
     fetch(url)
       .then(function (resp) {
-        console.log(resp)
         return resp.json()
       })
       .then((data) => {
