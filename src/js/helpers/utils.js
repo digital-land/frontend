@@ -18,6 +18,10 @@ utils.toCamelCase = function (s) {
 }
 
 utils.truncate = function (s, len) {
+  if (typeof val === 'undefined') {
+    console.log("Can't truncate undefined string")
+    return ''
+  }
   return s.slice(0, len) + '...'
 }
 

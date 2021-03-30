@@ -114,6 +114,7 @@ function optionalFields (data) {
 }
 
 function processSiteData (row) {
+  console.log(row)
   const templateFuncs = {
     ifCoords: ifCoords,
     isRange: isRange,
@@ -167,7 +168,10 @@ function loadBrownfieldSites (map, url, groupName, options) {
   if (!Object.prototype.hasOwnProperty.call(map.featureGroups, groupNameCC)) {
     console.log('fetch from url', url)
     fetch(url)
-      .then(resp => resp.json())
+      .then(function (resp) {
+        console.log(resp)
+        return resp.json()
+      })
       .then((data) => {
         var l = map.createFeatureGroup(groupNameCC)
         const geojsonLayer = brownfieldGeojsonToLayer(data, options)
