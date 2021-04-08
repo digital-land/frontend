@@ -150,7 +150,7 @@ SubNavTabs.prototype.showTab = function ($tab) {
 }
 
 SubNavTabs.prototype.getTab = function (hash) {
-  return this.$module.querySelector(`${this.subNavTabsSelector}[href="' + hash + '"]`)
+  return this.$module.querySelector(`${this.subNavTabsSelector}[href="${hash}"]`)
 }
 
 SubNavTabs.prototype.setAttributes = function ($tab) {
@@ -286,7 +286,6 @@ SubNavTabs.prototype.highlightTab = function ($tab) {
 
 SubNavTabs.prototype.getCurrentTab = function () {
   const selector = `.${this.subNavTabSelectedClass} ${this.subNavTabsSelector}`
-  console.log('selector', selector)
   return this.$module.querySelector(selector)
 }
 
