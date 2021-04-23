@@ -54,3 +54,14 @@ class DeveloperAgreementTypeMapper(Mapper):
 
     def get_url(self, k):
         return super().get_url(k, self.get_slug(k))
+
+
+class DocumentTypeMapper(Mapper):
+    dataset_urls = [
+        "https://raw.githubusercontent.com/digital-land/document-type/main/dataset/document-type.csv"
+    ]
+    key_field = "category"
+    url_pattern = "https://digital-land.github.io{slug}"
+
+    def get_url(self, k):
+        return super().get_url(k, self.get_slug(k))

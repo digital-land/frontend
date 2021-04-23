@@ -132,7 +132,7 @@
                     "html": policyHTML
                 }) }}
                 {%- endif -%}
-            {%- elif field in ["development-policy-categories", "developer-agreement-type", "development-plan-types", "contribution-purpose", "contribution-funding-status"] %}
+            {%- elif field in ["development-policy-categories", "developer-agreement-type", "development-plan-types", "contribution-purpose", "contribution-funding-status", "document-types"] %}
                 {%- for category in row[field].split(';')  %}
                     {%- set category_url = category|dl_category_mapper(field, "url") -%}
                     {%- set category_name = category|dl_category_mapper(field) -%}
