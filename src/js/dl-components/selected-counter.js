@@ -25,13 +25,15 @@ SelectedCounter.prototype.init = function () {
 
   // if current count is 0 hide the message
   this.message_is_hidden = false
-  if (this.currentCount == 0) {
+  if (this.currentCount === 0) {
     this.hideCountMessage()
   }
 
   // Bind event changes to the textarea
   var boundChangeEvents = this.bindChangeEvents.bind(this)
   boundChangeEvents()
+
+  return this
 }
 
 SelectedCounter.prototype.fetchCountElement = function () {
@@ -77,10 +79,10 @@ SelectedCounter.prototype.updateCount = function () {
   var count = $fieldset.querySelectorAll('input:checked').length
 
   // if 0 hide
-  if (count == 0) {
+  if (count === 0) {
     this.countElement.textContent = 0
     this.hideCountMessage()
-  } else if (count != this.currentCount) {
+  } else if (count !== this.currentCount) {
     // if changed update
     this.countElement.textContent = count
     this.showCountMessage()
