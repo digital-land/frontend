@@ -476,13 +476,15 @@ SelectedCounter.prototype.init = function () {
 
   // if current count is 0 hide the message
   this.message_is_hidden = false;
-  if (this.currentCount == 0) {
+  if (this.currentCount === 0) {
     this.hideCountMessage();
   }
 
   // Bind event changes to the textarea
   var boundChangeEvents = this.bindChangeEvents.bind(this);
   boundChangeEvents();
+
+  return this
 };
 
 SelectedCounter.prototype.fetchCountElement = function () {
@@ -528,10 +530,10 @@ SelectedCounter.prototype.updateCount = function () {
   var count = $fieldset.querySelectorAll('input:checked').length;
 
   // if 0 hide
-  if (count == 0) {
+  if (count === 0) {
     this.countElement.textContent = 0;
     this.hideCountMessage();
-  } else if (count != this.currentCount) {
+  } else if (count !== this.currentCount) {
     // if changed update
     this.countElement.textContent = count;
     this.showCountMessage();
@@ -3038,8 +3040,9 @@ SubNavTabs.prototype.teardown = function () {
 };
 
 SubNavTabs.prototype.onHashChange = function (e) {
+  console.log('hashchange');
   var hash = window.location.hash;
-  var $tabWithHash = this.getTab(hash);
+  var $tabWithHash = this.getTab(hash) || this.$tabs[0];
   if (!$tabWithHash) {
     return
   }
@@ -3069,7 +3072,7 @@ SubNavTabs.prototype.showTab = function ($tab) {
 };
 
 SubNavTabs.prototype.getTab = function (hash) {
-  return this.$module.querySelector(`${this.subNavTabsSelector}[href="' + hash + '"]`)
+  return this.$module.querySelector(`${this.subNavTabsSelector}[href="${hash}"]`)
 };
 
 SubNavTabs.prototype.setAttributes = function ($tab) {
@@ -3205,7 +3208,6 @@ SubNavTabs.prototype.highlightTab = function ($tab) {
 
 SubNavTabs.prototype.getCurrentTab = function () {
   const selector = `.${this.subNavTabSelectedClass} ${this.subNavTabsSelector}`;
-  console.log('selector', selector);
   return this.$module.querySelector(selector)
 };
 
