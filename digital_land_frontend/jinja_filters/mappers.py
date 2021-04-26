@@ -275,26 +275,24 @@ class ConservationAreaMapper(BaseGeometryMapper):
     dataset_urls = [
         "https://github.com/digital-land/conservation-area-collection/raw/main/dataset/conservation-area.csv"
     ]
+    key_field = "slug"
     matcher = re.compile(r"^/conservation-area/")
     url_pattern = "https://digital-land.github.io{slug}"
     geometry_url_pattern = "https://digital-land.github.io{slug}/geometry.geojson"
 
-    def key_filter(self, k):
-        return k.split(":")[-1]
-
     def get_name(self, slug):
-        result = super().get_name(slug)
-        if not result:
-            return slug.split("/")[-1]
-        return result
+        return self.mapping.get(slug, None)
+
+    def get_url(self, slug):
+        if slug not in self.slug:
+            return None
+        return self.url_pattern.format(slug=slug)
 
     @Mapper.lazy_load
-    def get_geometry_url(self, k):
-        # if k[-4:] == "CA25":
-        #     __import__('pdb').set_trace()
-        if k not in self.slug:
+    def get_geometry_url(self, slug):
+        if slug not in self.slug:
             return None
-        return self.geometry_url_pattern.format(slug=k)
+        return self.geometry_url_pattern.format(slug=slug)
 
 
 class GeographyMapper(GeneralMapper):
