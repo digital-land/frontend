@@ -3040,12 +3040,9 @@ SubNavTabs.prototype.teardown = function () {
 };
 
 SubNavTabs.prototype.onHashChange = function (e) {
-  console.log('hashchange');
   var hash = window.location.hash;
+  // if user hits back button to none hashed state then need to show the first tab
   var $tabWithHash = this.getTab(hash) || this.$tabs[0];
-  if (!$tabWithHash) {
-    return
-  }
 
   // Prevent changing the hash
   if (this.changingHash) {
