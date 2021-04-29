@@ -49,13 +49,6 @@
 .dl-button--on-blue {
   @include govuk-style-button($button-text-colour: govuk-colour("blue"), $button-colour: govuk-colour("white"), $button-shadow-colour: govuk-colour("black"));
   font-weight: bold;
-
-  &:link,
-  &:visited {
-    &:hover {
-      color: darken(govuk-colour("blue"), 5%);
-    }
-  }
 }
 
 // Allows you to align an anchor next to the button
