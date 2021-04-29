@@ -36,11 +36,11 @@
   .govuk-heading-l,
   .govuk-body-l,
   .govuk-body,
-  a {
+  a:not([role="button"]) {
     color: $govuk-body-background-colour;
   }
 
-  a:hover {
+  a:not([role="button"]):hover {
     color: govuk-colour("light-grey", $legacy: "grey-3");
   }
 }
