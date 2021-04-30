@@ -197,6 +197,17 @@
     <a href="https://digital-land.github.io/specification/schema/{{ entity.schema }}/">View the {{ entity.schema }} schema</a>
 </p>
 
+{% if typology == "category" -%}
+{% block recordReferences -%}
+    <h2 class="govuk-heading-m">References</h2>
+    <list>
+    {% for reference in row[pipeline_name]|reference_mapper(pipeline_name) %}
+        <li><a href={{ reference["href"] }}>{{ reference["text"] }}</a></li>
+    {% endfor %}
+    </list>
+{% endblock recordReferences -%}
+{% endif -%}
+
 {% block recordGeometry -%}
     {%- if geometry_url %}
 

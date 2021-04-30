@@ -1,29 +1,30 @@
 import jinja2
 
 from .filters import (
-    group_id_to_name_filter,
-    organisation_id_to_name_filter,
-    organisation_id_to_url_filter,
-    geography_to_name_filter,
-    geography_to_url_filter,
-    geography_to_geometry_url_filter,
-    strip_slug,
-    make_link,
-    is_list,
-    is_historical,
+    category_mapper_router,
     contains_historical,
-    policy_to_development_plan_filter,
-    policy_mapper,
     dev_doc_mapper,
-    plan_type_mapper,
-    policy_category_mapper,
+    developer_agreement_contribution_mapper,
     developer_agreement_mapper,
     developer_agreement_type_mapper,
-    category_mapper_router,
-    developer_agreement_contribution_mapper,
+    geography_to_geometry_url_filter,
+    geography_to_name_filter,
+    geography_to_url_filter,
     get_geometry_url_filter,
-    key_field_filter,
     github_line_num_filter,
+    group_id_to_name_filter,
+    is_historical,
+    is_list,
+    key_field_filter,
+    make_link,
+    organisation_id_to_name_filter,
+    organisation_id_to_url_filter,
+    plan_type_mapper,
+    policy_category_mapper,
+    policy_mapper,
+    policy_to_development_plan_filter,
+    reference_filter,
+    strip_slug,
 )
 
 
@@ -74,6 +75,7 @@ def setup_jinja():
     env.filters["dl_category_mapper"] = category_mapper_router.route
     env.filters["key_field"] = key_field_filter
     env.filters["github_line_num"] = github_line_num_filter
+    env.filters["reference_mapper"] = reference_filter
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"

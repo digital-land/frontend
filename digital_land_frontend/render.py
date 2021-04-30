@@ -77,6 +77,7 @@ class Renderer:
         self,
         pipeline_name,
         schema,
+        typology,
         key_field,
         url_root=None,
         group_field="organisation",
@@ -86,6 +87,7 @@ class Renderer:
     ):
         self.pipeline_name = pipeline_name
         self.schema = schema
+        self.typology = typology
         self.docs = Path(docs)
         self.key_field = key_field
         self.group_field = group_field
@@ -210,6 +212,8 @@ class Renderer:
                 entity=entity,
                 pipeline_name=self.pipeline_name,
                 breadcrumb=breadcrumb,
+                schema=self.schema,
+                typology=self.typology,
             )
             rows.append(row)
             self.add_to_index(row["slug"], row)

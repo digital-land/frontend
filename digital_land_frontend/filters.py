@@ -1,29 +1,30 @@
-import os
 import numbers
-import validators
+import os
 from datetime import datetime
-from jinja2 import evalcontextfilter, Markup
 
-from .jinja_filters.mappers import (
-    GeneralOrganisationMapper,
-    GeographyMapper,
-    PolicyMapper,
-    DevelopmentDocMapper,
-    PolicyToDocMapper,
-    DeveloperAgreementMapper,
-    DeveloperAgreementContributionMapper,
-)
+import validators
+from digital_land.specification import Specification
+from jinja2 import Markup, evalcontextfilter
 
 from .jinja_filters.category_mappers import (
     ContributionPurposeMapper,
     ContributionFundingStatusMapper,
-    PlanTypeMapper,
-    PolicyCategoryMapper,
+    ContributionPurposeMapper,
     DeveloperAgreementTypeMapper,
     DocumentTypeMapper,
+    PlanTypeMapper,
+    PolicyCategoryMapper,
 )
-
-from digital_land.specification import Specification
+from .jinja_filters.mappers import (
+    DeveloperAgreementContributionMapper,
+    DeveloperAgreementMapper,
+    DevelopmentDocMapper,
+    GeneralOrganisationMapper,
+    GeographyMapper,
+    PolicyMapper,
+    PolicyToDocMapper,
+)
+from .jinja_filters.reference_mappers import ReferenceMapper
 
 
 def get_jinja_template_raw(template_file_path):
@@ -144,6 +145,23 @@ def policy_to_development_plan_filter(id):
     E.g. astonclintonndp-B1 -> neigh-plan-buc-astonclintonndp
     """
     return policy_to_doc_mapper.get_name(id)
+
+
+reference_mapper = ReferenceMapper()
+
+
+def reference_filter(id, field):
+    """
+    Returns links to each entity that references the provided id in the provided field
+
+    E.g.
+    "article-4-document", "document-type" -> [
+        {"reference": "article-4-document:CA05-1", "href": "/conservation-area/local-authority-eng/LBH/CA05", "text": "article-4-document:CA05-1"},
+        {"reference": "article-4-document:CA11-2", "href": "/conservation-area/local-authority-eng/LBH/CA11", "text": "article-4-document:CA11-2"},
+        ...
+    ]
+    """
+    return reference_mapper.get_references(id, field)
 
 
 class MapperFilter:
