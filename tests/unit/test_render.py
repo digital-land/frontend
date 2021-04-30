@@ -113,6 +113,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
     renderer = Renderer(
         "dataset-name",
         "schema-name",
+        "typology-name",
         "dataset-name",
         group_field="organisation",
         renderer=spy_renderer,
@@ -133,6 +134,8 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
             "pipeline_name": "dataset-name",
             "row": row,
             "entity": entity,
+            "schema": "schema-name",
+            "typology": "typology-name",
         }
 
     assert len(spy_renderer.index_pages_rendered) == 3
@@ -240,6 +243,7 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
     renderer = Renderer(
         "dataset-name",
         "schema-name",
+        "typology-name",
         "dataset-name",
         group_field="organisation",
         renderer=spy_renderer,
@@ -259,6 +263,8 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
             "pipeline_name": "dataset-name",
             "row": row,
             "entity": entity,
+            "schema": "schema-name",
+            "typology": "typology-name",
         }
 
     assert len(spy_renderer.index_pages_rendered) == 1
@@ -314,6 +320,7 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
     renderer = Renderer(
         "dataset-name",
         "schema-name",
+        "typology-name",
         "dataset-name",
         group_field=None,
         renderer=spy_renderer,
@@ -333,6 +340,8 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
             "pipeline_name": "dataset-name",
             "row": row,
             "entity": entity,
+            "schema": "schema-name",
+            "typology": "typology-name",
         }
 
     assert len(spy_renderer.index_pages_rendered) == 1

@@ -7,7 +7,6 @@ from digital_land.specification import Specification
 from jinja2 import Markup, evalcontextfilter
 
 from .jinja_filters.category_mappers import (
-    ContributionPurposeMapper,
     ContributionFundingStatusMapper,
     ContributionPurposeMapper,
     DeveloperAgreementTypeMapper,
