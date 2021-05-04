@@ -27,9 +27,16 @@ class ViewModelJsonQuery:
 
         return self.paginate(url)
 
+    def get(self, url):
+        try:
+            response = requests.get(url)
+        except ConnectionRefusedError:
+            raise ConnectionError("failed to connect to view model api at %s" % url)
+        return response
+
     def paginate(self, url):
         while url:
-            response = requests.get(url)
+            response = self.get(url)
             data = response.json()
             try:
                 url = response.links.get("next").get("url")
