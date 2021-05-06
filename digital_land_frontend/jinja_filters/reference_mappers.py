@@ -56,13 +56,14 @@ class ViewModelJsonQuery:
 
 class ReferenceMapper:
     def __init__(self):
-        self.view_model = ViewModelJsonQuery()
+        self.view_model = ViewModelJsonQuery("https://datasette-demo.digital-land.info/view_model/")
 
     def get_references(self, value, field):
-        category = list(
-            self.view_model.select("category", exact={"category": value, "type": field})
+        field_typology = SPECIFICATION.field_typology(field)
+        key = list(
+            self.view_model.select(field_typology, exact={field_typology: value, "type": field})
         )
-        row_count = len(category)
+        row_count = len(key)
         if row_count != 1:
             logger.warning(
                 'select category "%s" returned %s rows, expected exactly 1',
@@ -70,7 +71,7 @@ class ReferenceMapper:
                 row_count,
             )
             return None
-        category_id = category[0]["id"]
+        key_id = key[0]["id"]
         schemas = SPECIFICATION.schema_from.get(field, [])
         for schema in schemas:
             typology = SPECIFICATION.field_typology(schema)
@@ -79,9 +80,9 @@ class ReferenceMapper:
                 typology,
                 joins=[
                     {
-                        "table": f"{typology}_category",
-                        "column": "category",
-                        "value": category_id,
+                        "table": f"{typology}_{field_typology}",
+                        "column": field_typology,
+                        "value": key_id,
                     },
                 ],
                 label="slug_id",

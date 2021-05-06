@@ -201,7 +201,7 @@
 {% block recordReferences -%}
     <h2 class="govuk-heading-m">References</h2>
     <list>
-    {% for reference in row[pipeline_name]|reference_mapper(pipeline_name) %}
+    {% for reference in row[key_field]|reference_mapper(pipeline_name) %}
         <li><a href={{ reference["href"] }}>{{ reference["text"] }}</a></li>
     {% endfor %}
     </list>
@@ -292,7 +292,6 @@
 
 {% block feedbackPrompt %}
     {%- from "digital-land-frontend/components/feedback/macro.html" import dlFeedback %}
-    {% set key_field = row|key_field(pipeline_name) %}
     {% set subject = "Feedback on (" + key_field + ") " + row_name + " -- " + pipeline_name  %}
     {{ dlFeedback({
         "text": "Spotted an issue? Let us know so we can improve the data.",

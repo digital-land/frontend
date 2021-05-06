@@ -214,6 +214,7 @@ class Renderer:
                 breadcrumb=breadcrumb,
                 schema=self.schema,
                 typology=self.typology,
+                key_field=self.key_field,
             )
             rows.append(row)
             self.add_to_index(row["slug"], row)
