@@ -1,7 +1,10 @@
 import json
+import logging
 
 import requests
 from digital_land.cli import SPECIFICATION
+
+logger = logging.getLogger(__name__)
 
 
 class ViewModelJsonQuery:
@@ -61,10 +64,12 @@ class ReferenceMapper:
         )
         row_count = len(category)
         if row_count != 1:
-            raise ValueError(
-                "select category %s returned %s rows, expected exactly 1"
-                % (value, row_count)
+            logger.warning(
+                'select category "%s" returned %s rows, expected exactly 1',
+                value,
+                row_count,
             )
+            return None
         category_id = category[0]["id"]
         schemas = SPECIFICATION.schema_from.get(field, [])
         for schema in schemas:
