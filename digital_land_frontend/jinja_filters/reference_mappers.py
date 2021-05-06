@@ -5,7 +5,7 @@ from digital_land.cli import SPECIFICATION
 
 
 class ViewModelJsonQuery:
-    def __init__(self, url_base="http://127.0.0.1:8001/view_model/"):
+    def __init__(self, url_base="https://datasette-demo.digital-land.info/view_model/"):
         self.url_base = url_base
 
     def select(self, table, exact={}, joins=[], label=None):
