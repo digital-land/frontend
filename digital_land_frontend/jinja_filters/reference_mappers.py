@@ -56,12 +56,16 @@ class ViewModelJsonQuery:
 
 class ReferenceMapper:
     def __init__(self):
-        self.view_model = ViewModelJsonQuery("https://datasette-demo.digital-land.info/view_model/")
+        self.view_model = ViewModelJsonQuery(
+            "https://datasette-demo.digital-land.info/view_model/"
+        )
 
     def get_references(self, value, field):
         field_typology = SPECIFICATION.field_typology(field)
         key = list(
-            self.view_model.select(field_typology, exact={field_typology: value, "type": field})
+            self.view_model.select(
+                field_typology, exact={field_typology: value, "type": field}
+            )
         )
         row_count = len(key)
         if row_count != 1:
