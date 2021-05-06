@@ -136,6 +136,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
             "entity": entity,
             "schema": "schema-name",
             "typology": "typology-name",
+            "key_field": "dataset-name",
         }
 
     assert len(spy_renderer.index_pages_rendered) == 3
@@ -265,6 +266,7 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
             "entity": entity,
             "schema": "schema-name",
             "typology": "typology-name",
+            "key_field": "dataset-name",
         }
 
     assert len(spy_renderer.index_pages_rendered) == 1
@@ -342,6 +344,7 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
             "entity": entity,
             "schema": "schema-name",
             "typology": "typology-name",
+            "key_field": "dataset-name",
         }
 
     assert len(spy_renderer.index_pages_rendered) == 1
