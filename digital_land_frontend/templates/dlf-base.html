@@ -13,11 +13,11 @@
 {% block head %}
 	<meta name="digital-land:template" content="{{ templateName|default('dlf-base.html') }}">
 
-	{% block dlMapAssets %}
+	{%- block dlMapAssets %}
 		{%- if includesMap -%}
 			{% include 'digital-land-frontend/partials/dl-map-assets.html' %}
 		{%- endif %}
-	{% endblock %}
+	{% endblock -%}
 
 	{%- block dlCss %}
 	<link href="{{ staticPath | default('/static') }}/stylesheets/dl-frontend.css" rel="stylesheet" />
