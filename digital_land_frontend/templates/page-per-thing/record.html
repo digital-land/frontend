@@ -60,9 +60,10 @@
             </li>
             {% endif -%}
             {% if typology == "category" -%}
+            {% set references = row[key_field]|reference_mapper(pipeline_name) %}
             <li class="dlf-subnav__list-item">
                 <a class="dlf-subnav__list-item__link" href="#referenced-by" data-module-sub-nav="tab">
-                Referenced by
+                Referenced by ({{ references|length }})
                 </a>
             </li>
             {% endif -%}
