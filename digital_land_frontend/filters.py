@@ -160,7 +160,9 @@ def reference_filter(id, field):
         ...
     ]
     """
-    return reference_mapper.get_references(id, field)
+    return sorted(
+        list(reference_mapper.get_references(id, field)), key=lambda x: x["text"]
+    )
 
 
 class MapperFilter:

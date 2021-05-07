@@ -59,6 +59,13 @@
                 </a>
             </li>
             {% endif -%}
+            {% if typology == "category" -%}
+            <li class="dlf-subnav__list-item">
+                <a class="dlf-subnav__list-item__link" href="#referenced-by" data-module-sub-nav="tab">
+                Referenced by
+                </a>
+            </li>
+            {% endif -%}
         </ul>
     </nav>
 
@@ -197,17 +204,6 @@
     <a href="https://digital-land.github.io/specification/schema/{{ entity.schema }}/">View the {{ entity.schema }} schema</a>
 </p>
 
-{% if typology == "category" -%}
-{% block recordReferences -%}
-    <h2 class="govuk-heading-m">References</h2>
-    <list>
-    {% for reference in row[key_field]|reference_mapper(pipeline_name) %}
-        <li><a href={{ reference["href"] }}>{{ reference["text"] }}</a></li>
-    {% endfor %}
-    </list>
-{% endblock recordReferences -%}
-{% endif -%}
-
 {% block recordGeometry -%}
     {%- if geometry_url %}
 
@@ -285,6 +281,25 @@
     <h2 class="govuk-heading-m govuk-!-margin-top-9">Provenance</h2>
 </div>
 {% endif -%}
+
+{% block recordReferences -%}
+{% if typology == "category" -%}
+{% set references = row[key_field]|reference_mapper(pipeline_name) %}
+<div id="referenced-by">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">Referenced by</h2>
+            <p class="govuk-body">This record is referenced by {{ references|length }} other planning related data record{{ "" if references|length == 1 else "s" }}. These are</p>
+            <ul class="govuk-list govuk-list--bullet">
+            {% for reference in references %}
+                <li><a href={{ reference["href"] }}>{{ reference["text"] }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif -%}
+{% endblock recordReferences -%}
 
 {%- endblock content %}
 
