@@ -31,7 +31,7 @@
 
 {% block recordHead %}
     {% block recordTitle -%}
-    <span class="govuk-caption-xl">{{ pipeline_name }}</span>
+    <span class="govuk-caption-xl">{{ pipeline_name|replace("-", " ")|capitalize }}</span>
     <h1 class="govuk-heading-xl">{{ row_name }}</h1>
     {%- endblock recordTitle %}
 {% endblock recordHead %}
