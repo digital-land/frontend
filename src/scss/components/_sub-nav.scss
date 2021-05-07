@@ -115,3 +115,11 @@
     background-color: govuk-colour("black");
   }
 }
+
+.dlf-subnav__heading {
+  @include govuk-responsive-margin(9, "top");
+
+  .dlf-subnav--init & {
+    margin-top: 0;
+  }
+}

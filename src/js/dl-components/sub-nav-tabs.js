@@ -15,6 +15,7 @@ function nodeListForEach (nodes, callback) {
 
 function SubNavTabs ($module) {
   this.$module = $module
+  this.$body = document.querySelector('body')
 
   this.keys = { left: 37, right: 39, up: 38, down: 40 }
   this.jsHiddenClass = 'govuk-tabs__panel--hidden'
@@ -87,6 +88,9 @@ SubNavTabs.prototype.setup = function () {
   // Handle hashchange events
   $module.boundOnHashChange = this.onHashChange.bind(this)
   window.addEventListener('hashchange', $module.boundOnHashChange, true)
+
+  // Add class to acknowledge module has been initiated
+  this.$body.classList.add(this.subNavActivatedClass)
 }
 
 SubNavTabs.prototype.teardown = function () {
@@ -116,6 +120,9 @@ SubNavTabs.prototype.teardown = function () {
 
   // Remove hashchange event handler
   window.removeEventListener('hashchange', $module.boundOnHashChange, true)
+
+  // Remove class acknowledging module was initiated
+  this.$body.classList.remove(this.subNavActivatedClass)
 }
 
 SubNavTabs.prototype.onHashChange = function (e) {
@@ -298,6 +305,7 @@ SubNavTabs.prototype.getHref = function ($tab) {
 
 SubNavTabs.prototype.setupOptions = function (params) {
   params = params || {}
+  this.subNavActivatedClass = params.subNavActivatedClass || 'dlf-subnav--init'
   this.subNavListSelector = params.subNavListSelector || '.dlf-subnav__list'
   this.subNavListItemSelector = params.subNavListItemSelector || '.dlf-subnav__list-item'
   this.subNavTabsSelector = params.subNavTabsSelector || '.dlf-subnav__list-item__link'
