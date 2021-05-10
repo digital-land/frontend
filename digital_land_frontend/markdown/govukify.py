@@ -16,6 +16,7 @@ def govukify(html):
     html = html.replace("<h3", '<h3 class="govuk-heading-m"')
     html = html.replace("<h4", '<h4 class="govuk-heading-s"')
     html = html.replace("<ul", '<ul class="govuk-list govuk-list--bullet"')
+    html = html.replace("<ol", '<ol class="govuk-list govuk-list--number"')
     html = html.replace("<pre>", '<pre class="hljs-container">')
     html = html.replace("<img", '<img class="dl-image" ')
     html = html.replace(
