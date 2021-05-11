@@ -10,6 +10,7 @@ from digital_land_frontend.filters import (
     contains_historical,
     is_historical,
     key_field_filter,
+    total_items_filter,
 )
 
 
@@ -153,3 +154,9 @@ def test_key_field_filter():
 
     assert key_field_filter(record, pipeline_name) == "xyz"
     assert key_field_filter(record, pipeline_name_2) == "dev-plan-1"
+
+
+def test_total_items_filter():
+    d = {"obj1": [1, 2, 3], "obj2": [4, 5, 6]}
+
+    assert total_items_filter(d) == 6

@@ -84,6 +84,7 @@ class Renderer:
         group_list_field="organisations",
         docs="docs",
         renderer=None,
+        limit=None,
     ):
         self.pipeline_name = pipeline_name
         self.schema = schema
@@ -96,6 +97,7 @@ class Renderer:
         self.group_map = {}
         self.group_slug_seen = set()
         self.slug_seen = set()
+        self.limit = limit
 
         if not url_root:
             url_root = f"/{pipeline_name.replace(' ', '-')}/"
@@ -179,6 +181,9 @@ class Renderer:
         self.slugs = set()
         rows = []
         for idx, entity in enumerate(reader, start=1):
+            if self.limit and idx > self.limit:
+                break
+
             row = entity.snapshot()
 
             if not row:

@@ -160,9 +160,7 @@ def reference_filter(id, field):
         ...
     ]
     """
-    return sorted(
-        list(reference_mapper.get_references(id, field)), key=lambda x: x["text"]
-    )
+    return reference_mapper.get_references(id, field)
 
 
 class MapperFilter:
@@ -292,3 +290,8 @@ def key_field_filter(record, pipeline_name):
 
 def github_line_num_filter(n):
     return str(int(n) + 1)
+
+
+def total_items_filter(obj):
+    counts = [len(v) for k, v in obj.items()]
+    return sum(counts)

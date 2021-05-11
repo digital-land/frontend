@@ -7,6 +7,9 @@
 {%- from "digital-land-frontend/components/data-reference-cell/macro.html" import dlDataReferenceCell %}
 {%- from "digital-land-frontend/components/data-table/macro.html" import dlDataTableWrapper %}
 
+{# set at the top level, not in a block. Should this variable be passed to the template? #}
+{% set references = row[key_field]|reference_mapper(pipeline_name) %}
+
 {%- set row_name = row['name'] if row['name'] else row['slug'] %}
 {% set geometry_url = row|get_geometry_url %}
 {% if geometry_url %}
@@ -59,14 +62,11 @@
                 </a>
             </li>
             {% endif -%}
-            {% if typology == "category" -%}
-            {% set references = row[key_field]|reference_mapper(pipeline_name) %}
             <li class="dlf-subnav__list-item">
                 <a class="dlf-subnav__list-item__link" href="#referenced-by" data-module-sub-nav="tab">
-                Referenced by ({{ references|length }})
+                Referenced by ({{ references|total_items }})
                 </a>
             </li>
-            {% endif -%}
         </ul>
     </nav>
 
@@ -201,16 +201,6 @@
 </div>
 {% endblock recordTableContainer %}
 
-<h3 class="govuk-heading-m">Associated information</h3>
-
-<ul class="govuk-list govuk-list--bullet">
-    <li><a href="https://digital-land.github.io/specification/schema/{{ entity.schema }}/">View the {{ entity.schema }} schema</a></li>
-    {%- if typology == "category" %}
-    {%- set references = row[key_field]|reference_mapper(pipeline_name) -%}
-    <li>This record is <a href="#referenced-by">referenced by {{ references|length }} other planning related data record{{ "" if references|length == 1 else "s" }}</a></li>
-    {% endif -%}
-</ul>
-
 {% block recordGeometry -%}
     {%- if geometry_url %}
 
@@ -225,12 +215,25 @@
         "height": "460"
     }) }}
 
-    <div class="govuk-!-margin-top-2">
+    <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-6">
         <a class="dl-page-action-button" href="{{geometry_url}}">Download geojson</a>
     </div>
     
     {%- endif %}
 {%- endblock recordGeometry %}
+
+{% block recordAssociatedInfo %}
+<h3 class="govuk-heading-m">Associated information</h3>
+
+<ul class="govuk-list govuk-list--bullet">
+    <li><a href="https://digital-land.github.io/specification/schema/{{ entity.schema }}/">View the {{ entity.schema }} schema</a></li>
+    {%- if typology == "category" %}
+    {%- set references = row[key_field]|reference_mapper(pipeline_name) -%}
+    <li>This record is <a href="#referenced-by">referenced by {{ references|length }} other planning related data record{{ "" if references|length == 1 else "s" }}</a></li>
+    {% endif -%}
+</ul>
+{% endblock recordAssociatedInfo %}
+
 </div>
 
 <div id="history">
@@ -290,22 +293,27 @@
 {% endif -%}
 
 {% block recordReferences -%}
-{% if typology == "category" -%}
-{% set references = row[key_field]|reference_mapper(pipeline_name) %}
 <div id="referenced-by">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h2 class="govuk-heading-m dlf-subnav__heading">Referenced by</h2>
-            <p class="govuk-body">This record is referenced by {{ references|length }} other planning related data record{{ "" if references|length == 1 else "s" }}. These are</p>
+            <p class="govuk-body">This record is referenced by {{ references|total_items }} other planning related data record{{ "" if references|total_items == 1 else "s" }}.</p>
+            {% if references|length > 0 -%}
+            {% for type, refs in references.items() %}
+            <h3 class="govuk-heading-s">{{ type|capitalize }}</h3>
             <ul class="govuk-list govuk-list--bullet">
-            {% for reference in references %}
-                <li><a href={{ reference["href"] }}>{{ reference["text"] }}</a></li>
-            {% endfor %}
+                {%- for ref in refs %}
+                <li>
+                    <a href={{ ref["href"] }}>{{ ref["text"] }}</a>
+                    <span class="secondary-text data-reference">({{ ref["id"] }})</span>
+                </li>
+                {% endfor -%}
             </ul>
+            {% endfor %}
+            {% endif -%}
         </div>
     </div>
 </div>
-{% endif -%}
 {% endblock recordReferences -%}
 
 {%- endblock content %}

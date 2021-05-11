@@ -25,6 +25,7 @@ from .filters import (
     policy_to_development_plan_filter,
     reference_filter,
     strip_slug,
+    total_items_filter,
 )
 
 
@@ -76,6 +77,7 @@ def setup_jinja():
     env.filters["key_field"] = key_field_filter
     env.filters["github_line_num"] = github_line_num_filter
     env.filters["reference_mapper"] = reference_filter
+    env.filters["total_items"] = total_items_filter
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"
