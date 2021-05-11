@@ -56,13 +56,8 @@ class ViewModelJsonQuery:
                 url = response.links.get("next").get("url")
             except AttributeError:
                 url = None
-            yield from (
-                {
-                    key: value["label"] if isinstance(value, dict) else value
-                    for key, value in row.items()
-                }
-                for row in row_iter
-            )
+
+            yield from row_iter
 
     def expand_columns(self, data):
         col_map = {}
@@ -83,15 +78,9 @@ class ReferenceMapper:
     relationships = {
         "geography": [
             ("document", "document_geography"),
-            ("organisation", "organisation_geography"),
             ("policy", "policy_geography"),
         ],
         "category": [("document", "document_category"), ("policy", "policy_category")],
-        "organisation": [
-            ("document", "document_organisation"),
-            ("geography", "organisation_geography"),
-            ("policy", "policy_organisation"),
-        ],
     }
 
     def __init__(self):
