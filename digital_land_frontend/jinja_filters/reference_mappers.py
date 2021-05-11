@@ -101,6 +101,10 @@ class ReferenceMapper:
 
     def get_references(self, value, field):
         field_typology = SPECIFICATION.field_typology(field)
+        if field_typology not in self.relationships:
+            logger.info("no relationships configured for %s typology", field_typology)
+            return {}
+
         key = list(
             self.view_model.select(
                 field_typology, exact={field_typology: value, "type": field}
