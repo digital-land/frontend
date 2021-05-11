@@ -123,13 +123,13 @@ class ReferenceMapper:
 
         result = {}
         for type_, table in self.relationships[field_typology]:
-            logger.info('looking in "%s" for "%s" relationships', table, type_)
+            logger.debug('looking in "%s" for "%s" relationships', table, type_)
             for row in self.view_model.select(
                 type_,
                 joins=[
                     {
                         "table": table,
-                        "column": field_typology,
+                        "column": f"{field_typology}_id",
                         "value": key_id,
                     }
                 ],
