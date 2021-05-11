@@ -11,12 +11,15 @@ class ViewModelJsonQuery:
     def __init__(self, url_base="https://datasette-demo.digital-land.info/view_model/"):
         self.url_base = url_base
 
-    def select(self, table, exact={}, joins=[], label=None):
+    def select(self, table, exact={}, joins=[], label=None, sort=None):
         url = f"{self.url_base}{table}.json"
         params = ["_shape=objects"]
 
         if label:
             params.append(f"_label={label}")
+
+        if sort:
+            params.append(f"_sort={sort}")
 
         for column, value in exact.items():
             params.append(f"{column}__exact={requests.utils.quote(value)}")
@@ -41,6 +44,14 @@ class ViewModelJsonQuery:
         while url:
             response = self.get(url)
             data = response.json()
+            if "rows" not in data:
+                raise ValueError('no "rows" found in response:\n%s', data)
+
+            if "expanded_columns" in data:
+                row_iter = self.expand_columns(data)
+            else:
+                row_iter = data["rows"]
+
             try:
                 url = response.links.get("next").get("url")
             except AttributeError:
@@ -50,11 +61,39 @@ class ViewModelJsonQuery:
                     key: value["label"] if isinstance(value, dict) else value
                     for key, value in row.items()
                 }
-                for row in data["rows"]
+                for row in row_iter
             )
+
+    def expand_columns(self, data):
+        col_map = {}
+        for config, dest_col in data["expandable_columns"]:
+            if config["column"] in data["expanded_columns"]:
+                if dest_col in data["columns"]:
+                    raise ValueError(f"name clash trying to expand {dest_col} label")
+                col_map[config["column"]] = dest_col
+
+        for row in data["rows"]:
+            for src, dest in col_map.items():
+                row[dest] = row[src]["label"]
+                row[src] = row[src]["value"]
+            yield row
 
 
 class ReferenceMapper:
+    relationships = {
+        "geography": [
+            ("document", "document_geography"),
+            ("organisation", "organisation_geography"),
+            ("policy", "policy_geography"),
+        ],
+        "category": [("document", "document_category"), ("policy", "policy_category")],
+        "organisation": [
+            ("document", "document_organisation"),
+            ("geography", "organisation_geography"),
+            ("policy", "policy_organisation"),
+        ],
+    }
+
     def __init__(self):
         self.view_model = ViewModelJsonQuery(
             "https://datasette-demo.digital-land.info/view_model/"
@@ -70,29 +109,36 @@ class ReferenceMapper:
         row_count = len(key)
         if row_count != 1:
             logger.warning(
-                'select category "%s" returned %s rows, expected exactly 1',
+                'select %s "%s" returned %s rows, expected exactly 1',
+                field_typology,
                 value,
                 row_count,
             )
-            return None
+            return {}
         key_id = key[0]["id"]
-        schemas = SPECIFICATION.schema_from.get(field, [])
-        for schema in schemas:
-            typology = SPECIFICATION.field_typology(schema)
 
+        result = {}
+        for type_, table in self.relationships[field_typology]:
+            logger.info('looking in "%s" for "%s" relationships', table, type_)
             for row in self.view_model.select(
-                typology,
+                type_,
                 joins=[
                     {
-                        "table": f"{typology}_{field_typology}",
+                        "table": table,
                         "column": field_typology,
                         "value": key_id,
-                    },
+                    }
                 ],
                 label="slug_id",
+                sort="name",
             ):
-                yield {
-                    "reference": row["reference"] or row[typology],
-                    "href": row["slug_id"],
-                    "text": row["name"],
-                }
+                result.setdefault(type_, []).append(
+                    {
+                        "id": row[type_],
+                        "reference": row["reference"] or row[type_],
+                        "href": row["slug"],
+                        "text": row["name"],
+                    }
+                )
+
+        return result
