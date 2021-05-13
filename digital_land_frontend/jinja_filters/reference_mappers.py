@@ -45,6 +45,7 @@ class ViewModelJsonQuery:
             response = self.get(url)
             data = response.json()
             if "rows" not in data:
+                logger.warning("url: %s", url)
                 raise ValueError('no "rows" found in response:\n%s', data)
 
             if "expanded_columns" in data:
@@ -85,7 +86,7 @@ class ReferenceMapper:
 
     def __init__(self):
         self.view_model = ViewModelJsonQuery(
-            "https://datasette-demo.digital-land.info/view_model/"
+            "http://localhost:8090/view_model"
         )
 
     def get_references(self, value, field):
