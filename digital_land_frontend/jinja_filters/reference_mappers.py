@@ -45,6 +45,7 @@ class ViewModelJsonQuery:
             response = self.get(url)
             data = response.json()
             if "rows" not in data:
+                logger.warning("url: %s", url)
                 raise ValueError('no "rows" found in response:\n%s', data)
 
             if "expanded_columns" in data:
