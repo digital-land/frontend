@@ -7,7 +7,11 @@
     <h3 class="{{ params.heading_class|default('govuk-heading-s') }} dl-timeline__entry-heading">{{ params.heading }}</h3>
     {% if params.meta -%}
     <p class="dl-timeline__entry-details govuk-body-s">
-      {{ params.meta }}
+      {% if params.meta.html -%}
+        {{ params.meta.html|safe }}
+      {% else -%}
+        {{ params.meta }}
+      {%- endif %}
     </p>
     {%- endif %}
     <div class="dl-timeline__entry__content">
