@@ -86,7 +86,7 @@ class ReferenceMapper:
 
     def __init__(self):
         self.view_model = ViewModelJsonQuery(
-            "http://localhost:8090/view_model"
+            "https://datasette-demo.digital-land.info/view_model/"
         )
 
     def get_references(self, value, field):
