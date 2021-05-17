@@ -15,7 +15,7 @@
   }
 
   &:after {
-    bottom: 0;
+    bottom: 3px;
   }
 }
 
@@ -54,6 +54,10 @@
   @include dl-timeline-circle;
 }
 
+.dl-timeline:after {
+  top: unset;
+}
+
 $stopper-width: 14px;
 $line-width: 4px;
 
@@ -83,6 +87,10 @@ $line-width: 4px;
   }
 }
 
+.dl-timeline--with-starter-label {
+  padding-bottom: 0;
+}
+
 .dl-timeline--dates {
   .dl-timeline__entry:before {
     margin-top: 4px;
@@ -97,6 +105,10 @@ $line-width: 4px;
   @include govuk-media-query($from: tablet) {
     padding-bottom: 20px;
   }
+}
+
+.dl-timeline__start-label {
+  padding-left: 20px;
 }
 
 .dl-sbs__entry-heading,

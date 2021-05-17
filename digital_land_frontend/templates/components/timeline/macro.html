@@ -25,12 +25,17 @@
 {% endmacro %}
 
 {% macro dlTimeline(params) %}
-<ol {% if params.id %}id="{{ params.id }}" {% endif %}class="dl-timeline{{ ' ' + params.classes if params.classes }}">
-    {% for entry in params.entries %}
+<ol {% if params.id %}id="{{ params.id }}" {% endif %}class="dl-timeline{{ ' ' + params.classes if params.classes }}{{ ' dl-timeline--with-starter-label' if params.startLabel }}">
+  {% for entry in params.entries %}
     {{ dlTimelineEntry(entry)}}
-    {% endfor %}
-    {%- if caller -%}
+  {% endfor %}
+  {%- if caller -%}
 		{{ caller() }}
 	{%- endif -%}
+  {% if params.startLabel %}
+  <li class="dl-timeline__start-label">
+    <h4 class="govuk-heading-s">Started 2021-05-12</h4>
+  </li>
+  {% endif %}
 </ol>
 {% endmacro %}
