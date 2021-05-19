@@ -46,7 +46,9 @@ class ViewModelJsonQuery:
             try:
                 data = response.json()
             except Exception as e:
-                logger.error("json not found in response (url: %s):\n%s", url, response.content)
+                logger.error(
+                    "json not found in response (url: %s):\n%s", url, response.content
+                )
                 raise e
 
             if "rows" not in data:
