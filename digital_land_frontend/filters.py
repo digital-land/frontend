@@ -1,6 +1,8 @@
 import numbers
 import os
+import logging
 from datetime import datetime
+from collections import Mapping
 
 import validators
 from digital_land.specification import Specification
@@ -24,6 +26,8 @@ from .jinja_filters.mappers import (
     PolicyToDocMapper,
 )
 from .jinja_filters.reference_mappers import ReferenceMapper
+
+logger = logging.getLogger(__name__)
 
 
 def get_jinja_template_raw(template_file_path):
@@ -293,5 +297,9 @@ def github_line_num_filter(n):
 
 
 def total_items_filter(obj):
-    counts = [len(v) for k, v in obj.items()]
-    return sum(counts)
+    if isinstance(obj, Mapping):
+        counts = [len(v) for k, v in obj.items()]
+        return sum(counts)
+
+    logger.error(f"total_items expected a Dict. But got {type(obj)}")
+    return None
