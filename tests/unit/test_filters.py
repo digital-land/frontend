@@ -158,7 +158,7 @@ def test_key_field_filter():
 
 def test_total_items_filter():
     d = {"obj1": [1, 2, 3], "obj2": [4, 5, 6]}
-    l = []
+    not_dict = []
 
     assert total_items_filter(d) == 6
-    assert total_items_filter(l) is None
+    assert total_items_filter(not_dict) is None
