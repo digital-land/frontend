@@ -43,7 +43,12 @@ class ViewModelJsonQuery:
     def paginate(self, url):
         while url:
             response = self.get(url)
-            data = response.json()
+            try:
+                data = response.json()
+            except Exception as e:
+                logger.error("json not found in response (url: %s):\n%s", url, response.content)
+                raise e
+
             if "rows" not in data:
                 logger.warning("url: %s", url)
                 raise ValueError('no "rows" found in response:\n%s', data)
