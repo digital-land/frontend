@@ -341,7 +341,15 @@
 <script>
     const $mapElement = document.querySelector('[data-module="boundary-map"]')
     const mapComponent = new DLMaps.Map($mapElement).init({})
+    let zoom = mapComponent.map.getZoom()
+    let center = mapComponent.map.getCenter()
+    console.log(zoom, center)
+    let url = `http://digital-land.github.io/leaflet-spike/#${center.lat},${center.lng},${zoom}z`
+    console.log(url)
 </script>
+    <div>
+    <a href="{{ url }}">See this on a national map</a>
+    </div>
 {% endblock -%}
 
 {% block initDataTables %}
