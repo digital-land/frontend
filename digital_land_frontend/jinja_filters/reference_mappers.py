@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 
 import requests
 from digital_land.cli import SPECIFICATION
@@ -42,7 +43,9 @@ class ViewModelJsonQuery:
 
     def paginate(self, url):
         while url:
+            start_time = time.time()
             response = self.get(url)
+            logger.info("request time: %.2fs", time.time() - start_time)
             try:
                 data = response.json()
             except Exception as e:
