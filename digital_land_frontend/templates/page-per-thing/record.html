@@ -218,6 +218,10 @@
     <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-6">
         <a class="dl-page-action-button" href="{{geometry_url}}">Download geojson</a>
     </div>
+
+    <div>
+        <a class="js-hidden dl-link-national-map" href="{{ url }}">See geometry on national map.</a>
+    </div>
     
     {%- endif %}
 {%- endblock recordGeometry %}
@@ -340,16 +344,20 @@
 {%- block initMapBlock %}
 <script>
     const $mapElement = document.querySelector('[data-module="boundary-map"]')
-    const mapComponent = new DLMaps.Map($mapElement).init({})
-    let zoom = mapComponent.map.getZoom()
-    let center = mapComponent.map.getCenter()
-    console.log(zoom, center)
-    let url = `http://digital-land.github.io/leaflet-spike/#${center.lat},${center.lng},${zoom}z`
-    console.log(url)
+    const $nationalMapLink = document.querySelector('.dl-link-national-map')
+    const mapComponent = new DLMaps.Map($mapElement).init({
+        initGeoJsonLoadCallback: function (urls, featureGroup) {
+            console.log("initial load completed")
+            // do we need to check there isn't more than one shape?
+            const center = featureGroup.getBounds().getCenter()
+            const zoom = mapComponent.map.getZoom()
+            let url = `http://digital-land.github.io/leaflet-spike/#${center.lat},${center.lng},${zoom}z`
+            console.log(url)
+            $nationalMapLink.href = url
+            $nationalMapLink.classList.remove("js-hidden")
+        }
+    })
 </script>
-    <div>
-    <a href="{{ url }}">See this on a national map</a>
-    </div>
 {% endblock -%}
 
 {% block initDataTables %}
