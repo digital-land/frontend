@@ -64,7 +64,7 @@
             {% endif -%}
             <li class="dlf-subnav__list-item">
                 <a class="dlf-subnav__list-item__link" href="#referenced-by" data-module-sub-nav="tab">
-                Referenced by ({{ references|total_items }})
+                {{ references|total_items }} Reference{{ "" if references|total_items == 1 else "s" }}
                 </a>
             </li>
         </ul>
