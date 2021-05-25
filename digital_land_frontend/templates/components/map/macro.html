@@ -1,7 +1,7 @@
 {%- macro dlMap(params) %}
 {%- from 'digital-land-frontend/components/dl-helpers.html' import random_int %}
 {%- set height = params.height|string + "px" if params.height else "350px"  %}
-<div class="dl-map__wrapper govuk-!-margin-bottom-{{ params.bottomMargin if params.bottomMargin else '2' }}">
+<div class="dl-map__wrapper">
     {%- if params.arialabelledby %}
     {%- set ariaId = "aria-label-" + random_int(4) %}
     <span id="{{ ariaId }}" class="govuk-visually-hidden">{{ params.arialabelledby }}</span>
@@ -32,13 +32,26 @@
         {{ params.sidePanel.html }}
     </div>
     {% endif %}
-
-    {% if params.note %}
-    <div class="dl-map__note-panel">
-    {% if params.note.html %}
-        {{ params.note.html|safe }}
-    {% endif %}
-    </div>
-    {% endif %}
 </div>
 {% endmacro %}
+
+{%- macro dlLeafletMap(params) %}
+{%- from 'digital-land-frontend/components/dl-helpers.html' import random_int %}
+{%- set height = params.height|string + "px" if params.height else "350px"  %}
+{%- if params.arialabelledby %}
+{%- set ariaId = "aria-label-" + random_int(4) %}
+<span id="{{ ariaId }}" class="govuk-visually-hidden">{{ params.arialabelledby }}</span>
+{% endif -%}
+<div 
+    class="dl-map{{ ' ' + params.classes if params.classes }}"
+    id="{{ params.id if params.id else 'map' }}"
+    data-module="boundary-map"
+    style="height: {{ height }};"
+    {%- if params.arialabelledby %} aria-labelledby="{{ ariaId }}"{% endif -%}
+    {% if params.attributes -%}
+    {%- for attribute, value in params.attributes.items() %} {{ attribute }}="{{ value if not value|is_list else value|join(';') }}"{% endfor %}
+    {%- endif %}   
+>
+    <noscript>To view this map, you need to enable JavaScript.</noscript>
+</div>
+{% endmacro -%}

@@ -2,7 +2,7 @@
 {% set templateName = "page-per-thing/record.html" %}
 
 {%- from "govuk-jinja-components/components/details/macro.jinja" import govukDetails %}
-{%- from "digital-land-frontend/components/map/macro.html" import dlMap %}
+{%- from "digital-land-frontend/components/map/macro.html" import dlLeafletMap %}
 {%- from "digital-land-frontend/components/data-record/macro.html" import dlDataRecordPanel %}
 {%- from "digital-land-frontend/components/data-reference-cell/macro.html" import dlDataReferenceCell %}
 {%- from "digital-land-frontend/components/data-table/macro.html" import dlDataTableWrapper %}
@@ -203,30 +203,28 @@
 
 {% block recordGeometry -%}
     {%- if geometry_url %}
-
-    {%- set mapNoteHTML %}
-    <a class="js-hidden dl-link-national-map" href="{{ url }}">See geometry on national map.</a>
-    {% endset -%}
-
     <h2 class="govuk-heading-m">Geographical area</h2>
 
-    {{ dlMap({
-        "id": "dlMap",
-        "classes": "govuk-!-margin-top-4",
-        "attributes": {
-            "data-geojson-urls": geometry_url
-        },
-        "height": "460",
-        "note": {
-            "html": mapNoteHTML
-        },
-        "bottomMargin": "4"
-    }) }}
+    <div class="dl-map__wrapper">
+        {{- dlLeafletMap({
+            "id": "dlMap",
+            "classes": "govuk-!-margin-top-4",
+            "attributes": {
+                "data-geojson-urls": geometry_url
+            },
+            "height": "460"
+        }) -}}
+
+        {% if pipeline_name in ["conservation-area", "heritage-coast", "brownfield-land", "local-area-district", "area-of-outstanding-natural-beauty"] %}
+        <div class="dl-map__note-panel">
+            <a class="js-hidden dl-link-national-map" href="{{ url }}">See geometry on national map.</a>
+        </div>
+        {% endif %}
+    </div>
 
     <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-6">
         <a class="dl-page-action-button" href="{{geometry_url}}">Download geojson</a>
     </div>
-    
     {%- endif %}
 {%- endblock recordGeometry %}
 
@@ -358,8 +356,11 @@
             const zoom = mapComponent.map.getZoom()
             let url = `http://digital-land.github.io/leaflet-spike/?layer=${datasetName}#${center.lat},${center.lng},${zoom}z`
             console.log(url)
-            $nationalMapLink.href = url
-            $nationalMapLink.classList.remove("js-hidden")
+            if ($nationalMapLink) {
+                // only show this for the datasets we've added to the national map
+                $nationalMapLink.href = url
+                $nationalMapLink.classList.remove("js-hidden")
+            }
         }
     })
 </script>
