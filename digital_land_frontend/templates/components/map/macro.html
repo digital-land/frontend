@@ -1,7 +1,7 @@
 {%- macro dlMap(params) %}
 {%- from 'digital-land-frontend/components/dl-helpers.html' import random_int %}
 {%- set height = params.height|string + "px" if params.height else "350px"  %}
-<div class="dl-map__wrapper">
+<div class="dl-map__wrapper govuk-!-margin-bottom-{{ params.bottomMargin if params.bottomMargin else '2' }}">
     {%- if params.arialabelledby %}
     {%- set ariaId = "aria-label-" + random_int(4) %}
     <span id="{{ ariaId }}" class="govuk-visually-hidden">{{ params.arialabelledby }}</span>
@@ -30,6 +30,14 @@
     {% if params.sidePanel %}
     <div class="dl-map__side-panel{{ ' ' + params.sidePanel.classes if params.sidePanel.classes }}">
         {{ params.sidePanel.html }}
+    </div>
+    {% endif %}
+
+    {% if params.note %}
+    <div class="dl-map__note-panel">
+    {% if params.note.html %}
+        {{ params.note.html|safe }}
+    {% endif %}
     </div>
     {% endif %}
 </div>
