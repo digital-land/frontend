@@ -28,6 +28,14 @@ $govuk-tag-light-blue: #d2e2f1;
   }
 }
 
+.dl-map__note-panel {
+  display: inline-block;
+  @include govuk-font($size: 16);
+  padding: 5px 8px;
+  //color: $govuk-tag-dark-blue;
+  background: govuk-colour("light-grey");
+}
+
 $bfs-brown: #594d00;
 
 .map-key {
