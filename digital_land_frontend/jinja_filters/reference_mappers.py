@@ -12,6 +12,23 @@ class ViewModelJsonQuery:
     def __init__(self, url_base="https://datasette-demo.digital-land.info/view_model/"):
         self.url_base = url_base
 
+    def get_id(self, table, value):
+        url = f"{self.url_base}get_{table}_id.json"
+        params = ["_shape=objects",
+                  f"{table}={value}"]
+
+        url = f"{url}?{'&'.join(params)}"
+        return self.paginate(url)
+
+    def get_references_by_id(self, table, id):
+        url = f"{self.url_base}get_{table}_references.json"
+        params = ["_shape=objects",
+                  f"{table}={id}"]
+
+        url = f"{url}?{'&'.join(params)}"
+        return self.paginate(url)
+
+
     def select(self, table, exact={}, joins=[], label=None, sort=None):
         url = f"{self.url_base}{table}.json"
         params = ["_shape=objects"]
@@ -45,7 +62,7 @@ class ViewModelJsonQuery:
         while url:
             start_time = time.time()
             response = self.get(url)
-            logger.info("request time: %.2fs", time.time() - start_time)
+            logger.info("request time: %.2fs, %s", time.time() - start_time, url)
             try:
                 data = response.json()
             except Exception as e:
@@ -86,12 +103,11 @@ class ViewModelJsonQuery:
 
 
 class ReferenceMapper:
-    relationships = {
-        "geography": [
-            ("document", "document_geography"),
-            ("policy", "policy_geography"),
-        ],
-        "category": [("document", "document_category"), ("policy", "policy_category")],
+    xref_datasets = {
+        "geography",
+        "category",
+        "policy",
+        "document"
     }
 
     def __init__(self):
@@ -101,15 +117,17 @@ class ReferenceMapper:
 
     def get_references(self, value, field):
         field_typology = SPECIFICATION.field_typology(field)
-        if field_typology not in self.relationships:
+        if field_typology not in self.xref_datasets:
             logger.info("no relationships configured for %s typology", field_typology)
             return {}
 
         key = list(
-            self.view_model.select(
-                field_typology, exact={field_typology: value, "type": field}
-            )
+            self.view_model.get_id(field_typology, value)
         )
+
+        if key and "type" in key[0]:
+            key = [id for id in key if id["type"] == field]
+
         row_count = len(key)
         if row_count != 1:
             logger.warning(
@@ -122,27 +140,16 @@ class ReferenceMapper:
         key_id = key[0]["id"]
 
         result = {}
-        for type_, table in self.relationships[field_typology]:
-            logger.debug('looking in "%s" for "%s" relationships', table, type_)
-            for row in self.view_model.select(
-                type_,
-                joins=[
-                    {
-                        "table": table,
-                        "column": f"{field_typology}_id",
-                        "value": key_id,
-                    }
-                ],
-                label="slug_id",
-                sort="name",
-            ):
-                result.setdefault(type_, []).append(
-                    {
-                        "id": row[type_],
-                        "reference": row["reference"] or row[type_],
-                        "href": row["slug"],
-                        "text": row["name"],
-                    }
-                )
+        logger.debug('looking for "%s" relationships', field_typology)
+
+        for row in self.view_model.get_references_by_id(field_typology, key_id):
+            result.setdefault(row["type"], []).append(
+                {
+                    "id": row["id"],
+                    "reference": row["reference"],
+                    "href": row["href"],
+                    "text": row["name"],
+                }
+            )
 
         return result
