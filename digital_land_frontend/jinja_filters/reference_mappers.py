@@ -14,20 +14,17 @@ class ViewModelJsonQuery:
 
     def get_id(self, table, value):
         url = f"{self.url_base}get_{table}_id.json"
-        params = ["_shape=objects",
-                  f"{table}={value}"]
+        params = ["_shape=objects", f"{table}={value}"]
 
         url = f"{url}?{'&'.join(params)}"
         return self.paginate(url)
 
     def get_references_by_id(self, table, id):
         url = f"{self.url_base}get_{table}_references.json"
-        params = ["_shape=objects",
-                  f"{table}={id}"]
+        params = ["_shape=objects", f"{table}={id}"]
 
         url = f"{url}?{'&'.join(params)}"
         return self.paginate(url)
-
 
     def select(self, table, exact={}, joins=[], label=None, sort=None):
         url = f"{self.url_base}{table}.json"
@@ -103,12 +100,7 @@ class ViewModelJsonQuery:
 
 
 class ReferenceMapper:
-    xref_datasets = {
-        "geography",
-        "category",
-        "policy",
-        "document"
-    }
+    xref_datasets = {"geography", "category", "policy", "document"}
 
     def __init__(self):
         self.view_model = ViewModelJsonQuery(
@@ -121,9 +113,7 @@ class ReferenceMapper:
             logger.info("no relationships configured for %s typology", field_typology)
             return {}
 
-        key = list(
-            self.view_model.get_id(field_typology, value)
-        )
+        key = list(self.view_model.get_id(field_typology, value))
 
         if key and "type" in key[0]:
             key = [id for id in key if id["type"] == field]
