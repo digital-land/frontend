@@ -13,6 +13,7 @@ const del = require('del')
 const postcss = require('gulp-postcss')
 const autoprefixer = require('autoprefixer')
 const sourcemaps = require('gulp-sourcemaps')
+const babel = require('gulp-babel')
 
 // set paths
 const config = {
@@ -81,6 +82,9 @@ gulp.task('js:compile', () => {
       })
     )
     .pipe(eol())
+    .pipe(babel({
+      presets: ['@babel/preset-env']
+    }))
     .pipe(gulp.dest(`${config.jsDestPath}`))
 })
 
@@ -98,6 +102,9 @@ gulp.task('js-map:compile', () => {
       })
     )
     .pipe(eol())
+    .pipe(babel({
+      presets: ['@babel/preset-env']
+    }))
     .pipe(gulp.dest(`${config.jsDestPath}`))
 })
 
