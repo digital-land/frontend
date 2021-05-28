@@ -14,14 +14,17 @@ class ViewModelJsonQuery:
 
     def get_id(self, table, value):
         url = f"{self.url_base}get_{table}_id.json"
-        params = ["_shape=objects", f"{table}={value}"]
+        params = [
+            "_shape=objects",
+            f"{requests.utils.quote(table)}={requests.utils.quote(value)}",
+        ]
 
         url = f"{url}?{'&'.join(params)}"
         return self.paginate(url)
 
     def get_references_by_id(self, table, id):
         url = f"{self.url_base}get_{table}_references.json"
-        params = ["_shape=objects", f"{table}={id}"]
+        params = ["_shape=objects", f"{requests.utils.quote(table)}={id}"]
 
         url = f"{url}?{'&'.join(params)}"
         return self.paginate(url)
@@ -56,20 +59,27 @@ class ViewModelJsonQuery:
         return response
 
     def paginate(self, url):
-        while url:
+        limit = -1
+        more = True
+        while more:
+            paginated_url = url + f"&gid={limit}"
             start_time = time.time()
-            response = self.get(url)
-            logger.info("request time: %.2fs, %s", time.time() - start_time, url)
+            response = self.get(paginated_url)
+            logger.info(
+                "request time: %.2fs, %s", time.time() - start_time, paginated_url
+            )
             try:
                 data = response.json()
             except Exception as e:
                 logger.error(
-                    "json not found in response (url: %s):\n%s", url, response.content
+                    "json not found in response (url: %s):\n%s",
+                    paginated_url,
+                    response.content,
                 )
                 raise e
 
             if "rows" not in data:
-                logger.warning("url: %s", url)
+                logger.warning("url: %s", paginated_url)
                 raise ValueError('no "rows" found in response:\n%s', data)
 
             if "expanded_columns" in data:
@@ -77,10 +87,11 @@ class ViewModelJsonQuery:
             else:
                 row_iter = data["rows"]
 
-            try:
-                url = response.links.get("next").get("url")
-            except AttributeError:
-                url = None
+            if "truncated" in data and data["truncated"]:
+                more = True
+                limit = data["rows"][-1]["gid"]
+            else:
+                more = False
 
             yield from row_iter
 
