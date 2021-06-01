@@ -1,6 +1,6 @@
 {
   "presets": ["@babel/preset-env"],
-    "targets": {
+  "targets": {
     "chrome": "58",
     "ie": "11"
   }

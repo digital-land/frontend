@@ -71,6 +71,9 @@ lintSCSS.description = 'Check files follow GOVUK style'
 gulp.task('js:compile', () => {
   return gulp
     .src(['src/js/dl-frontend.js'])
+    .pipe(babel({
+      presets: ['@babel/preset-env']
+    }))
     .pipe(
       rollup({
         // set the 'window' global
@@ -82,15 +85,15 @@ gulp.task('js:compile', () => {
       })
     )
     .pipe(eol())
-    .pipe(babel({
-      presets: ['@babel/preset-env']
-    }))
     .pipe(gulp.dest(`${config.jsDestPath}`))
 })
 
 gulp.task('js-map:compile', () => {
   return gulp
     .src(['src/js/dl-maps.js', 'src/js/dl-maps/Leaflet.recentre.js'])
+    .pipe(babel({
+      presets: ['@babel/preset-env']
+    }))
     .pipe(
       rollup({
         // set the 'window' global
@@ -102,9 +105,6 @@ gulp.task('js-map:compile', () => {
       })
     )
     .pipe(eol())
-    .pipe(babel({
-      presets: ['@babel/preset-env']
-    }))
     .pipe(gulp.dest(`${config.jsDestPath}`))
 })
 
