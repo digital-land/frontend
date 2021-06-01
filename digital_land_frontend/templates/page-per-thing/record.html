@@ -215,7 +215,7 @@
             "height": "460"
         }) -}}
 
-        {% if pipeline_name in ["conservation-area", "heritage-coast", "brownfield-land", "local-area-district", "area-of-outstanding-natural-beauty"] %}
+        {% if pipeline_name in ["conservation-area", "heritage-coast", "brownfield-land", "local-area-district", "area-of-outstanding-natural-beauty", "ancient-woodland"] %}
         <div class="dl-map__note-panel">
             <a class="js-hidden dl-link-national-map" href="{{ url }}">See geometry on national map.</a>
         </div>
@@ -354,7 +354,7 @@
             // do we need to check there isn't more than one shape?
             const center = featureGroup.getBounds().getCenter()
             const zoom = mapComponent.map.getZoom()
-            let url = `http://digital-land.github.io/leaflet-spike/?layer=${datasetName}#${center.lat},${center.lng},${zoom}z`
+            let url = `http://digital-land.github.io/map?layer=${datasetName}#${center.lat},${center.lng},${zoom}z`
             console.log(url)
             if ($nationalMapLink) {
                 // only show this for the datasets we've added to the national map
