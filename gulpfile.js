@@ -13,6 +13,7 @@ const del = require('del')
 const postcss = require('gulp-postcss')
 const autoprefixer = require('autoprefixer')
 const sourcemaps = require('gulp-sourcemaps')
+const plumber = require('gulp-plumber')
 const babel = require('gulp-babel')
 
 // set paths
@@ -71,9 +72,7 @@ lintSCSS.description = 'Check files follow GOVUK style'
 gulp.task('js:compile', () => {
   return gulp
     .src(['src/js/dl-frontend.js'])
-    .pipe(babel({
-      presets: ['@babel/preset-env']
-    }))
+    .pipe(plumber())
     .pipe(
       rollup({
         // set the 'window' global
@@ -84,6 +83,18 @@ gulp.task('js:compile', () => {
         format: 'umd'
       })
     )
+    .pipe(
+      babel({
+        presets: [
+          [
+            '@babel/env',
+            {
+              modules: false
+            }
+          ]
+        ]
+      })
+    )
     .pipe(eol())
     .pipe(gulp.dest(`${config.jsDestPath}`))
 })
@@ -91,9 +102,7 @@ gulp.task('js:compile', () => {
 gulp.task('js-map:compile', () => {
   return gulp
     .src(['src/js/dl-maps.js', 'src/js/dl-maps/Leaflet.recentre.js'])
-    .pipe(babel({
-      presets: ['@babel/preset-env']
-    }))
+    .pipe(plumber())
     .pipe(
       rollup({
         // set the 'window' global
@@ -102,6 +111,18 @@ gulp.task('js-map:compile', () => {
         legacy: true,
         // UMD allows the published bundle to work in CommonJS and in the browser.
         format: 'umd'
+      })
+    )
+    .pipe(
+      babel({
+        presets: [
+          [
+            '@babel/env',
+            {
+              modules: false
+            }
+          ]
+        ]
       })
     )
     .pipe(eol())
