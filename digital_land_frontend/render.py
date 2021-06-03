@@ -86,7 +86,7 @@ class Renderer:
         docs="docs",
         renderer=None,
         limit=None,
-        enable_x_ref=False
+        enable_x_ref=False,
     ):
         self.pipeline_name = pipeline_name
         self.schema = schema
