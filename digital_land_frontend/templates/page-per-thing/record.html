@@ -8,7 +8,7 @@
 {%- from "digital-land-frontend/components/data-table/macro.html" import dlDataTableWrapper %}
 
 {# set at the top level, not in a block. Should this variable be passed to the template? #}
-{% set references = row[key_field]|reference_mapper(pipeline_name) %}
+{% set references = row[key_field]|reference_mapper(pipeline_name) if enable_x_ref else {} %}
 
 {%- set row_name = row['name'] if row['name'] else row['slug'] %}
 {% set geometry_url = row|get_geometry_url %}
@@ -234,7 +234,6 @@
 <ul class="govuk-list govuk-list--bullet">
     <li><a href="https://digital-land.github.io/specification/schema/{{ entity.schema }}/">View the {{ entity.schema }} schema</a></li>
     {%- if typology == "category" %}
-    {%- set references = row[key_field]|reference_mapper(pipeline_name) -%}
     <li>This record is <a href="#referenced-by">referenced by {{ references|length }} other planning related data record{{ "" if references|length == 1 else "s" }}</a></li>
     {% endif -%}
 </ul>

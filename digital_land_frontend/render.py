@@ -35,9 +35,10 @@ def generate_download_link(pipeline_name):
 
 
 class JinjaRenderer:
-    def __init__(self, url_root, docs="docs"):
+    def __init__(self, url_root, docs="docs", enable_x_ref=False):
         self.docs = docs
         self.env = setup_jinja()
+        self.env.globals["enable_x_ref"] = enable_x_ref
         self.env.globals["urlRoot"] = url_root
         self.env.trim_blocks = True
         self.env.lstrip_blocks = True
@@ -85,6 +86,7 @@ class Renderer:
         docs="docs",
         renderer=None,
         limit=None,
+        enable_x_ref=False
     ):
         self.pipeline_name = pipeline_name
         self.schema = schema
@@ -102,7 +104,7 @@ class Renderer:
         if not url_root:
             url_root = f"/{pipeline_name.replace(' ', '-')}/"
 
-        self.renderer = renderer or JinjaRenderer(url_root, docs)
+        self.renderer = renderer or JinjaRenderer(url_root, docs, enable_x_ref)
 
     def add_to_group_index(self, row):
         if self.group_field and self.group_field in row and row[self.group_field]:
