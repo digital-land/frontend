@@ -132,6 +132,10 @@ const copyVendorJS = () =>
 const copyCookieJS = () =>
   gulp.src('src/js/dl-cookies.js').pipe(gulp.dest(`${config.jsDestPath}/`))
 
+// need to replace this with task to run js through Babel
+const copyNationalMapJS = () =>
+  gulp.src('src/js/dl-national-map-controller.js').pipe(gulp.dest(`${config.jsDestPath}/`))
+
 const copyImagesForStylesheets = () =>
   gulp.src('src/images/**/*').pipe(gulp.dest(config.cssDestPath))
 
@@ -156,6 +160,7 @@ latestStylesheets.description = 'Generate the latest stylesheets'
 
 const latestJS = gulp.parallel(
   copyCookieJS,
+  copyNationalMapJS,
   'js:compile',
   'js-map:compile'
 )
