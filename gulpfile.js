@@ -162,7 +162,21 @@ const copyCookieJS = () =>
 
 // need to replace this with task to run js through Babel
 const copyNationalMapJS = () =>
-  gulp.src('src/js/dl-national-map-controller.js').pipe(gulp.dest(`${config.jsDestPath}/`))
+  gulp.src('src/js/dl-national-map-controller.js')
+    .pipe(plumber())
+    .pipe(
+      babel({
+        presets: [
+          [
+            '@babel/env',
+            {
+              modules: false
+            }
+          ]
+        ]
+      })
+    )
+    .pipe(gulp.dest(`${config.jsDestPath}/`))
 
 const copyImagesForStylesheets = () =>
   gulp.src('src/images/**/*').pipe(gulp.dest(config.cssDestPath))
