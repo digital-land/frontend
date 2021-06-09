@@ -13,6 +13,8 @@ const del = require('del')
 const postcss = require('gulp-postcss')
 const autoprefixer = require('autoprefixer')
 const sourcemaps = require('gulp-sourcemaps')
+const plumber = require('gulp-plumber')
+const babel = require('gulp-babel')
 
 // set paths
 const config = {
@@ -70,6 +72,7 @@ lintSCSS.description = 'Check files follow GOVUK style'
 gulp.task('js:compile', () => {
   return gulp
     .src(['src/js/dl-frontend.js'])
+    .pipe(plumber())
     .pipe(
       rollup({
         // set the 'window' global
@@ -80,6 +83,18 @@ gulp.task('js:compile', () => {
         format: 'umd'
       })
     )
+    .pipe(
+      babel({
+        presets: [
+          [
+            '@babel/env',
+            {
+              modules: false
+            }
+          ]
+        ]
+      })
+    )
     .pipe(eol())
     .pipe(gulp.dest(`${config.jsDestPath}`))
 })
@@ -87,6 +102,7 @@ gulp.task('js:compile', () => {
 gulp.task('js-map:compile', () => {
   return gulp
     .src(['src/js/dl-maps.js', 'src/js/dl-maps/Leaflet.recentre.js'])
+    .pipe(plumber())
     .pipe(
       rollup({
         // set the 'window' global
@@ -95,6 +111,18 @@ gulp.task('js-map:compile', () => {
         legacy: true,
         // UMD allows the published bundle to work in CommonJS and in the browser.
         format: 'umd'
+      })
+    )
+    .pipe(
+      babel({
+        presets: [
+          [
+            '@babel/env',
+            {
+              modules: false
+            }
+          ]
+        ]
       })
     )
     .pipe(eol())
@@ -134,7 +162,21 @@ const copyCookieJS = () =>
 
 // need to replace this with task to run js through Babel
 const copyNationalMapJS = () =>
-  gulp.src('src/js/dl-national-map-controller.js').pipe(gulp.dest(`${config.jsDestPath}/`))
+  gulp.src('src/js/dl-national-map-controller.js')
+    .pipe(plumber())
+    .pipe(
+      babel({
+        presets: [
+          [
+            '@babel/env',
+            {
+              modules: false
+            }
+          ]
+        ]
+      })
+    )
+    .pipe(gulp.dest(`${config.jsDestPath}/`))
 
 const copyImagesForStylesheets = () =>
   gulp.src('src/images/**/*').pipe(gulp.dest(config.cssDestPath))
