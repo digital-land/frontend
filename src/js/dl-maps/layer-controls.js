@@ -1,6 +1,7 @@
 /* global L, window, DLMaps */
 
 import utils from '../helpers/utils.js'
+import mapUtils from './map-utils.js'
 
 function LayerControls ($module, leafletMap) {
   this.$module = $module
@@ -16,9 +17,14 @@ LayerControls.prototype.init = function (params) {
 
   // setup default options for geojsonFeatureLayers
   const boundGetLayerStyleOption = this.getLayerStyleOption.bind(this)
+  const boundPointToLayer = this.defaultPointToLayer.bind(this)
   const boundOnEachFeature = this.onEachFeature.bind(this)
   this.geoJsonLayerOptions = {
     style: boundGetLayerStyleOption,
+    pointToLayer: function (feature, latlng) {
+      console.log('running pointToLayer on', feature)
+      boundPointToLayer(feature, latlng)
+    },
     onEachFeature: boundOnEachFeature
   }
   // create mapping between dataset and layer, one per control item
@@ -81,6 +87,13 @@ LayerControls.prototype.createFeatureLayer = function () {
   return L.geoJSON(false, this.geoJsonLayerOptions).addTo(this.map)
 }
 
+// function brownfieldGeojsonToLayer (geojson, options) {
+//   return L.geoJSON(geojson, {
+//     pointToLayer: plot,
+//     onEachFeature: options.onEachFeature || bindBrownfieldPopup
+//   })
+// }
+
 LayerControls.prototype.createAllFeatureLayers = function () {
   const layerToDatasetMap = {}
   const that = this
@@ -89,6 +102,17 @@ LayerControls.prototype.createAllFeatureLayers = function () {
     let layer
     if (dataset === 'brownfield-land') {
       layer = DLMaps.brownfieldSites.geojsonToLayer(false, that.geoJsonLayerOptions).addTo(that.map)
+    } else if (dataset === 'listed-building') {
+      const boundPointToLayer = that.defaultPointToLayer.bind(that)
+      const boundOnEachFeature = that.onEachFeature.bind(that)
+      const options = {
+        pointToLayer: function (feature, latlng) {
+          console.log('running pointToLayer on', feature)
+          boundPointToLayer(feature, latlng)
+        },
+        onEachFeature: boundOnEachFeature
+      }
+      layer = L.geoJSON(false, options).addTo(that.map)
     } else {
       layer = that.createFeatureLayer()
     }
@@ -98,6 +122,7 @@ LayerControls.prototype.createAllFeatureLayers = function () {
 }
 
 LayerControls.prototype.getLayerStyleOption = function (feature) {
+  // gets the layer control and looks for style settings
   const colour = this.getStyle(this.getControlByName(feature.properties.type))
   if (typeof colour === 'undefined') {
     return { color: '#003078', weight: 2 }
@@ -190,6 +215,16 @@ LayerControls.prototype.defaultOnEachFeature = function (feature, layer) {
       <a href=${this.baseUrl}${feature.properties.slug}>${feature.properties.slug}</a>
     `)
   }
+}
+
+LayerControls.prototype.defaultPointToLayer = function (feature, latlng) {
+  console.log('plot circle marker')
+  // gets the layer control and looks for style settings
+  const colour = this.getStyle(this.getControlByName(feature.properties.type))
+  const style = mapUtils.circleMarkerStyle(colour)
+  var size = mapUtils.setCircleSize(feature.properties.hectares)
+  style.radius = size.toFixed(2)
+  return L.circle(latlng, style)
 }
 
 LayerControls.prototype.setupOptions = function (params) {
