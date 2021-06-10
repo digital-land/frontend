@@ -152,7 +152,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
         "pipeline_name": "dataset-name",
         "breadcrumb": [{"text": "dataset-name"}],
         "count": 4,
-        "download_url": "https://raw.githubusercontent.com/digital-land/dataset-name-collection/main/dataset/dataset-name.csv",
+        "download_url": "https://collection-dataset.s3.eu-west-2.amazonaws.com/dataset-name-collection/dataset/dataset-name.csv",
         "group_field": "organisation",
         "groups": OrderedDict(
             {
@@ -273,7 +273,7 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
     assert spy_renderer.index_pages_rendered["docs/index.html"] == {
         "pipeline_name": "dataset-name",
         "breadcrumb": [{"text": "dataset-name"}],
-        "download_url": "https://raw.githubusercontent.com/digital-land/dataset-name-collection/main/dataset/dataset-name.csv",
+        "download_url": "https://collection-dataset.s3.eu-west-2.amazonaws.com/dataset-name-collection/dataset/dataset-name.csv",
         "count": 4,
         "group_field": "organisation",
         "groups": OrderedDict(
@@ -351,7 +351,7 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
     assert spy_renderer.index_pages_rendered["docs/index.html"] == {
         "pipeline_name": "dataset-name",
         "breadcrumb": [{"text": "dataset-name"}],
-        "download_url": "https://raw.githubusercontent.com/digital-land/dataset-name-collection/main/dataset/dataset-name.csv",
+        "download_url": "https://collection-dataset.s3.eu-west-2.amazonaws.com/dataset-name-collection/dataset/dataset-name.csv",
         "count": 4,
         "group_field": None,
         "items": [
@@ -420,10 +420,10 @@ def test_generate_download_link():
     # test url to a normal collection
     assert (
         generate_download_link("development-plan-document")
-        == "https://raw.githubusercontent.com/digital-land/development-plan-document-collection/main/dataset/development-plan-document.csv"
+        == "https://collection-dataset.s3.eu-west-2.amazonaws.com/development-plan-document-collection/dataset/development-plan-document.csv"
     )
     # test url to dataset within another collection
     assert (
         generate_download_link("developer-agreement-type")
-        == "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement-type.csv"
+        == "https://collection-dataset.s3.eu-west-2.amazonaws.com/developer-contributions-collection/dataset/developer-agreement-type.csv"
     )

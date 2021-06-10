@@ -128,7 +128,7 @@ class OrganisationMapper(Mapper):
 
 class NeighbourhoodPlanAreaMapper(Mapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/neighbourhood-plan-area-collection/main/dataset/neighbourhood-plan-area.csv"
+        "https://collection-dataset.s3.eu-west-2.amazonaws.com/neighbourhood-plan-area-collection/dataset/neighbourhood-plan-area.csv"
     ]
     url_pattern = "https://digital-land.github.io/{key}"
     key_field = "organisation"
@@ -143,7 +143,7 @@ class GeneralOrganisationMapper(GeneralMapper):
 
 class PolicyMapper(Mapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/development-policy-collection/main/dataset/development-policy.csv"
+        "https://collection-dataset.s3.eu-west-2.amazonaws.com/development-policy-collection/dataset/development-policy.csv"
     ]
     key_field = "development-policy"
     url_pattern = "https://digital-land.github.io{slug}"
@@ -154,7 +154,7 @@ class PolicyMapper(Mapper):
 
 class DevelopmentDocMapper(Mapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/development-plan-document-collection/main/dataset/development-plan-document.csv"
+        "https://collection-dataset.s3.eu-west-2.amazonaws.com/development-plan-document-collection/dataset/development-plan-document.csv"
     ]
     key_field = "development-plan-document"
     url_pattern = "https://digital-land.github.io{slug}"
@@ -173,7 +173,7 @@ class PolicyToDocMapper(Mapper):
 
 class DeveloperAgreementMapper(Mapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/developer-agreement-collection/main/dataset/developer-agreement.csv"
+        "https://collection-dataset.s3.eu-west-2.amazonaws.com/developer-contributions-collection/dataset/developer-agreement.csv"
     ]
     key_field = "developer-agreement"
     url_pattern = "https://digital-land.github.io{slug}"
@@ -185,7 +185,7 @@ class DeveloperAgreementMapper(Mapper):
 
 class DeveloperAgreementContributionMapper(Mapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/developer-agreement-contribution-collection/main/dataset/developer-agreement-contribution.csv"
+        "https://collection-dataset.s3.eu-west-2.amazonaws.com/developer-contributions-collection/dataset/developer-agreement-contribution.csv"
     ]
     key_field = "developer-agreement-contribution"
     url_pattern = "https://digital-land.github.io{slug}"
@@ -208,7 +208,7 @@ class BaseGeometryMapper(Mapper):
 
 class ParishMapper(BaseGeometryMapper):
     dataset_urls = [
-        "https://media.githubusercontent.com/media/digital-land/parish-collection/main/dataset/parish.csv"
+        "https://collection-dataset.s3.eu-west-2.amazonaws.com/parish-collection/dataset/parish.csv"
     ]
     matcher = re.compile(r"^E04")
     key_field = "geography"
@@ -223,7 +223,7 @@ class ParishMapper(BaseGeometryMapper):
 
 class LocalAuthorityDistrictMapper(BaseGeometryMapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/local-authority-district-collection/main/dataset/local-authority-district.csv"
+        "https://collection-dataset.s3.eu-west-2.amazonaws.com/local-authority-district-collection/dataset/local-authority-district.csv"
     ]
     matcher = re.compile(r"")
     value_field = "name"
@@ -258,7 +258,7 @@ class BoundaryMapper(BaseGeometryMapper):
 
 class DevelopmentPolicyAreaMapper(BaseGeometryMapper):
     dataset_urls = [
-        "https://raw.githubusercontent.com/digital-land/development-policy-area-collection/main/dataset/development-policy-area.csv"
+        "https://collection-dataset.s3.eu-west-2.amazonaws.com/development-policy-area-collection/dataset/development-policy-area.csv"
     ]
     matcher = re.compile(r"^/development-policy-area/")
     url_pattern = "https://digital-land.github.io{slug}"
@@ -273,7 +273,7 @@ class DevelopmentPolicyAreaMapper(BaseGeometryMapper):
 
 class ConservationAreaMapper(BaseGeometryMapper):
     dataset_urls = [
-        "https://github.com/digital-land/conservation-area-collection/raw/main/dataset/conservation-area.csv"
+        "https://collection-dataset.s3.eu-west-2.amazonaws.com/conservation-area-collection/dataset/conservation-area.csv"
     ]
     key_field = "slug"
     matcher = re.compile(r"^/conservation-area/")

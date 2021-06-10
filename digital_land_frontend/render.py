@@ -22,16 +22,16 @@ from digital_land_frontend.jinja_filters.mappers import (
 
 def generate_download_link(pipeline_name):
     urls = {
-        "contribution-funding-status": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/contribution-funding-status.csv",
-        "contribution-purpose": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/contribution-purpose.csv",
-        "developer-agreement": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement.csv",
-        "developer-agreement-contribution": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement-contribution.csv",
-        "developer-agreement-transaction": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement-transaction.csv",
-        "developer-agreement-type": "https://raw.githubusercontent.com/digital-land/developer-contributions-collection/main/dataset/developer-agreement-type.csv",
+        "contribution-funding-status": "https://collection-dataset.s3.eu-west-2.amazonaws.com/developer-contributions-collection/dataset/contribution-funding-status.csv",
+        "contribution-purpose": "https://collection-dataset.s3.eu-west-2.amazonaws.com/developer-contributions-collection/dataset/contribution-purpose.csv",
+        "developer-agreement": "https://collection-dataset.s3.eu-west-2.amazonaws.com/developer-contributions-collection/dataset/developer-agreement.csv",
+        "developer-agreement-contribution": "https://collection-dataset.s3.eu-west-2.amazonaws.com/developer-contributions-collection/dataset/developer-agreement-contribution.csv",
+        "developer-agreement-transaction": "https://collection-dataset.s3.eu-west-2.amazonaws.com/developer-contributions-collection/dataset/developer-agreement-transaction.csv",
+        "developer-agreement-type": "https://collection-dataset.s3.eu-west-2.amazonaws.com/developer-contributions-collection/dataset/developer-agreement-type.csv",
     }
     if pipeline_name in urls:
         return urls[pipeline_name]
-    return f"https://raw.githubusercontent.com/digital-land/{pipeline_name}-collection/main/dataset/{pipeline_name}.csv"
+    return f"https://collection-dataset.s3.eu-west-2.amazonaws.com/{pipeline_name}-collection/dataset/{pipeline_name}.csv"
 
 
 class JinjaRenderer:
