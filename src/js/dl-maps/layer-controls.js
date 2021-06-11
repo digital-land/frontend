@@ -107,8 +107,8 @@ LayerControls.prototype.createAllFeatureLayers = function () {
       const boundOnEachFeature = that.onEachFeature.bind(that)
       const options = {
         pointToLayer: function (feature, latlng) {
-          console.log('running pointToLayer on', feature)
-          boundPointToLayer(feature, latlng)
+          console.log('running pointToLayer on', feature, feature.properties.hectare)
+          return boundPointToLayer(feature, latlng)
         },
         onEachFeature: boundOnEachFeature
       }
@@ -208,6 +208,7 @@ LayerControls.prototype.getStyle = function ($control) {
 }
 
 LayerControls.prototype.defaultOnEachFeature = function (feature, layer) {
+  console.debug('onEachFeature run')
   if (feature.properties) {
     layer.bindPopup(`
       <h3>${feature.properties.name}</h3>
@@ -222,8 +223,9 @@ LayerControls.prototype.defaultPointToLayer = function (feature, latlng) {
   // gets the layer control and looks for style settings
   const colour = this.getStyle(this.getControlByName(feature.properties.type))
   const style = mapUtils.circleMarkerStyle(colour)
-  var size = mapUtils.setCircleSize(feature.properties.hectares)
+  var size = mapUtils.setCircleSize(feature.properties.hectares, 10)
   style.radius = size.toFixed(2)
+  console.log(style, latlng)
   return L.circle(latlng, style)
 }
 
