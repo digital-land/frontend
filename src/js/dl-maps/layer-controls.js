@@ -1,6 +1,7 @@
 /* global L, window, DLMaps */
 
 import utils from '../helpers/utils.js'
+import mapUtils from './map-utils.js'
 
 function LayerControls ($module, leafletMap) {
   this.$module = $module
@@ -14,13 +15,6 @@ LayerControls.prototype.init = function (params) {
   this.$controls = Array.prototype.slice.call($controls)
   this.datasetNames = this.$controls.map($control => $control.dataset.layerControl)
 
-  // setup default options for geojsonFeatureLayers
-  const boundGetLayerStyleOption = this.getLayerStyleOption.bind(this)
-  const boundOnEachFeature = this.onEachFeature.bind(this)
-  this.geoJsonLayerOptions = {
-    style: boundGetLayerStyleOption,
-    onEachFeature: boundOnEachFeature
-  }
   // create mapping between dataset and layer, one per control item
   this.layerMap = this.createAllFeatureLayers()
 
@@ -77,20 +71,39 @@ LayerControls.prototype.getControlByName = function (dataset) {
   return undefined
 }
 
-LayerControls.prototype.createFeatureLayer = function () {
-  return L.geoJSON(false, this.geoJsonLayerOptions).addTo(this.map)
+LayerControls.prototype.createFeatureLayer = function (geoJsonLayerOptions) {
+  // return L.geoJSON(false, this.geoJsonLayerOptions).addTo(this.map)
+  return L.geoJSON(false, geoJsonLayerOptions).addTo(this.map)
 }
 
 LayerControls.prototype.createAllFeatureLayers = function () {
   const layerToDatasetMap = {}
   const that = this
+  const boundGetLayerStyleOption = this.getLayerStyleOption.bind(this)
+  const boundPointToLayer = this.defaultPointToLayer.bind(this)
+  const boundOnEachFeature = this.onEachFeature.bind(this)
+
   this.$controls.forEach(function ($control) {
     const dataset = that.getDatasetName($control)
     let layer
+
+    const radiusSetting = that.getMarkerRadius($control)
+
+    // generate options for the geoJSON layer we are creating
+    const geoJsonLayerOptions = {
+      style: boundGetLayerStyleOption,
+      pointToLayer: function (feature, latlng) {
+        return boundPointToLayer(feature, latlng, radiusSetting)
+      },
+      onEachFeature: boundOnEachFeature
+    }
+
     if (dataset === 'brownfield-land') {
-      layer = DLMaps.brownfieldSites.geojsonToLayer(false, that.geoJsonLayerOptions).addTo(that.map)
+      // layer = DLMaps.brownfieldSites.geojsonToLayer(false, that.geoJsonLayerOptions).addTo(that.map)
+      layer = DLMaps.brownfieldSites.geojsonToLayer(false, geoJsonLayerOptions).addTo(that.map)
     } else {
-      layer = that.createFeatureLayer()
+      // layer = that.createFeatureLayer()
+      layer = that.createFeatureLayer(geoJsonLayerOptions)
     }
     layerToDatasetMap[dataset] = layer
   })
@@ -98,6 +111,7 @@ LayerControls.prototype.createAllFeatureLayers = function () {
 }
 
 LayerControls.prototype.getLayerStyleOption = function (feature) {
+  // gets the layer control and looks for style settings
   const colour = this.getStyle(this.getControlByName(feature.properties.type))
   if (typeof colour === 'undefined') {
     return { color: '#003078', weight: 2 }
@@ -182,6 +196,10 @@ LayerControls.prototype.getStyle = function ($control) {
   return $control.dataset.layerColour
 }
 
+LayerControls.prototype.getMarkerRadius = function ($control) {
+  return parseInt($control.dataset.layerMarkerRadius)
+}
+
 LayerControls.prototype.defaultOnEachFeature = function (feature, layer) {
   if (feature.properties) {
     layer.bindPopup(`
@@ -190,6 +208,16 @@ LayerControls.prototype.defaultOnEachFeature = function (feature, layer) {
       <a href=${this.baseUrl}${feature.properties.slug}>${feature.properties.slug}</a>
     `)
   }
+}
+
+LayerControls.prototype.defaultPointToLayer = function (feature, latlng, radius) {
+  const r = radius || 10
+  // gets the layer control and looks for style settings
+  const colour = this.getStyle(this.getControlByName(feature.properties.type))
+  const style = mapUtils.circleMarkerStyle(colour)
+  var size = mapUtils.setCircleSize(feature.properties.hectares, r)
+  style.radius = size.toFixed(2)
+  return L.circle(latlng, style)
 }
 
 LayerControls.prototype.setupOptions = function (params) {
