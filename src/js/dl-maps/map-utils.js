@@ -6,9 +6,9 @@ const circleMarkerStyle = function (hex) {
   }
 }
 
-function setCircleSize (hectares) {
-  if (isNaN(hectares)) {
-    return 100 // give it a default size
+function setCircleSize (hectares, defaultRadius) {
+  if (hectares === null || isNaN(hectares)) {
+    return defaultRadius || 100 // give it a default size
   }
   return (Math.sqrt((hectares * 10000) / Math.PI))
 }
