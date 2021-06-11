@@ -87,12 +87,13 @@ LayerControls.prototype.createAllFeatureLayers = function () {
     const dataset = that.getDatasetName($control)
     let layer
 
+    const radiusSetting = that.getMarkerRadius($control)
+
     // generate options for the geoJSON layer we are creating
     const geoJsonLayerOptions = {
       style: boundGetLayerStyleOption,
       pointToLayer: function (feature, latlng) {
-        console.log('running pointToLayer on', feature, feature.properties.hectare)
-        return boundPointToLayer(feature, latlng)
+        return boundPointToLayer(feature, latlng, radiusSetting)
       },
       onEachFeature: boundOnEachFeature
     }
@@ -195,6 +196,10 @@ LayerControls.prototype.getStyle = function ($control) {
   return $control.dataset.layerColour
 }
 
+LayerControls.prototype.getMarkerRadius = function ($control) {
+  return parseInt($control.dataset.layerMarkerRadius)
+}
+
 LayerControls.prototype.defaultOnEachFeature = function (feature, layer) {
   console.debug('onEachFeature run')
   if (feature.properties) {
@@ -206,12 +211,13 @@ LayerControls.prototype.defaultOnEachFeature = function (feature, layer) {
   }
 }
 
-LayerControls.prototype.defaultPointToLayer = function (feature, latlng) {
+LayerControls.prototype.defaultPointToLayer = function (feature, latlng, radius) {
+  const r = radius || 10
   console.log('plot circle marker')
   // gets the layer control and looks for style settings
   const colour = this.getStyle(this.getControlByName(feature.properties.type))
   const style = mapUtils.circleMarkerStyle(colour)
-  var size = mapUtils.setCircleSize(feature.properties.hectares, 10)
+  var size = mapUtils.setCircleSize(feature.properties.hectares, r)
   style.radius = size.toFixed(2)
   console.log(style, latlng)
   return L.circle(latlng, style)
