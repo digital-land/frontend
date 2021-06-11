@@ -15,18 +15,6 @@ LayerControls.prototype.init = function (params) {
   this.$controls = Array.prototype.slice.call($controls)
   this.datasetNames = this.$controls.map($control => $control.dataset.layerControl)
 
-  // setup default options for geojsonFeatureLayers
-  const boundGetLayerStyleOption = this.getLayerStyleOption.bind(this)
-  const boundPointToLayer = this.defaultPointToLayer.bind(this)
-  const boundOnEachFeature = this.onEachFeature.bind(this)
-  this.geoJsonLayerOptions = {
-    style: boundGetLayerStyleOption,
-    pointToLayer: function (feature, latlng) {
-      console.log('running pointToLayer on', feature)
-      boundPointToLayer(feature, latlng)
-    },
-    onEachFeature: boundOnEachFeature
-  }
   // create mapping between dataset and layer, one per control item
   this.layerMap = this.createAllFeatureLayers()
 
@@ -83,38 +71,38 @@ LayerControls.prototype.getControlByName = function (dataset) {
   return undefined
 }
 
-LayerControls.prototype.createFeatureLayer = function () {
-  return L.geoJSON(false, this.geoJsonLayerOptions).addTo(this.map)
+LayerControls.prototype.createFeatureLayer = function (geoJsonLayerOptions) {
+  // return L.geoJSON(false, this.geoJsonLayerOptions).addTo(this.map)
+  return L.geoJSON(false, geoJsonLayerOptions).addTo(this.map)
 }
-
-// function brownfieldGeojsonToLayer (geojson, options) {
-//   return L.geoJSON(geojson, {
-//     pointToLayer: plot,
-//     onEachFeature: options.onEachFeature || bindBrownfieldPopup
-//   })
-// }
 
 LayerControls.prototype.createAllFeatureLayers = function () {
   const layerToDatasetMap = {}
   const that = this
+  const boundGetLayerStyleOption = this.getLayerStyleOption.bind(this)
+  const boundPointToLayer = this.defaultPointToLayer.bind(this)
+  const boundOnEachFeature = this.onEachFeature.bind(this)
+
   this.$controls.forEach(function ($control) {
     const dataset = that.getDatasetName($control)
     let layer
+
+    // generate options for the geoJSON layer we are creating
+    const geoJsonLayerOptions = {
+      style: boundGetLayerStyleOption,
+      pointToLayer: function (feature, latlng) {
+        console.log('running pointToLayer on', feature, feature.properties.hectare)
+        return boundPointToLayer(feature, latlng)
+      },
+      onEachFeature: boundOnEachFeature
+    }
+
     if (dataset === 'brownfield-land') {
-      layer = DLMaps.brownfieldSites.geojsonToLayer(false, that.geoJsonLayerOptions).addTo(that.map)
-    } else if (dataset === 'listed-building') {
-      const boundPointToLayer = that.defaultPointToLayer.bind(that)
-      const boundOnEachFeature = that.onEachFeature.bind(that)
-      const options = {
-        pointToLayer: function (feature, latlng) {
-          console.log('running pointToLayer on', feature)
-          boundPointToLayer(feature, latlng)
-        },
-        onEachFeature: boundOnEachFeature
-      }
-      layer = L.geoJSON(false, options).addTo(that.map)
+      // layer = DLMaps.brownfieldSites.geojsonToLayer(false, that.geoJsonLayerOptions).addTo(that.map)
+      layer = DLMaps.brownfieldSites.geojsonToLayer(false, geoJsonLayerOptions).addTo(that.map)
     } else {
-      layer = that.createFeatureLayer()
+      // layer = that.createFeatureLayer()
+      layer = that.createFeatureLayer(geoJsonLayerOptions)
     }
     layerToDatasetMap[dataset] = layer
   })
@@ -208,6 +196,7 @@ LayerControls.prototype.getStyle = function ($control) {
 }
 
 LayerControls.prototype.defaultOnEachFeature = function (feature, layer) {
+  console.debug('onEachFeature run')
   if (feature.properties) {
     layer.bindPopup(`
       <h3>${feature.properties.name}</h3>
@@ -222,8 +211,9 @@ LayerControls.prototype.defaultPointToLayer = function (feature, latlng) {
   // gets the layer control and looks for style settings
   const colour = this.getStyle(this.getControlByName(feature.properties.type))
   const style = mapUtils.circleMarkerStyle(colour)
-  var size = mapUtils.setCircleSize(feature.properties.hectares)
+  var size = mapUtils.setCircleSize(feature.properties.hectares, 10)
   style.radius = size.toFixed(2)
+  console.log(style, latlng)
   return L.circle(latlng, style)
 }
 
