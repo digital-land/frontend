@@ -21,8 +21,6 @@ NationalMapController.prototype.init = function (params) {
 
   // kick it all off
   this.fetchAll()
-
-  return this
 }
 
 NationalMapController.prototype.createMap = function (mapId) {
@@ -166,8 +164,7 @@ NationalMapController.prototype.buildDataUrl = function (bounds, zoomLevel, type
   // controls whether to get simplified boundaries or full res
   if (zoomLevel > 11) { query = 'bounded_geography_full_paged' }
   if (type) { query = `${query}_by_type` }
-  // just canned query handles point data
-  if (type === 'brownfield-land' || type === 'listed-building') { query = 'bounded_geography_brownfield_land' }
+  if (type === 'brownfield-land') { query = 'bounded_geography_brownfield_land' }
 
   const url = new URL(`${this.baseUrl}/${query}.json?_json=geojson&_shape=arrayfirst&bbox_minx=${bounds._southWest.lng}&bbox_maxx=${bounds._northEast.lng}&bbox_miny=${bounds._southWest.lat}&bbox_maxy=${bounds._northEast.lat}&after=${afterRowid}`)
 
