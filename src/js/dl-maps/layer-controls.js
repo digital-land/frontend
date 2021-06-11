@@ -201,7 +201,6 @@ LayerControls.prototype.getMarkerRadius = function ($control) {
 }
 
 LayerControls.prototype.defaultOnEachFeature = function (feature, layer) {
-  console.debug('onEachFeature run')
   if (feature.properties) {
     layer.bindPopup(`
       <h3>${feature.properties.name}</h3>
@@ -213,13 +212,11 @@ LayerControls.prototype.defaultOnEachFeature = function (feature, layer) {
 
 LayerControls.prototype.defaultPointToLayer = function (feature, latlng, radius) {
   const r = radius || 10
-  console.log('plot circle marker')
   // gets the layer control and looks for style settings
   const colour = this.getStyle(this.getControlByName(feature.properties.type))
   const style = mapUtils.circleMarkerStyle(colour)
   var size = mapUtils.setCircleSize(feature.properties.hectares, r)
   style.radius = size.toFixed(2)
-  console.log(style, latlng)
   return L.circle(latlng, style)
 }
 
