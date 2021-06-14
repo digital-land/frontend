@@ -166,8 +166,9 @@ NationalMapController.prototype.buildDataUrl = function (bounds, zoomLevel, type
   // controls whether to get simplified boundaries or full res
   if (zoomLevel > 11) { query = 'bounded_geography_full_paged' }
   if (type) { query = `${query}_by_type` }
-  // just canned query handles point data
-  if (type === 'brownfield-land' || type === 'listed-building') { query = 'bounded_geography_brownfield_land' }
+  // this canned query handles point data
+  // list out point data layers here (TO DO replace with config)
+  if (type === 'brownfield-land' || type === 'listed-building' || type === 'certificate-of-immunity' || type === 'building-preservation-notice') { query = 'bounded_geography_brownfield_land' }
 
   const url = new URL(`${this.baseUrl}/${query}.json?_json=geojson&_shape=arrayfirst&bbox_minx=${bounds._southWest.lng}&bbox_maxx=${bounds._northEast.lng}&bbox_miny=${bounds._southWest.lat}&bbox_maxy=${bounds._northEast.lat}&after=${afterRowid}`)
 
