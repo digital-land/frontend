@@ -28,6 +28,7 @@ NationalMapController.prototype.init = function (params) {
   this.initControls(); // kick it all off
 
   this.fetchAll();
+  return this;
 };
 
 NationalMapController.prototype.createMap = function (mapId) {
@@ -162,7 +163,7 @@ NationalMapController.prototype.fetchFeatures = function (progress, url, geoJson
 
         if (data.length >= that.pageSize) {
           // why progress then call the func?
-          progress && progress(geoJsonLayer, type_);
+          progress(geoJsonLayer, type_);
           var lastItem = data[data.length - 1]; // used to paginate the results
 
           var nextUrl = url;
@@ -188,9 +189,11 @@ NationalMapController.prototype.buildDataUrl = function (bounds, zoomLevel) {
 
   if (type) {
     query = "".concat(query, "_by_type");
-  }
+  } // this canned query handles point data
+  // list out point data layers here (TO DO replace with config)
 
-  if (type === 'brownfield-land') {
+
+  if (type === 'brownfield-land' || type === 'listed-building' || type === 'certificate-of-immunity' || type === 'building-preservation-notice') {
     query = 'bounded_geography_brownfield_land';
   }
 
@@ -200,7 +203,7 @@ NationalMapController.prototype.buildDataUrl = function (bounds, zoomLevel) {
 };
 
 NationalMapController.prototype.fetchProgressCallback = function (geoJsonLayer, datasetName) {
-  console.debug("".concat(geoJsonLayer.getLayers().length, " features fetched for ").concat(datasetName));
+  console.log("".concat(geoJsonLayer.getLayers().length, " features fetched for ").concat(datasetName));
 };
 
 NationalMapController.prototype.setupOptions = function (params) {

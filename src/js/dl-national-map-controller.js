@@ -146,8 +146,7 @@ NationalMapController.prototype.fetchFeatures = function (progress, url, geoJson
         geoJsonLayer.addData(data)
 
         if (data.length >= that.pageSize) {
-          // why progress then call the func?
-          progress && progress(geoJsonLayer, type_)
+          progress(geoJsonLayer, type_)
           const lastItem = data[data.length - 1]
           // used to paginate the results
           const nextUrl = url
@@ -178,7 +177,7 @@ NationalMapController.prototype.buildDataUrl = function (bounds, zoomLevel, type
 }
 
 NationalMapController.prototype.fetchProgressCallback = function (geoJsonLayer, datasetName) {
-  console.debug(`${geoJsonLayer.getLayers().length} features fetched for ${datasetName}`)
+  console.log(`${geoJsonLayer.getLayers().length} features fetched for ${datasetName}`)
 }
 
 NationalMapController.prototype.setupOptions = function (params) {
