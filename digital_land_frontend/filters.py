@@ -1,8 +1,9 @@
+import functools
+import logging
 import numbers
 import os
-import logging
-from datetime import datetime
 from collections import Mapping
+from datetime import datetime
 
 import validators
 from digital_land.specification import Specification
@@ -28,6 +29,70 @@ from .jinja_filters.mappers import (
 from .jinja_filters.reference_mappers import ReferenceMapper
 
 logger = logging.getLogger(__name__)
+
+
+def register_basic_filters(env):
+    env.filters["clean_slug"] = strip_slug
+    env.filters["make_link"] = make_link
+    env.filters["is_list"] = is_list
+    env.filters["is_historical"] = is_historical
+    env.filters["contains_historical"] = contains_historical
+    env.filters["key_field"] = key_field_filter
+    env.filters["github_line_num"] = github_line_num_filter
+    env.filters["total_items"] = total_items_filter
+
+
+def register_mapper_filters(env, view_model):
+    contribution_funding_status_mapper = MapperFilter(ContributionFundingStatusMapper())
+    contribution_purpose_mapper = MapperFilter(ContributionPurposeMapper())
+    developer_agreement_contribution_mapper = MapperFilter(
+        DeveloperAgreementContributionMapper()
+    )
+    developer_agreement_mapper = MapperFilter(DeveloperAgreementMapper())
+    developer_agreement_type_mapper = MapperFilter(DeveloperAgreementTypeMapper())
+    doc_type_mapper = MapperFilter(DocumentTypeMapper())
+    geography_mapper = GeographyMapper()
+    organisation_mapper = GeneralOrganisationMapper()
+    plan_type_mapper = MapperFilter(PlanTypeMapper())
+    policy_category_mapper = MapperFilter(PolicyCategoryMapper())
+    policy_to_doc_mapper = PolicyToDocMapper()
+
+    env.filters["dev_doc_mapper"] = MapperFilter(DevelopmentDocMapper()).filter
+    env.filters[
+        "developer_agreement_contribution_mapper"
+    ] = developer_agreement_contribution_mapper.filter
+    env.filters["developer_agreement_mapper"] = developer_agreement_mapper.filter
+    env.filters[
+        "developer_agreement_type_mapper"
+    ] = developer_agreement_type_mapper.filter
+    env.filters["geography_to_geometry_url"] = geography_mapper.get_geometry_url
+    env.filters["geography_to_name"] = geography_mapper.get_name
+    env.filters["geography_to_url"] = geography_mapper.get_url
+    env.filters["get_geometry_url"] = functools.partial(
+        get_geometry_url_filter, geography_mapper
+    )
+    env.filters["group_id_to_name"] = functools.partial(
+        group_id_to_name_filter, organisation_mapper
+    )
+    env.filters["organisation_id_to_name"] = organisation_mapper.get_name
+    env.filters["organisation_id_to_url"] = organisation_mapper.get_url
+    env.filters["plan_type_mapper"] = plan_type_mapper.filter
+    env.filters["policy_category_mapper"] = policy_category_mapper.filter
+    env.filters["policy_mapper"] = MapperFilter(PolicyMapper()).filter
+    env.filters["policy_to_development_plan"] = policy_to_doc_mapper.get_name
+
+    env.filters["dl_category_mapper"] = MapperRouter(
+        {
+            "development-policy-category": policy_category_mapper,
+            "development-plan-type": plan_type_mapper,
+            "developer-agreement-type": developer_agreement_type_mapper,
+            "contribution-purpose": contribution_purpose_mapper,
+            "contribution-funding-status": contribution_funding_status_mapper,
+            "document-type": doc_type_mapper,
+        }
+    ).route
+
+    env.filters["reference_mapper"] = ReferenceMapper(view_model).get_references
 
 
 def get_jinja_template_raw(template_file_path):
@@ -79,92 +144,11 @@ def commanum(v):
     return v
 
 
-def group_id_to_name_filter(id, group_type):
+def group_id_to_name_filter(organisation_mapper, id, group_type):
     if group_type == "organisation":
-        return organisation_id_to_name_filter(id)
+        return organisation_mapper.get_name(id)
     else:
         raise NotImplementedError("group_type %s not implemented" % group_type)
-
-
-organisation_mapper = GeneralOrganisationMapper()
-
-
-def organisation_id_to_name_filter(id):
-    """
-    Maps organistion id to the name of the organisation
-
-    E.g. local-authority-eng:HAG -> Harrogate Borough Council
-    """
-    return organisation_mapper.get_name(id)
-
-
-def organisation_id_to_url_filter(id):
-    """
-    Maps organistion id to the url of the organisation
-
-    E.g. local-authority-eng:HAG -> https://digital-land.github.io/organisation/local-authority-eng/HA"
-    """
-    return organisation_mapper.get_url(id)
-
-
-geography_mapper = GeographyMapper()
-
-
-def geography_to_name_filter(id):
-    """
-    Maps geography to name
-
-    E.g. parish:E04001457 -> Aston Clinton
-    """
-    return geography_mapper.get_name(id)
-
-
-def geography_to_url_filter(id):
-    """
-    Maps geograpahy to a link for the relevant geograpahy page
-
-    E.g. parish:E04001457 -> https://digital-land.github.io/parish/E04001465/
-    """
-    return geography_mapper.get_url(id)
-
-
-def geography_to_geometry_url_filter(id):
-    """
-    Maps geograpahy to a link for the relevant geometry geojson file
-
-    E.g. parish:E04001457 -> https://digital-land.github.io/parish/E04001465/geometry.geojson
-    """
-
-    return geography_mapper.get_geometry_url(id)
-
-
-policy_to_doc_mapper = PolicyToDocMapper()
-
-
-def policy_to_development_plan_filter(id):
-    """
-    Maps policy idenitifer to development plan document it is a part of
-
-    E.g. astonclintonndp-B1 -> neigh-plan-buc-astonclintonndp
-    """
-    return policy_to_doc_mapper.get_name(id)
-
-
-reference_mapper = ReferenceMapper()
-
-
-def reference_filter(id, field):
-    """
-    Returns links to each entity that references the provided id in the provided field
-
-    E.g.
-    "article-4-document", "document-type" -> [
-        {"reference": "article-4-document:CA05-1", "href": "/conservation-area/local-authority-eng/LBH/CA05", "text": "article-4-document:CA05-1"},
-        {"reference": "article-4-document:CA11-2", "href": "/conservation-area/local-authority-eng/LBH/CA11", "text": "article-4-document:CA11-2"},
-        ...
-    ]
-    """
-    return reference_mapper.get_references(id, field)
 
 
 class MapperFilter:
@@ -177,20 +161,6 @@ class MapperFilter:
         elif type == "slug":
             return self.mapper.get_slug(id)
         return self.mapper.get_name(id)
-
-
-policy_mapper = MapperFilter(PolicyMapper())
-policy_category_mapper = MapperFilter(PolicyCategoryMapper())
-plan_type_mapper = MapperFilter(PlanTypeMapper())
-dev_doc_mapper = MapperFilter(DevelopmentDocMapper())
-doc_type_mapper = MapperFilter(DocumentTypeMapper())
-developer_agreement_type_mapper = MapperFilter(DeveloperAgreementTypeMapper())
-developer_agreement_mapper = MapperFilter(DeveloperAgreementMapper())
-developer_agreement_contribution_mapper = MapperFilter(
-    DeveloperAgreementContributionMapper()
-)
-contribution_purpose_mapper = MapperFilter(ContributionPurposeMapper())
-contribution_funding_status_mapper = MapperFilter(ContributionFundingStatusMapper())
 
 
 class MapperRouter:
@@ -223,18 +193,6 @@ class MapperRouter:
             raise ValueError("no mapper found for dataset %s" % dataset)
         mapper = self.mappers[dataset]
         return mapper.filter(k, type)
-
-
-category_mapper_router = MapperRouter(
-    {
-        "development-policy-category": policy_category_mapper,
-        "development-plan-type": plan_type_mapper,
-        "developer-agreement-type": developer_agreement_type_mapper,
-        "contribution-purpose": contribution_purpose_mapper,
-        "contribution-funding-status": contribution_funding_status_mapper,
-        "document-type": doc_type_mapper,
-    }
-)
 
 
 def strip_slug(s):
@@ -272,13 +230,13 @@ def contains_historical(lst):
     return len(with_end_date) > 0
 
 
-def get_geometry_url_filter(record):
+def get_geometry_url_filter(geography_mapper, record):
     if "geometry_url" in record and record["geometry_url"]:
         return record["geometry_url"]
     if "geographies" in record and record["geographies"]:
-        return geography_to_geometry_url_filter(record["geographies"])
+        return geography_mapper.get_geometry_url(record["geographies"])
     if "statistical-geography" in record and record["statistical-geography"]:
-        return geography_to_geometry_url_filter(record["statistical-geography"])
+        return geography_mapper.get_geometry_url(record["statistical-geography"])
     return None
 
 
