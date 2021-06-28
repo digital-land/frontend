@@ -40,6 +40,7 @@ def register_basic_filters(env):
     env.filters["key_field"] = key_field_filter
     env.filters["github_line_num"] = github_line_num_filter
     env.filters["total_items"] = total_items_filter
+    env.filters["split_to_list"] = split_to_list
 
 
 def register_mapper_filters(env, view_model):
@@ -261,3 +262,6 @@ def total_items_filter(obj):
 
     logger.error(f"total_items expected a Dict. But got {type(obj)}")
     return None
+
+def split_to_list(s):
+    return s.split(";")
