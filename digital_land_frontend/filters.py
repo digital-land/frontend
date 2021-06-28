@@ -263,5 +263,6 @@ def total_items_filter(obj):
     logger.error(f"total_items expected a Dict. But got {type(obj)}")
     return None
 
+
 def split_to_list(s):
     return s.split(";")
