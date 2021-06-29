@@ -43,7 +43,7 @@ def register_basic_filters(env):
     env.filters["split_to_list"] = split_to_list
 
 
-def register_mapper_filters(env, view_model):
+def register_mapper_filters(env, view_model=None):
     contribution_funding_status_mapper = MapperFilter(ContributionFundingStatusMapper())
     contribution_purpose_mapper = MapperFilter(ContributionPurposeMapper())
     developer_agreement_contribution_mapper = MapperFilter(
@@ -93,7 +93,8 @@ def register_mapper_filters(env, view_model):
         }
     ).route
 
-    env.filters["reference_mapper"] = ReferenceMapper(view_model).get_references
+    if view_model:
+        env.filters["reference_mapper"] = ReferenceMapper(view_model).get_references
 
 
 def get_jinja_template_raw(template_file_path):

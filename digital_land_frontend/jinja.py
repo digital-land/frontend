@@ -3,7 +3,7 @@ import jinja2
 from .filters import register_basic_filters, register_mapper_filters
 
 
-def setup_jinja(view_model):
+def setup_jinja(view_model=None):
     # register templates
     multi_loader = jinja2.ChoiceLoader(
         [
