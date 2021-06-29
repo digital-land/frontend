@@ -1,188 +1,148 @@
-/* global L, fetch, DLMaps, AbortController */
+/* global DLMaps, maplibregl, LayerControls, ZoomControls */
 
-function NationalMapController (mapId, $layerControls, $zoomControls) {
-  this.mapId = mapId
-  this.$layerControls = $layerControls
+function capitalizeFirstLetter (string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+function MapController ($layerControlsList, $zoomControls) {
+  this.$layerControlsList = $layerControlsList
   this.$zoomControls = $zoomControls
 }
 
-NationalMapController.prototype.init = function (params) {
-  // use options provided
+MapController.prototype.init = function (params) {
+  // check maplibregl is available
+  // if not return
   this.setupOptions(params)
 
-  // init controller - used to cancel in flight fetch chains
-  this.controller = undefined
+  // create the maplibre map
+  this.map = this.createMap()
 
-  // create the map
-  this.map = this.createMap(this.mapId)
+  // perform setup once map is loaded
+  const boundSetup = this.setup.bind(this)
+  this.map.on('load', boundSetup)
 
-  // initialise the layer and zoom controls
-  this.initControls()
-
-  // kick it all off
-  this.fetchAll()
+  // run debugging code
+  this.debug()
 
   return this
 }
 
-NationalMapController.prototype.createMap = function (mapId) {
-  // default location and zoom level if not set by URL params
-  const mappos = L.Permalink.getMapLocation(this.defaultZoomLevel, [53.865, -5.101])
-
-  const theMap = L.map(mapId, {
-    center: mappos.center,
-    zoom: mappos.zoom
+MapController.prototype.createMap = function () {
+  const mappos = DLMaps.Permalink.getMapLocation(6, [0, 52])
+  var map = new maplibregl.Map({
+    container: this.mapId, // container id
+    style: './base-tile.json', // open source tiles?
+    center: mappos.center, // starting position [lng, lat]
+    zoom: mappos.zoom // starting zoom
   })
-  L.Permalink.setup(theMap)
-  this.addTileLayer(theMap)
-
-  // listen for moveend events
-  const boundMoveEndHandler = this.moveEndHandler.bind(this)
-  theMap.on('moveend', boundMoveEndHandler)
-
-  return theMap
+  DLMaps.Permalink.setup(map)
+  return map
 }
 
-NationalMapController.prototype.addTileLayer = function (map) {
-  // add the OpenStreetMap tiles
-  L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-  }).addTo(map)
+MapController.prototype.setup = function () {
+  // add source to map
+  this.addSource()
+
+  // add zoom controls
+  this.zoomControl = new DLMaps.ZoomControls(this.$zoomControls, this.map, this.map.getZoom()).init({})
+
+  // setup layers
+  console.log(this.$layerControlsList, this.map)
+  this.layerControlsComponent = new DLMaps.LayerControls(this.$layerControlsList, this.map, this.sourceName).init()
+
+  // register click handler
+  const boundClickHandler = this.clickHandler.bind(this)
+  this.map.on('click', boundClickHandler)
 }
 
-NationalMapController.prototype.initControls = function () {
-  console.log(this.$layerControls, this.$zoomControls)
-  if (!this.$layerControls || !this.$zoomControls) {
-    console.log('No control elements defined')
-    return undefined
-  }
-
-  this.zoomComponent = new DLMaps.ZoomControls(this.$zoomControls, this.map, this.map.getZoom()).init({})
-  const boundToggleDataLayer = this.toggleDataLayer.bind(this)
-  this.layerControlsComponent = new DLMaps.LayerControls(this.$layerControls, this.map).init({
-    toggleControlCallback: boundToggleDataLayer
-  })
-}
-
-NationalMapController.prototype.moveEndHandler = function (e) {
-  var bounds = e.target.getBounds()
-  this.fetchAll(bounds)
-  this.map._fetchSinceControlAction = true
-}
-
-NationalMapController.prototype.toggleDataLayer = function (map, datasetName, adding) {
-  const layer = this.layerControlsComponent.layerMap[datasetName]
-  if (adding) {
-    console.log('Debug: ', layer, datasetName)
-    map.addLayer(layer)
-
-    /* Not sure this is efficient
-        What to limit the number of fetch requests. If layer toggled off then on
-        with no move of the map there is no need to fetch all the features again */
-
-    if (map._fetchSinceControlAction) {
-      // if something has changed since layer last shown then trigger fetch all
-      // can further improve by fetching only reenable layer
-      this.fetchAll()
-      map._fetchSinceControlAction = false
-    }
-    if (layer.getLayers().length === 0) {
-      // if contains no layers then maybe no fetch has been done before
-      this.fetchAll()
-    }
-  } else {
-    map.removeLayer(layer)
-  }
-}
-
-NationalMapController.prototype.fetchAll = function (bounds = this.map.getBounds()) {
-  if (this.controller) {
-    console.log('controller.abort()')
-    this.controller && this.controller.abort()
-  }
-  // eslint-disable-next-line no-unused-vars
-  for (const [key, value] of Object.entries(this.layerControlsComponent.layerMap)) {
-    value.clearLayers()
-  }
-
-  this.controller = new AbortController()
-  this.layerControlsComponent.enabledLayers().forEach(layer => {
-    const type_ = layer.dataset.layerControl
-    const zoom = this.map.getZoom()
-    const zoomConstraint = this.layerControlsComponent.getZoomRestriction(layer)
-
-    // check for zoom constraint and only fetch if map is zoomed that far
-    if (typeof zoomConstraint !== 'undefined') {
-      console.log(type_, 'ZoomConstraint', this.layerControlsComponent.getZoomRestriction(layer))
-      if (zoom < zoomConstraint) { return }
-    }
-
-    console.log('fetching', type_)
-    this.fetchFeatures(
-      this.fetchProgressCallback,
-      this.buildDataUrl(bounds, zoom, type_),
-      this.layerControlsComponent.layerMap[type_],
-      this.controller.signal,
-      type_
-    ).then(function (geoJsonLayer) {
-      console.log('fetch complete', type_)
-    }).catch((e) => {
-      console.log('caught error from fetch', type_, e)
-    })
+MapController.prototype.addSource = function () {
+  const sourceName = this.sourceName
+  this.map.addSource(sourceName, {
+    type: 'vector',
+    tiles: [
+      this.vectorSource
+    ],
+    minzoom: this.minMapZoom,
+    maxzoom: this.maxMapZoom
   })
 }
 
-// function to perform the fetch
-NationalMapController.prototype.fetchFeatures = function (progress, url, geoJsonLayer, signal, type_) {
+MapController.prototype.createPopupHTML = function (feature) {
+  const featureType = capitalizeFirstLetter(feature.sourceLayer).replaceAll('-', ' ')
+  const html = [
+    `<p class="secondary-text govuk-!-margin-bottom-0">${featureType}</p>`,
+    '<p class="dl-small-text govuk-!-margin-top-0">',
+    `<a href="${this.baseURL}${feature.properties.slug}">${feature.properties.name}</a>`,
+    '</p>'
+  ]
+  return html.join('\n')
+}
+
+MapController.prototype.clickHandler = function (e) {
+  const map = this.map
+  console.log('click at', e)
+
+  var bbox = [
+    [e.point.x - 5, e.point.y - 5],
+    [e.point.x + 5, e.point.y + 5]
+  ]
+
   const that = this
-  return new Promise((resolve, reject) => fetch(url, { signal })
-    .then(response => {
-      if (response.status !== 200) {
-        throw new Error(`${response.status}: ${response.statusText}`)
-      }
+  // returns a list of layer ids we want to be 'clickable'
+  const enabledControls = this.layerControlsComponent.enabledLayers()
+  const enabledLayers = enabledControls.map($control => that.layerControlsComponent.getDatasetName($control))
+  const clickableLayers = enabledLayers.map(function (layer) {
+    const components = that.layerControlsComponent.availableLayers[layer]
+    if (components.includes(layer + 'Fill')) {
+      return layer + 'Fill'
+    }
+    return components[0]
+  })
+  console.log('Clickable layers: ', clickableLayers)
+  // need to get all the layers that are clickable
+  var features = map.queryRenderedFeatures(bbox, {
+    layers: clickableLayers
+  })
 
-      response.json().then(data => {
-        geoJsonLayer.addData(data)
-
-        if (data.length >= that.pageSize) {
-          progress(geoJsonLayer, type_)
-          const lastItem = data[data.length - 1]
-          // used to paginate the results
-          const nextUrl = url
-          nextUrl.searchParams.set('after', lastItem.id)
-          // self call if more results still to get
-          that.fetchFeatures(progress, nextUrl, geoJsonLayer, signal, type_).then(resolve).catch(reject)
-        } else {
-          resolve(geoJsonLayer)
-        }
-      }).catch(reject)
-    }).catch(reject))
+  console.log(features)
+  const coordinates = e.lngLat
+  features.forEach(function (feature) {
+    console.log(feature.properties.name, feature)
+    const popupHTML = that.createPopupHTML(feature)
+    new maplibregl.Popup()
+      .setLngLat(coordinates)
+      .setHTML(popupHTML)
+      .addTo(map)
+  })
 }
 
-NationalMapController.prototype.buildDataUrl = function (bounds, zoomLevel, type = false, afterRowid = 0) {
-  var query = 'bounded_geography_simplified_paged'
-  // controls whether to get simplified boundaries or full res
-  if (zoomLevel > 11) { query = 'bounded_geography_full_paged' }
-  if (type) { query = `${query}_by_type` }
-  // this canned query handles point data
-  // list out point data layers here (TO DO replace with config)
-  if (type === 'brownfield-land' || type === 'listed-building' || type === 'certificate-of-immunity' || type === 'building-preservation-notice') { query = 'bounded_geography_brownfield_land' }
-
-  const url = new URL(`${this.baseUrl}/${query}.json?_json=geojson&_shape=arrayfirst&bbox_minx=${bounds._southWest.lng}&bbox_maxx=${bounds._northEast.lng}&bbox_miny=${bounds._southWest.lat}&bbox_maxy=${bounds._northEast.lat}&after=${afterRowid}`)
-
-  if (type) url.searchParams.set('type', type)
-
-  return url
+MapController.prototype.getMap = function () {
+  return this.map
 }
 
-NationalMapController.prototype.fetchProgressCallback = function (geoJsonLayer, datasetName) {
-  console.log(`${geoJsonLayer.getLayers().length} features fetched for ${datasetName}`)
-}
-
-NationalMapController.prototype.setupOptions = function (params) {
+MapController.prototype.setupOptions = function (params) {
   params = params || {}
-  this.defaultZoomLevel = params.defaultZoomLevel || 6
-  this.baseUrl = params.baseUrl || 'https://datasette-demo.digital-land.info/view_model'
-  this.pageSize = params.pageSize || 100
+  this.mapId = params.mapId || 'mapid'
+  this.sourceName = params.sourceName || 'dl-vectors'
+  this.vectorSource = params.vectorSource || 'https://datasette-tiles.digital-land.info/-/tiles/dataset_tiles/{z}/{x}/{y}.vector.pbf'
+  this.minMapZoom = params.minMapZoom || 6
+  this.maxMapZoom = params.maxMapZoom || 15
+  this.baseURL = params.baseURL || 'https://digital-land.github.io'
+}
+
+MapController.prototype.debug = function () {
+  const that = this
+  function countFeatures (layerName) {
+    const l = that.map.getLayer(layerName)
+    if (l) {
+      return that.map.queryRenderedFeatures({ layers: [layerName] }).length
+    }
+    return 0
+  }
+  this.map.on('moveend', function (e) {
+    console.log('moveend')
+    console.log('Brownfield', countFeatures('brownfieldland'))
+    console.log('LA boundaries', countFeatures('ladFill'))
+    console.log('conservation area', countFeatures('conservationareaFill'))
+  })
 }
