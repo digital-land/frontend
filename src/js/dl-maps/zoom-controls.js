@@ -24,10 +24,8 @@ ZoomControls.prototype.init = function (params) {
   })
 
   const boundZoomHandler = this.zoomHandler.bind(this)
-  this.map.addEventListener('zoomend', boundZoomHandler)
-
-  // get rid of default zoom controls
-  this.map.removeControl(this.map.zoomControl)
+  // use on() not addEventListener()
+  this.map.on('zoomend', boundZoomHandler)
 
   return this
 }
@@ -50,7 +48,7 @@ ZoomControls.prototype.zoom = function (direction) {
 
 ZoomControls.prototype.zoomHandler = function (e) {
   const zoomLevel = this.map.getZoom()
-  this.$counter.textContent = zoomLevel
+  this.$counter.textContent = parseFloat(zoomLevel).toFixed(2)
 }
 
 ZoomControls.prototype.setupOptions = function (params) {
