@@ -117,6 +117,7 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
         "dataset-name",
         group_field="organisation",
         renderer=spy_renderer,
+        view_model=None,
     )
     renderer.render(dataset_multi_slug_reader)
 
@@ -248,6 +249,7 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
         "dataset-name",
         group_field="organisation",
         renderer=spy_renderer,
+        view_model=None,
     )
     renderer.render(dataset_simple_slug_reader)
 
@@ -326,6 +328,7 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
         "dataset-name",
         group_field=None,
         renderer=spy_renderer,
+        view_model=None,
     )
     renderer.render(dataset_simple_slug_reader)
 

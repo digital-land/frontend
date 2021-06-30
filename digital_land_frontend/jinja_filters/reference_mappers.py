@@ -1,124 +1,27 @@
-import json
 import logging
-import time
 
-import requests
 from digital_land.cli import SPECIFICATION
 
 logger = logging.getLogger(__name__)
 
 
-class ViewModelJsonQuery:
-    def __init__(self, url_base="https://datasette-demo.digital-land.info/view_model/"):
-        self.url_base = url_base
-
-    def get_id(self, table, value):
-        url = f"{self.url_base}get_{table}_id.json"
-        params = [
-            "_shape=objects",
-            f"{requests.utils.quote(table)}={requests.utils.quote(value)}",
-        ]
-
-        url = f"{url}?{'&'.join(params)}"
-        return self.paginate(url)
-
-    def get_references_by_id(self, table, id):
-        url = f"{self.url_base}get_{table}_references.json"
-        params = ["_shape=objects", f"{requests.utils.quote(table)}={id}"]
-
-        url = f"{url}?{'&'.join(params)}"
-        return self.paginate(url)
-
-    def select(self, table, exact={}, joins=[], label=None, sort=None):
-        url = f"{self.url_base}{table}.json"
-        params = ["_shape=objects"]
-
-        if label:
-            params.append(f"_label={label}")
-
-        if sort:
-            params.append(f"_sort={sort}")
-
-        for column, value in exact.items():
-            params.append(f"{column}__exact={requests.utils.quote(value)}")
-
-        for clause in joins:
-            params.append(f"_through={requests.utils.quote(json.dumps(clause))}")
-
-        param_string = "&".join(params)
-        if param_string:
-            url = f"{url}?{param_string}"
-
-        return self.paginate(url)
-
-    def get(self, url):
-        try:
-            response = requests.get(url)
-        except ConnectionRefusedError:
-            raise ConnectionError("failed to connect to view model api at %s" % url)
-        return response
-
-    def paginate(self, url):
-        limit = -1
-        more = True
-        while more:
-            paginated_url = url + f"&gid={limit}"
-            start_time = time.time()
-            response = self.get(paginated_url)
-            logger.info(
-                "request time: %.2fs, %s", time.time() - start_time, paginated_url
-            )
-            try:
-                data = response.json()
-            except Exception as e:
-                logger.error(
-                    "json not found in response (url: %s):\n%s",
-                    paginated_url,
-                    response.content,
-                )
-                raise e
-
-            if "rows" not in data:
-                logger.warning("url: %s", paginated_url)
-                raise ValueError('no "rows" found in response:\n%s', data)
-
-            if "expanded_columns" in data:
-                row_iter = self.expand_columns(data)
-            else:
-                row_iter = data["rows"]
-
-            if "truncated" in data and data["truncated"]:
-                more = True
-                limit = data["rows"][-1]["gid"]
-            else:
-                more = False
-
-            yield from row_iter
-
-    def expand_columns(self, data):
-        col_map = {}
-        for config, dest_col in data["expandable_columns"]:
-            if config["column"] in data["expanded_columns"]:
-                if dest_col in data["columns"]:
-                    raise ValueError(f"name clash trying to expand {dest_col} label")
-                col_map[config["column"]] = dest_col
-
-        for row in data["rows"]:
-            for src, dest in col_map.items():
-                row[dest] = row[src]["label"]
-                row[src] = row[src]["value"]
-            yield row
-
-
 class ReferenceMapper:
     xref_datasets = {"geography", "category", "policy", "document"}
 
-    def __init__(self):
-        self.view_model = ViewModelJsonQuery(
-            "https://datasette-demo.digital-land.info/view_model/"
-        )
+    def __init__(self, view_model):
+        self.view_model = view_model
 
     def get_references(self, value, field):
+        """
+        Returns links to each entity that references the provided id in the provided field
+
+        E.g.
+        "article-4-document", "document-type" -> [
+            {"reference": "article-4-document:CA05-1", "href": "/conservation-area/local-authority-eng/LBH/CA05", "text": "article-4-document:CA05-1"},
+            {"reference": "article-4-document:CA11-2", "href": "/conservation-area/local-authority-eng/LBH/CA11", "text": "article-4-document:CA11-2"},
+            ...
+        ]
+        """
         field_typology = SPECIFICATION.field_typology(field)
         if field_typology not in self.xref_datasets:
             logger.info("no relationships configured for %s typology", field_typology)

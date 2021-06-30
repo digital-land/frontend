@@ -1,20 +1,28 @@
 import pytest
 
 from digital_land_frontend.filters import (
-    policy_mapper,
-    is_list,
-    plan_type_mapper,
-    dev_doc_mapper,
-    policy_category_mapper,
-    category_mapper_router,
+    MapperFilter,
+    MapperRouter,
     contains_historical,
     is_historical,
+    is_list,
     key_field_filter,
     total_items_filter,
+)
+from digital_land_frontend.jinja_filters.category_mappers import (
+    DeveloperAgreementTypeMapper,
+    PlanTypeMapper,
+    PolicyCategoryMapper,
+)
+from digital_land_frontend.jinja_filters.mappers import (
+    DevelopmentDocMapper,
+    PolicyMapper,
 )
 
 
 def test_policy_mapper_filter():
+    policy_mapper = MapperFilter(PolicyMapper())
+
     s = "worminghallndp-NH1"
 
     assert policy_mapper.filter(s) == "New Houses"
@@ -41,6 +49,7 @@ def test_is_list_filter():
 
 
 def test_plan_type_filter():
+    plan_type_mapper = MapperFilter(PlanTypeMapper())
     s = "local-plan"
 
     assert plan_type_mapper.filter(s) == "Local Plan"
@@ -51,6 +60,7 @@ def test_plan_type_filter():
 
 
 def test_dev_doc_mapper_filter():
+    dev_doc_mapper = MapperFilter(DevelopmentDocMapper())
     doc_id = "neigh-plan-buc-buckinghamndp"
 
     assert dev_doc_mapper.filter(doc_id) == "Buckingham Neighbourhood Plan"
@@ -61,6 +71,7 @@ def test_dev_doc_mapper_filter():
 
 
 def test_policy_category_mapper_filter():
+    policy_category_mapper = MapperFilter(PolicyCategoryMapper())
     cat_id = "strategic-policy"
 
     assert policy_category_mapper.filter(cat_id) == "Strategic policy"
@@ -71,6 +82,13 @@ def test_policy_category_mapper_filter():
 
 
 def test_mapper_router_filter():
+    category_mapper_router = MapperRouter(
+        {
+            "development-policy-category": MapperFilter(PolicyCategoryMapper()),
+            "development-plan-type": MapperFilter(PlanTypeMapper()),
+            "developer-agreement-type": MapperFilter(DeveloperAgreementTypeMapper()),
+        }
+    )
 
     # test development plan type mapper
     pt = "local-plan"
@@ -104,6 +122,9 @@ def test_mapper_router_filter():
 
 
 def test_mapper_router_unmatched_key():
+    category_mapper_router = MapperRouter(
+        {"development-policy-category": MapperFilter(PolicyCategoryMapper())}
+    )
     with pytest.raises(ValueError, match=r"^no mapper found"):
         category_mapper_router.route("local-plan", "bad-key")
 
