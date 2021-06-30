@@ -95,6 +95,9 @@ def register_mapper_filters(env, view_model=None):
 
     if view_model:
         env.filters["reference_mapper"] = ReferenceMapper(view_model).get_references
+    else:
+        # provide a no-op function to stop jinja complaining
+        env.filters["reference_mapper"] = lambda x: x
 
 
 def get_jinja_template_raw(template_file_path):
