@@ -20,6 +20,10 @@
   }
 }
 
+.dl-full-width-page > .dlf-feedback__wrapper {
+  max-width: $govuk-page-width-full;
+}
+
 .dlf-feedback {
   margin-top: $govuk-gutter;
   background: govuk-colour("white");
