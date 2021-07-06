@@ -21,7 +21,9 @@
 }
 
 .dl-full-width-page > .dlf-feedback__wrapper {
-  max-width: $govuk-page-width-full;
+  @include govuk-media-query(1020px) {
+    max-width: 100%;
+  }
 }
 
 .dlf-feedback {
