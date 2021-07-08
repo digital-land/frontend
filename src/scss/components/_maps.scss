@@ -109,6 +109,14 @@ $bfs-brown: #594d00;
 
 .dl-map__wrapper {
   position: relative;
+  min-height: 700px;
+
+  .dl-map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+  }
 }
 
 .dl-map__loader {
