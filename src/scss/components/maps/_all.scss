@@ -3,3 +3,7 @@
 @import "key";
 @import "side-panel";
 @import "zoom-controls";
+
+.dl-map__overlay {
+  box-shadow: 0 0 3px rgba(govuk-colour("black"), .8);
+}

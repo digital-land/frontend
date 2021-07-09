@@ -16,6 +16,10 @@ LayerControls.prototype.init = function (params) {
   this.$container = this.$module.closest('.' + this.controlsContainerClass)
   this.$container.classList.remove('js-hidden')
 
+  // add buttons to open and close panel
+  this.closeBtn = this.createCloseButton()
+  this.openBtn = this.createOpenButton()
+
   // list all datasets names
   this.datasetNames = this.$controls.map($control => $control.dataset.layerControl)
 
@@ -51,6 +55,47 @@ LayerControls.prototype.init = function (params) {
   }, this)
 
   return this
+}
+
+LayerControls.prototype.createCloseButton = function () {
+  const button = document.createElement('button')
+  button.classList.add('dl-map__close-btn')
+  button.dataset.action = 'close'
+  const label = document.createElement('span')
+  label.textContent = 'Close layer panel'
+  label.classList.add('govuk-visually-hidden')
+  button.appendChild(label)
+  this.$container.appendChild(button)
+
+  const boundTogglePanel = this.togglePanel.bind(this)
+  button.addEventListener('click', boundTogglePanel)
+  return button
+}
+
+LayerControls.prototype.createOpenButton = function () {
+  const button = document.createElement('button')
+  button.classList.add('dl-map__open-btn', 'dl-map__overlay', 'js-hidden')
+  button.dataset.action = 'open'
+  const label = document.createElement('span')
+  label.textContent = 'Open layer panel'
+  label.classList.add('govuk-visually-hidden')
+  button.appendChild(label)
+  this.map.getContainer().appendChild(button)
+
+  const boundTogglePanel = this.togglePanel.bind(this)
+  button.addEventListener('click', boundTogglePanel)
+  return button
+}
+
+LayerControls.prototype.togglePanel = function (e) {
+  const action = e.target.dataset.action
+  if (action === 'open') {
+    this.$container.classList.remove('dl-map__side-panel--collapsed')
+    this.openBtn.classList.add('js-hidden')
+  } else {
+    this.$container.classList.add('dl-map__side-panel--collapsed')
+    this.openBtn.classList.remove('js-hidden')
+  }
 }
 
 LayerControls.prototype.onControlChkbxChange = function (e) {
