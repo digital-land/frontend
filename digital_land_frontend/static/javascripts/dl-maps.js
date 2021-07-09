@@ -607,8 +607,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.$container = this.$module.closest('.' + this.controlsContainerClass);
     this.$container.classList.remove('js-hidden'); // add buttons to open and close panel
 
-    this.closeBtn = this.createCloseButton();
-    this.openBtn = this.createOpenButton(); // list all datasets names
+    this.$closeBtn = this.createCloseButton();
+    this.$openBtn = this.createOpenButton(); // list all datasets names
 
     this.datasetNames = this.$controls.map(function ($control) {
       return $control.dataset.layerControl;
@@ -682,12 +682,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     if (opening) {
       this.$container.classList.remove('dl-map__side-panel--collapsed');
-      this.openBtn.classList.add('js-hidden');
+      this.$openBtn.classList.add('js-hidden'); // focus on the panel when opening
+
       this.$container.focus();
     } else {
       this.$container.classList.add('dl-map__side-panel--collapsed');
-      this.openBtn.classList.remove('js-hidden');
-      this.openBtn.focus();
+      this.$openBtn.classList.remove('js-hidden'); // focus on open btn when closing panel
+
+      this.$openBtn.focus();
     }
   };
 
