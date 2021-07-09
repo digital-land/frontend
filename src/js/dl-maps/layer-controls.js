@@ -17,8 +17,8 @@ LayerControls.prototype.init = function (params) {
   this.$container.classList.remove('js-hidden')
 
   // add buttons to open and close panel
-  this.closeBtn = this.createCloseButton()
-  this.openBtn = this.createOpenButton()
+  this.$closeBtn = this.createCloseButton()
+  this.$openBtn = this.createOpenButton()
 
   // list all datasets names
   this.datasetNames = this.$controls.map($control => $control.dataset.layerControl)
@@ -89,12 +89,20 @@ LayerControls.prototype.createOpenButton = function () {
 
 LayerControls.prototype.togglePanel = function (e) {
   const action = e.target.dataset.action
-  if (action === 'open') {
+  const opening = (action === 'open')
+  // set aria attributes
+  this.$container.setAttribute('aria-hidden', !opening)
+  this.$container.setAttribute('open', opening)
+  if (opening) {
     this.$container.classList.remove('dl-map__side-panel--collapsed')
-    this.openBtn.classList.add('js-hidden')
+    this.$openBtn.classList.add('js-hidden')
+    // focus on the panel when opening
+    this.$container.focus()
   } else {
     this.$container.classList.add('dl-map__side-panel--collapsed')
-    this.openBtn.classList.remove('js-hidden')
+    this.$openBtn.classList.remove('js-hidden')
+    // focus on open btn when closing panel
+    this.$openBtn.focus()
   }
 }
 
