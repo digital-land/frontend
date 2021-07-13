@@ -4,9 +4,18 @@
   z-index: 1001;
   top: $govuk-gutter-half;
   right: $govuk-gutter-half;
-  width: 330px;
   background: govuk-colour("white");
   box-shadow: 0 0 3px rgba(govuk-colour("black"), .8);
+
+  @include govuk-media-query($until: tablet) {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+
+  @include govuk-media-query($from: tablet) {
+    width: 330px;
+  }
 }
 
 .dl-map__side-panel--full {
