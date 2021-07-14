@@ -31,7 +31,7 @@ MapController.prototype.createMap = function () {
   const mappos = DLMaps.Permalink.getMapLocation(6, [0, 52])
   var map = new maplibregl.Map({
     container: this.mapId, // container id
-    style: './base-tile.json', // open source tiles?
+    style: this.baseTileStyleFilePath, // open source tiles?
     center: mappos.center, // starting position [lng, lat]
     zoom: mappos.zoom // starting zoom
   })
@@ -133,6 +133,7 @@ MapController.prototype.setupOptions = function (params) {
   this.minMapZoom = params.minMapZoom || 5
   this.maxMapZoom = params.maxMapZoom || 15
   this.baseURL = params.baseURL || 'https://digital-land.github.io'
+  this.baseTileStyleFilePath = params.baseTileStyleFilePath || './base-tile.json'
 }
 
 MapController.prototype.debug = function () {
