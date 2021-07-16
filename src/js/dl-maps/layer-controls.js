@@ -128,7 +128,7 @@ LayerControls.prototype.getControlByName = function (dataset) {
 
 LayerControls.prototype.createVectorLayer = function (layerId, datasetName, _type, paintOptions) {
   // if there is a tileSource for the layer use that or default to the group one
-  const tileSource = this.map.getSource(datasetName) ? this.map.getSource(datasetName) + '-source' : this.tileSource
+  const tileSource = this.map.getSource(datasetName + '-source') ? datasetName + '-source' : this.tileSource
   console.log('TileSource:', tileSource)
   this.map.addLayer({
     id: layerId,
