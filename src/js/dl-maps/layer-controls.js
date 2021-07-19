@@ -8,6 +8,8 @@ function LayerControls ($module, map, source) {
 
 LayerControls.prototype.init = function (params) {
   this.setupOptions(params)
+  this._initialLoadWithLayers = false
+
   // returns a node list so convert to array
   var $controls = this.$module.querySelectorAll(this.layerControlSelector)
   this.$controls = Array.prototype.slice.call($controls)
@@ -45,6 +47,7 @@ LayerControls.prototype.init = function (params) {
     // use URL params if available
     console.log('layer params exist')
     this.setControls()
+    this._initialLoadWithLayers = true
   }
 
   // listen for changes on each checkbox and change the URL
