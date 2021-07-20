@@ -178,6 +178,23 @@ const copyNationalMapJS = () =>
     )
     .pipe(gulp.dest(`${config.jsDestPath}/`))
 
+const copyOrganisationMapJS = () =>
+  gulp.src('src/js/organisation-map-controller.js')
+    .pipe(plumber())
+    .pipe(
+      babel({
+        presets: [
+          [
+            '@babel/env',
+            {
+              modules: false
+            }
+          ]
+        ]
+      })
+    )
+    .pipe(gulp.dest(`${config.jsDestPath}/`))
+
 const copyImagesForStylesheets = () =>
   gulp.src('src/images/**/*').pipe(gulp.dest(config.cssDestPath))
 
@@ -203,6 +220,7 @@ latestStylesheets.description = 'Generate the latest stylesheets'
 const latestJS = gulp.parallel(
   copyCookieJS,
   copyNationalMapJS,
+  copyOrganisationMapJS,
   'js:compile',
   'js-map:compile'
 )
