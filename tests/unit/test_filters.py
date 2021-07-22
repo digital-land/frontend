@@ -1,4 +1,5 @@
 import pytest
+import datetime
 
 from digital_land_frontend.filters import (
     MapperFilter,
@@ -8,6 +9,7 @@ from digital_land_frontend.filters import (
     is_list,
     key_field_filter,
     total_items_filter,
+    readable_date_filter,
 )
 from digital_land_frontend.jinja_filters.category_mappers import (
     DeveloperAgreementTypeMapper,
@@ -183,3 +185,9 @@ def test_total_items_filter():
 
     assert total_items_filter(d) == 6
     assert total_items_filter(not_dict) is None
+
+def test_readable_date_filter():
+    d = "2020-07-10"
+    dt = datetime.datetime.strptime(d, '%Y-%m-%d')
+    
+    assert readable_date_filter(dt) == "10 July 2020"
