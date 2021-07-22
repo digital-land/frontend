@@ -186,8 +186,9 @@ def test_total_items_filter():
     assert total_items_filter(d) == 6
     assert total_items_filter(not_dict) is None
 
+
 def test_readable_date_filter():
     d = "2020-07-10"
-    dt = datetime.datetime.strptime(d, '%Y-%m-%d')
-    
+    dt = datetime.datetime.strptime(d, "%Y-%m-%d")
+
     assert readable_date_filter(dt) == "10 July 2020"
