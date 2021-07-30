@@ -134,12 +134,14 @@ OrgMapController.prototype.removeDuplicates = function (features) {
 }
 
 OrgMapController.prototype.createFeaturesPopup = function (features) {
+  const featureCount = features.length
   const wrapperOpen = '<div class="dl-popup">'
   const wrapperClose = '</div>'
-  let headingHTML = `<h3 class="dl-popup-heading">${features.length} features selected</h3>`
-  if (features.length > this.popupMaxListLength) {
+  const featureOrFeatures = (featureCount > 1) ? 'features' : 'feature'
+  let headingHTML = `<h3 class="dl-popup-heading">${featureCount} ${featureOrFeatures} selected</h3>`
+  if (featureCount > this.popupMaxListLength) {
     headingHTML = '<h3 class="dl-popup-heading">Too many features selected</h3>'
-    const tooMany = `<p class="govuk-body-s">You clicked on ${features.length} features.</p><p class="govuk-body-s">Zoom in or turn off layers to narrow down your choice.</p>`
+    const tooMany = `<p class="govuk-body-s">You clicked on ${featureCount} features.</p><p class="govuk-body-s">Zoom in or turn off layers to narrow down your choice.</p>`
     return wrapperOpen + headingHTML + tooMany + wrapperClose
   }
   let itemsHTML = '<ul class="dl-popup-list">\n'
@@ -189,8 +191,10 @@ OrgMapController.prototype.clickHandler = function (e) {
   })
 
   const coordinates = e.lngLat
-  const popupHTML = that.createFeaturesPopup(this.removeDuplicates(features))
-  const popup = new maplibregl.Popup({ maxWidth: this.popupWidth }).setLngLat(coordinates).setHTML(popupHTML).addTo(map)
+  if (features.length) {
+    const popupHTML = that.createFeaturesPopup(this.removeDuplicates(features))
+    const popup = new maplibregl.Popup({ maxWidth: this.popupWidth }).setLngLat(coordinates).setHTML(popupHTML).addTo(map)
+  }
 }
 
 OrgMapController.prototype.flyToFeatureSet = function (dataset, filter, returnFeatures) {
