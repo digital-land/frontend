@@ -71,15 +71,55 @@ MapController.prototype.addSource = function () {
   })
 }
 
-MapController.prototype.createPopupHTML = function (feature) {
-  const featureType = capitalizeFirstLetter(feature.sourceLayer).replaceAll('-', ' ')
-  const html = [
-    `<p class="secondary-text govuk-!-margin-bottom-0">${featureType}</p>`,
-    '<p class="dl-small-text govuk-!-margin-top-0">',
-    `<a href="${this.baseURL}${feature.properties.slug}">${feature.properties.name}</a>`,
-    '</p>'
-  ]
-  return html.join('\n')
+// uses the feature's sourceLayer to return the set colour for data of that type
+MapController.prototype.getFillColour = function (feature) {
+  const l = this.layerControlsComponent.getControlByName(feature.sourceLayer)
+  const styles = this.layerControlsComponent.getStyle(l)
+  return styles.colour
+}
+
+// sometimes the same feature can appear multiple times in a list for features
+// return only unique features
+MapController.prototype.removeDuplicates = function (features) {
+  const uniqueIds = []
+  console.log(features)
+  return features.filter(function (feature) {
+    if (uniqueIds.indexOf(feature.id) === -1) {
+      uniqueIds.push(feature.id)
+      return true
+    }
+    return false
+  })
+}
+
+MapController.prototype.createFeaturesPopup = function (features) {
+  const featureCount = features.length
+  const wrapperOpen = '<div class="dl-popup">'
+  const wrapperClose = '</div>'
+  const featureOrFeatures = (featureCount > 1) ? 'features' : 'feature'
+  let headingHTML = `<h3 class="dl-popup-heading">${featureCount} ${featureOrFeatures} selected</h3>`
+  if (featureCount > this.popupMaxListLength) {
+    headingHTML = '<h3 class="dl-popup-heading">Too many features selected</h3>'
+    const tooMany = `<p class="govuk-body-s">You clicked on ${featureCount} features.</p><p class="govuk-body-s">Zoom in or turn off layers to narrow down your choice.</p>`
+    return wrapperOpen + headingHTML + tooMany + wrapperClose
+  }
+  let itemsHTML = '<ul class="dl-popup-list">\n'
+  const that = this
+  features.forEach(function (feature) {
+    const featureType = capitalizeFirstLetter(feature.sourceLayer).replaceAll('-', ' ')
+    const fillColour = that.getFillColour(feature)
+    const itemHTML = [
+      `<li class="dl-popup-item" style="border-left: 5px solid ${fillColour}">`,
+      `<p class="secondary-text govuk-!-margin-bottom-0 govuk-!-margin-top-0">${featureType}</p>`,
+      '<p class="dl-small-text govuk-!-margin-top-0 govuk-!-margin-bottom-0">',
+      `<a href="${this.baseURL}${feature.properties.slug}">${feature.properties.name}</a>`,
+      '</p>',
+      '</li>'
+    ]
+    itemsHTML = itemsHTML + itemHTML.join('\n')
+  })
+  itemsHTML = headingHTML + itemsHTML + '</ul>'
+  return wrapperOpen + itemsHTML + wrapperClose
 }
 
 MapController.prototype.clickHandler = function (e) {
@@ -108,16 +148,12 @@ MapController.prototype.clickHandler = function (e) {
     layers: clickableLayers
   })
 
-  console.log(features)
   const coordinates = e.lngLat
-  features.forEach(function (feature) {
-    console.log(feature.properties.name, feature)
-    const popupHTML = that.createPopupHTML(feature)
-    new maplibregl.Popup()
-      .setLngLat(coordinates)
-      .setHTML(popupHTML)
-      .addTo(map)
-  })
+  if (features.length) {
+    // no need to show popup if not clicking on feature
+    const popupHTML = that.createFeaturesPopup(this.removeDuplicates(features))
+    const popup = new maplibregl.Popup({ maxWidth: this.popupWidth }).setLngLat(coordinates).setHTML(popupHTML).addTo(map)
+  }
 }
 
 MapController.prototype.getMap = function () {
@@ -134,6 +170,8 @@ MapController.prototype.setupOptions = function (params) {
   this.maxMapZoom = params.maxMapZoom || 15
   this.baseURL = params.baseURL || 'https://digital-land.github.io'
   this.baseTileStyleFilePath = params.baseTileStyleFilePath || './base-tile.json'
+  this.popupWidth = params.popupWidth || '260px'
+  this.popupMaxListLength = params.popupMaxListLength || 10
 }
 
 MapController.prototype.debug = function () {
