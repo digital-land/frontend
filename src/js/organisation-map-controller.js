@@ -79,7 +79,6 @@ OrgMapController.prototype.addSource = function () {
   var map = this.map
   var that = this
   // add sources for the layers
-  console.log('Datasets', this.getDatasets())
   this.getDatasets().forEach(function (d) {
     map.addSource(
       `${d}-source`, {
@@ -93,7 +92,6 @@ OrgMapController.prototype.addSource = function () {
 }
 
 OrgMapController.prototype.setFilters = function () {
-  console.log('lets set these filters')
   const that = this
   const datasets = this.datasets.filter(function (d) {
     return d.name !== 'local-authority-district'
@@ -114,29 +112,69 @@ OrgMapController.prototype.setFilters = function () {
   this.map.setFilter('local-authority-districtLine', ['in', this.statisticalGeography, ['get', 'slug']])
 }
 
-OrgMapController.prototype.createPopupHTML = function (feature) {
-  const featureType = capitalizeFirstLetter(feature.sourceLayer).replaceAll('-', ' ')
-  const html = [
-    `<p class="secondary-text govuk-!-margin-bottom-0">${featureType}</p>`,
-    '<p class="dl-small-text govuk-!-margin-top-0">',
-    `<a href="${this.baseURL}${feature.properties.slug}">${feature.properties.name}</a>`,
-    '</p>'
-  ]
-  return html.join('\n')
+// uses the feature's sourceLayer to return the set colour for data of that type
+OrgMapController.prototype.getFillColour = function (feature) {
+  const l = this.layerControlsComponent.getControlByName(feature.sourceLayer)
+  const styles = this.layerControlsComponent.getStyle(l)
+  return styles.colour
+}
+
+// sometimes the same feature can appear multiple times in a list for features
+// return only unique features
+OrgMapController.prototype.removeDuplicates = function (features) {
+  const uniqueIds = []
+  console.log(features)
+  return features.filter(function (feature) {
+    if (uniqueIds.indexOf(feature.id) === -1) {
+      uniqueIds.push(feature.id)
+      return true
+    }
+    return false
+  })
+}
+
+OrgMapController.prototype.createFeaturesPopup = function (features) {
+  const wrapperOpen = '<div class="dl-popup">'
+  const wrapperClose = '</div>'
+  let headingHTML = `<h3 class="dl-popup-heading">${features.length} features selected</h3>`
+  if (features.length > this.popupMaxListLength) {
+    headingHTML = '<h3 class="dl-popup-heading">Too many features selected</h3>'
+    const tooMany = `<p class="govuk-body-s">You clicked on ${features.length} features.</p><p class="govuk-body-s">Zoom in or turn off layers to narrow down your choice.</p>`
+    return wrapperOpen + headingHTML + tooMany + wrapperClose
+  }
+  let itemsHTML = '<ul class="dl-popup-list">\n'
+  const that = this
+  features.forEach(function (feature) {
+    const featureType = capitalizeFirstLetter(feature.sourceLayer).replaceAll('-', ' ')
+    const fillColour = that.getFillColour(feature)
+    const itemHTML = [
+      `<li class="dl-popup-item" style="border-left: 5px solid ${fillColour}">`,
+      `<p class="secondary-text govuk-!-margin-bottom-0 govuk-!-margin-top-0">${featureType}</p>`,
+      '<p class="dl-small-text govuk-!-margin-top-0 govuk-!-margin-bottom-0">',
+      `<a href="${this.baseURL}${feature.properties.slug}">${feature.properties.name}</a>`,
+      '</p>',
+      '</li>'
+    ]
+    itemsHTML = itemsHTML + itemHTML.join('\n')
+  })
+  itemsHTML = headingHTML + itemsHTML + '</ul>'
+  return wrapperOpen + itemsHTML + wrapperClose
 }
 
 OrgMapController.prototype.clickHandler = function (e) {
-  var map = this.map
-  console.log('click at', e)
-  var bbox = [[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]]
-  var that = this // returns a list of layer ids we want to be 'clickable'
+  const map = this.map
+  console.log('click location', e)
+  const bbox = [[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]]
+  const that = this // returns a list of layer ids we want to be 'clickable'
 
-  var enabledControls = this.layerControlsComponent.enabledLayers()
-  var enabledLayers = enabledControls.map(function ($control) {
+  const enabledControls = this.layerControlsComponent.enabledLayers()
+  const enabledLayers = enabledControls.map(function ($control) {
     return that.layerControlsComponent.getDatasetName($control)
   })
-  var clickableLayers = enabledLayers.map(function (layer) {
-    var components = that.layerControlsComponent.availableLayers[layer]
+
+  // need to get just the layers that are clickable
+  const clickableLayers = enabledLayers.map(function (layer) {
+    const components = that.layerControlsComponent.availableLayers[layer]
 
     if (components.includes(layer + 'Fill')) {
       return layer + 'Fill'
@@ -144,18 +182,15 @@ OrgMapController.prototype.clickHandler = function (e) {
 
     return components[0]
   })
-  console.log('Clickable layers: ', clickableLayers) // need to get all the layers that are clickable
+  console.log('Clickable layers: ', clickableLayers)
 
-  var features = map.queryRenderedFeatures(bbox, {
+  const features = map.queryRenderedFeatures(bbox, {
     layers: clickableLayers
   })
-  console.log(features)
-  var coordinates = e.lngLat
-  features.forEach(function (feature) {
-    console.log(feature.properties.name, feature)
-    var popupHTML = that.createPopupHTML(feature)
-    new maplibregl.Popup().setLngLat(coordinates).setHTML(popupHTML).addTo(map)
-  })
+
+  const coordinates = e.lngLat
+  const popupHTML = that.createFeaturesPopup(this.removeDuplicates(features))
+  const popup = new maplibregl.Popup({ maxWidth: this.popupWidth }).setLngLat(coordinates).setHTML(popupHTML).addTo(map)
 }
 
 OrgMapController.prototype.flyToFeatureSet = function (dataset, filter, returnFeatures) {
@@ -173,7 +208,7 @@ OrgMapController.prototype.flyToFeatureSet = function (dataset, filter, returnFe
 
 OrgMapController.prototype.registerInitialFlyTo = function () {
   let flownTo = false
-  var that = this
+  const that = this
   const sourceName = this.flyToDataset + '-source'
   this.map.on('sourcedata', function (e) {
     if (!flownTo) {
@@ -203,6 +238,8 @@ OrgMapController.prototype.setupOptions = function (params) {
   this.baseURL = params.baseURL || 'https://digital-land.github.io'
   this.baseTileStyleFilePath = params.baseTileStyleFilePath || './base-tile.json'
   this.flyToDataset = params.flyToDataset || 'local-authority-district'
+  this.popupWidth = params.popupWidth || '260px'
+  this.popupMaxListLength = params.popupMaxListLength || 10
 }
 
 OrgMapController.prototype.debug = function () {
@@ -223,7 +260,7 @@ OrgMapController.prototype.debug = function () {
   this.map.on('moveend', function (e) {
     console.log('moveend')
     console.log('Brownfield', countFeatures('brownfield-land'))
-    console.log('LA boundaries', countFeatures('ladFill'))
+    console.log('LA boundaries', countFeatures('local-authority-districtFill'))
     console.log('conservation area', countFeatures('conservation-areaFill'))
   })
 }
