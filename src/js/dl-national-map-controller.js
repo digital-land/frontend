@@ -112,7 +112,7 @@ MapController.prototype.createFeaturesPopup = function (features) {
       `<li class="dl-popup-item" style="border-left: 5px solid ${fillColour}">`,
       `<p class="secondary-text govuk-!-margin-bottom-0 govuk-!-margin-top-0">${featureType}</p>`,
       '<p class="dl-small-text govuk-!-margin-top-0 govuk-!-margin-bottom-0">',
-      `<a href="${this.baseURL}${feature.properties.slug}">${feature.properties.name}</a>`,
+      `<a href="${that.baseURL ? that.baseURL : ''}${feature.properties.slug}">${feature.properties.name}</a>`,
       '</p>',
       '</li>'
     ]
