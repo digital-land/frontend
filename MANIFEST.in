@@ -1,1 +1,2 @@
 graft digital_land_frontend/templates
+graft digital_land_frontend/static
