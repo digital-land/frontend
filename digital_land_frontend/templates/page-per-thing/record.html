@@ -39,6 +39,8 @@
     {%- endblock recordTitle %}
 {% endblock recordHead %}
 
+{%- set history_enabled = true if entity else false %}
+
 <div class="govuk-tabs" data-module="dlf-subnav">
     <h2 class="govuk-tabs__title">
       Contents
@@ -50,11 +52,13 @@
                 Record
                 </a>
             </li>
+            {%- if history_enabled %}
             <li class="dlf-subnav__list-item">
                 <a class="dlf-subnav__list-item__link" href="#history" data-module-sub-nav="tab">
                 History
                 </a>
             </li>
+            {%- endif %}
             {%- if provenance %}
             <li class="dlf-subnav__list-item">
                 <a class="dlf-subnav__list-item__link" href="#provenance" data-module-sub-nav="tab">
@@ -230,7 +234,7 @@
 <h3 class="govuk-heading-m">Associated information</h3>
 
 <ul class="govuk-list govuk-list--bullet">
-    <li><a href="https://digital-land.github.io/specification/schema/{{ entity.schema }}/">View the {{ entity.schema }} schema</a></li>
+    <li><a href="https://digital-land.github.io/specification/schema/{{ schema }}/">View the {{ schema }} schema</a></li>
     {%- if typology == "category" %}
     <li>This record is <a href="#referenced-by">referenced by {{ references|length }} other planning related data record{{ "" if references|length == 1 else "s" }}</a></li>
     {% endif -%}
@@ -239,6 +243,7 @@
 
 </div>
 
+{%- if history_enabled %}
 <div id="history">
 {%- block entryHistory %}
 <h2 class="govuk-heading-m dlf-subnav__heading">History</h2>
@@ -288,6 +293,7 @@
 }) }}
 {%- endblock entryHistory %}
 </div>
+{%- endif %}
 
 {%- if provenance %}
 <div id="provenance">

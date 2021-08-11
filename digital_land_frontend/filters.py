@@ -6,7 +6,6 @@ from collections import Mapping
 from datetime import datetime
 
 import validators
-from digital_land.specification import Specification
 from jinja2 import Markup, evalcontextfilter
 
 from .jinja_filters.category_mappers import (
@@ -31,19 +30,19 @@ from .jinja_filters.reference_mappers import ReferenceMapper
 logger = logging.getLogger(__name__)
 
 
-def register_basic_filters(env):
+def register_basic_filters(env, specification):
     env.filters["clean_slug"] = strip_slug
     env.filters["make_link"] = make_link
     env.filters["is_list"] = is_list
     env.filters["is_historical"] = is_historical
     env.filters["contains_historical"] = contains_historical
-    env.filters["key_field"] = key_field_filter
+    env.filters["key_field"] = functools.partial(key_field_filter, specification)
     env.filters["github_line_num"] = github_line_num_filter
     env.filters["total_items"] = total_items_filter
     env.filters["split_to_list"] = split_to_list
 
 
-def register_mapper_filters(env, view_model=None):
+def register_mapper_filters(env, view_model=None, specification=None):
     contribution_funding_status_mapper = MapperFilter(ContributionFundingStatusMapper())
     contribution_purpose_mapper = MapperFilter(ContributionPurposeMapper())
     developer_agreement_contribution_mapper = MapperFilter(
@@ -90,11 +89,14 @@ def register_mapper_filters(env, view_model=None):
             "contribution-purpose": contribution_purpose_mapper,
             "contribution-funding-status": contribution_funding_status_mapper,
             "document-type": doc_type_mapper,
-        }
+        },
+        specification,
     ).route
 
     if view_model:
-        env.filters["reference_mapper"] = ReferenceMapper(view_model).get_references
+        env.filters["reference_mapper"] = ReferenceMapper(
+            view_model, specification
+        ).get_references
     else:
         # provide a no-op function to stop jinja complaining
         env.filters["reference_mapper"] = lambda x: x
@@ -169,25 +171,15 @@ class MapperFilter:
 
 
 class MapperRouter:
-    specification_path = "specification"
-
-    def __init__(self, mappers):
+    def __init__(self, mappers, specification):
         if len(mappers) == 0:
             raise ValueError("no mappers provided")
         self.mappers = mappers
-        self.specification = self.load_specification()
-
-    def load_specification(self):
-        if os.path.isdir(self.specification_path):
-            return Specification(self.specification_path)
-        return None
+        self.specification = specification
 
     def dataset(self, fieldname):
-        # no specification
-        if self.specification is None:
-            return fieldname
         # fieldname not in set of fields
-        if self.specification and fieldname not in self.specification.field.keys():
+        if fieldname not in self.specification.field.keys():
             return fieldname
         parent = self.specification.field_parent(fieldname)
         return fieldname if parent == "category" else parent
@@ -245,14 +237,10 @@ def get_geometry_url_filter(geography_mapper, record):
     return None
 
 
-def key_field_filter(record, pipeline_name):
-    specification_path = "specification"
-    if os.path.isdir(specification_path):
-        spec = Specification(specification_path)
-        schema = spec.pipeline[pipeline_name]["schema"]
-        key_field = spec.key_field(schema)
-        return record.get(key_field)
-    return None
+def key_field_filter(specification, record, pipeline_name):
+    schema = specification.pipeline[pipeline_name]["schema"]
+    key_field = specification.key_field(schema)
+    return record.get(key_field)
 
 
 def github_line_num_filter(n):

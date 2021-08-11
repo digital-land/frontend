@@ -1,5 +1,7 @@
-import pytest
 import datetime
+
+import pytest
+from digital_land.specification import Specification
 
 from digital_land_frontend.filters import (
     MapperFilter,
@@ -8,8 +10,8 @@ from digital_land_frontend.filters import (
     is_historical,
     is_list,
     key_field_filter,
-    total_items_filter,
     readable_date_filter,
+    total_items_filter,
 )
 from digital_land_frontend.jinja_filters.category_mappers import (
     DeveloperAgreementTypeMapper,
@@ -20,6 +22,8 @@ from digital_land_frontend.jinja_filters.mappers import (
     DevelopmentDocMapper,
     PolicyMapper,
 )
+
+SPECIFICATION = Specification("specification")
 
 
 def test_policy_mapper_filter():
@@ -89,7 +93,8 @@ def test_mapper_router_filter():
             "development-policy-category": MapperFilter(PolicyCategoryMapper()),
             "development-plan-type": MapperFilter(PlanTypeMapper()),
             "developer-agreement-type": MapperFilter(DeveloperAgreementTypeMapper()),
-        }
+        },
+        SPECIFICATION,
     )
 
     # test development plan type mapper
@@ -125,7 +130,8 @@ def test_mapper_router_filter():
 
 def test_mapper_router_unmatched_key():
     category_mapper_router = MapperRouter(
-        {"development-policy-category": MapperFilter(PolicyCategoryMapper())}
+        {"development-policy-category": MapperFilter(PolicyCategoryMapper())},
+        SPECIFICATION,
     )
     with pytest.raises(ValueError, match=r"^no mapper found"):
         category_mapper_router.route("local-plan", "bad-key")
@@ -135,7 +141,8 @@ def test_is_historical():
     with pytest.raises(ValueError, match=r"does not contain end-date"):
         is_historical({})
 
-    with pytest.raises(ValueError, match=r"not a dict"):
+        {"development-policy-category": MapperFilter(PolicyCategoryMapper())},
+        SPECIFICATION,
         is_historical("")
 
     assert is_historical({"name": "blah", "end-date": ""}) is False
@@ -175,8 +182,8 @@ def test_key_field_filter():
     pipeline_name = "conservation-area"
     pipeline_name_2 = "development-plan-document"
 
-    assert key_field_filter(record, pipeline_name) == "xyz"
-    assert key_field_filter(record, pipeline_name_2) == "dev-plan-1"
+    assert key_field_filter(SPECIFICATION, record, pipeline_name) == "xyz"
+    assert key_field_filter(SPECIFICATION, record, pipeline_name_2) == "dev-plan-1"
 
 
 def test_total_items_filter():

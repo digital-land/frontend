@@ -3,7 +3,7 @@ import jinja2
 from .filters import register_basic_filters, register_mapper_filters
 
 
-def setup_jinja(view_model=None):
+def setup_jinja(view_model=None, specification=None):
     # register templates
     multi_loader = jinja2.ChoiceLoader(
         [
@@ -23,8 +23,8 @@ def setup_jinja(view_model=None):
     env = jinja2.Environment(loader=multi_loader, autoescape=True)
 
     # register jinja filters
-    register_basic_filters(env)
-    register_mapper_filters(env, view_model)
+    register_basic_filters(env, specification)
+    register_mapper_filters(env, view_model, specification)
 
     # set variables to make available to all templates
     env.globals["staticPath"] = "https://digital-land.github.io"

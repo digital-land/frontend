@@ -1,15 +1,14 @@
 import logging
 
-from digital_land.cli import SPECIFICATION
-
 logger = logging.getLogger(__name__)
 
 
 class ReferenceMapper:
     xref_datasets = {"geography", "category", "policy", "document"}
 
-    def __init__(self, view_model):
+    def __init__(self, view_model, specification):
         self.view_model = view_model
+        self.specification = specification
 
     def get_references(self, value, field):
         """
@@ -22,7 +21,7 @@ class ReferenceMapper:
             ...
         ]
         """
-        field_typology = SPECIFICATION.field_typology(field)
+        field_typology = self.specification.field_typology(field)
         if field_typology not in self.xref_datasets:
             logger.info("no relationships configured for %s typology", field_typology)
             return {}

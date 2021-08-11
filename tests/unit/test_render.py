@@ -3,13 +3,16 @@ from collections import OrderedDict
 import pytest
 from digital_land.model.entity import Entity
 from digital_land.model.entry import Entry
+from digital_land.specification import Specification
 
 from digital_land_frontend.render import (
     Renderer,
+    generate_download_link,
     slug_to_breadcrumb,
     slug_to_relative_href,
-    generate_download_link,
 )
+
+SPECIFICATION = Specification("specification")
 
 
 class SpyRenderer:
@@ -115,9 +118,10 @@ def test_render_with_index_grouping_and_sub_indexes(dataset_multi_slug_reader):
         "schema-name",
         "typology-name",
         "dataset-name",
+        None,
+        SPECIFICATION,
         group_field="organisation",
         renderer=spy_renderer,
-        view_model=None,
     )
     renderer.render(dataset_multi_slug_reader)
 
@@ -247,9 +251,10 @@ def test_render_with_index_grouping(dataset_simple_slug_reader):
         "schema-name",
         "typology-name",
         "dataset-name",
+        None,
+        SPECIFICATION,
         group_field="organisation",
         renderer=spy_renderer,
-        view_model=None,
     )
     renderer.render(dataset_simple_slug_reader)
 
@@ -326,9 +331,10 @@ def test_render_with_no_index_grouping(dataset_simple_slug_reader):
         "schema-name",
         "typology-name",
         "dataset-name",
+        None,
+        SPECIFICATION,
         group_field=None,
         renderer=spy_renderer,
-        view_model=None,
     )
     renderer.render(dataset_simple_slug_reader)
 
