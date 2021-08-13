@@ -16,16 +16,16 @@ $dl-info-colour: govuk-colour("blue");
 .dl-info-text__icon {
   @include govuk-font($size: false, $weight: bold);
 
+  box-sizing: content-box;
   display: inline-block;
 
   position: absolute;
   top: 50%;
   left: 0;
 
-  min-width: 32px;
-  min-height: 29px;
+  width: 32px;
+  height: 32px;
   margin-top: -20px; // Half the height of the circle (adjusted for NTA)
-  padding-top: 3px;
 
   // When a user customises their colours the background colour will often be removed.
   // Adding a border to the component keeps it's shape as a circle.
@@ -35,8 +35,10 @@ $dl-info-colour: govuk-colour("blue");
   color: govuk-colour("white");
   background: $dl-info-colour;
 
-  font-size: 1.6em;
-  line-height: 28px;
+  // measurements work with arial
+  font-family: Arial, sans-serif;
+  font-size: 1.5em;
+  line-height: 32px;
 
   text-align: center;
 
