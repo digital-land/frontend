@@ -37,7 +37,7 @@
   box-sizing: border-box;
   max-height: 100%;
   padding: 70px $govuk-gutter-half $govuk-gutter-half;
-  overflow: scroll;
+  overflow-y: auto;
 }
 
 .dl-map__side-panel__section {
