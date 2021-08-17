@@ -10,6 +10,23 @@ class ReferenceMapper:
         self.view_model = view_model
         self.specification = specification
 
+    def get_references_by_slug_id(self, slug_id, field):
+        result = {}
+        field_typology = self.specification.field_typology(field)
+
+        logger.debug('looking for "%s" relationships', field_typology)
+        for row in self.view_model.get_references_by_id(field_typology, str(slug_id)):
+            result.setdefault(row["type"], []).append(
+                {
+                    "id": row["id"],
+                    "reference": row["reference"],
+                    "href": row["href"],
+                    "text": row["name"],
+                }
+            )
+
+        return result
+
     def get_references(self, value, field):
         """
         Returns links to each entity that references the provided id in the provided field
@@ -42,17 +59,4 @@ class ReferenceMapper:
             return {}
         key_id = key[0]["id"]
 
-        result = {}
-        logger.debug('looking for "%s" relationships', field_typology)
-
-        for row in self.view_model.get_references_by_id(field_typology, key_id):
-            result.setdefault(row["type"], []).append(
-                {
-                    "id": row["id"],
-                    "reference": row["reference"],
-                    "href": row["href"],
-                    "text": row["name"],
-                }
-            )
-
-        return result
+        return self.get_references_by_slug_id(key_id, field)
