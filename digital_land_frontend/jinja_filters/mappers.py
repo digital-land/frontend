@@ -1,8 +1,11 @@
 import csv
 import logging
 import re
+import sys
 
 from ..caching import get
+
+csv.field_size_limit(sys.maxsize)
 
 
 class Mapper:

@@ -37,6 +37,7 @@ def register_basic_filters(env, specification):
     env.filters["is_historical"] = is_historical
     env.filters["contains_historical"] = contains_historical
     env.filters["key_field"] = functools.partial(key_field_filter, specification)
+    env.filters["field_name"] = functools.partial(field_name_filter, specification)
     env.filters["github_line_num"] = github_line_num_filter
     env.filters["total_items"] = total_items_filter
     env.filters["split_to_list"] = split_to_list
@@ -94,9 +95,11 @@ def register_mapper_filters(env, view_model=None, specification=None):
     ).route
 
     if view_model:
-        env.filters["reference_mapper"] = ReferenceMapper(
-            view_model, specification
-        ).get_references
+        ref_mapper = ReferenceMapper(view_model, specification)
+        env.filters["reference_mapper"] = ref_mapper.get_references
+        env.filters[
+            "reference_mapper_by_slug_id"
+        ] = ref_mapper.get_references_by_slug_id
     else:
         # provide a no-op function to stop jinja complaining
         env.filters["reference_mapper"] = lambda x: x
@@ -241,6 +244,12 @@ def key_field_filter(specification, record, pipeline_name):
     schema = specification.pipeline[pipeline_name]["schema"]
     key_field = specification.key_field(schema)
     return record.get(key_field)
+
+
+def field_name_filter(specification, field):
+    if field not in specification.field:
+        return field
+    return specification.field[field]["name"]
 
 
 def github_line_num_filter(n):
