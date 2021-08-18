@@ -103,6 +103,7 @@ def register_mapper_filters(env, view_model=None, specification=None):
     else:
         # provide a no-op function to stop jinja complaining
         env.filters["reference_mapper"] = lambda x: x
+        env.filters["reference_mapper_by_slug_id"] = lambda x: x
 
 
 def get_jinja_template_raw(template_file_path):
