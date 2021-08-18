@@ -271,7 +271,7 @@ Map.prototype.setupInitialZoomHook = function (featureGroup) {
   if (utils.isFunction(this.options.initZoomCallback)) {
     const moveEndHandler = function (e) {
       console.log('inital map move/zoom handler triggered')
-      that.options.initZoomCallback(featureGroup)
+      that.options.initZoomCallback(featureGroup, map)
       map.off('moveend', moveEndHandler)
     }
     map.on('moveend', moveEndHandler)
