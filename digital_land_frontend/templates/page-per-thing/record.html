@@ -16,7 +16,7 @@
 
 {%- set row_name = row['name'] if row['name'] else row['slug'] %}
 {% set geometry_url = row|get_geometry_url %}
-{% if geometry_url %}
+{% if geometry_url or geojson_features %}
     {% set includesMap = true %}
 {% endif %}
 
@@ -210,16 +210,13 @@
 {% endblock recordTableContainer %}
 
 {% block recordGeometry -%}
-    {%- if geometry_url %}
+    {%- if includesMap %}
     <h2 class="govuk-heading-m">Geographical area</h2>
 
     <div class="dl-map__wrapper">
         {{- dlLeafletMap({
             "id": "dlMap",
             "classes": "govuk-!-margin-top-4",
-            "attributes": {
-                "data-geojson-urls": geometry_url
-            },
             "height": "460"
         }) -}}
 
@@ -355,21 +352,29 @@
     const datasetName = "{{ pipeline_name }}"
     const $mapElement = document.querySelector('[data-module="boundary-map"]')
     const $nationalMapLink = document.querySelector('.dl-link-national-map')
-    const mapComponent = new DLMaps.Map($mapElement).init({
-        initZoomCallback: function (featureGroup) {
-            console.log("initial load completed")
-            // do we need to check there isn't more than one shape?
-            const center = featureGroup.getBounds().getCenter()
-            const zoom = mapComponent.map.getZoom()
-            let url = `http://digital-land.github.io/map?layer=${datasetName}#${center.lat},${center.lng},${zoom}z`
-            console.log(url)
-            if ($nationalMapLink) {
-                // only show this for the datasets we've added to the national map
-                $nationalMapLink.href = url
-                $nationalMapLink.classList.remove("js-hidden")
-            }
-        }
-    })
+    const mapParams = {
+    initZoomCallback: function (featureGroup, map) {
+          console.log("initial load completed")
+          // do we need to check there isn't more than one shape?
+          const center = featureGroup.getBounds().getCenter()
+          const zoom = map.getZoom()
+          let url = `http://digital-land.github.io/map?layer=${datasetName}#${center.lat},${center.lng},${zoom}z`
+          console.log(url)
+          if ($nationalMapLink) {
+              // only show this for the datasets we've added to the national map
+              $nationalMapLink.href = url
+              $nationalMapLink.classList.remove("js-hidden")
+          }
+      }
+    }
+
+{% if geometry_url %}
+    mapParams.geojsonURLs = ["{{ geometry_url }}"]
+{% elif geojson_features %}
+    mapParams.geojsonFeatures = {{ geojson_features|safe }}
+{% endif %}
+
+    const mapComponent = new DLMaps.Map($mapElement).init(mapParams)
 </script>
 {% endblock -%}
 
