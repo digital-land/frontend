@@ -85,8 +85,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 
   Map.prototype.init = function (params) {
-    console.log('running from a changed version of DLMaps');
-
     var _params = params || {}; // get element id from module
 
 
@@ -132,7 +130,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var initialFeatures = this.geojsonUrls;
 
       if (typeof _params.geojsonFeatures !== 'undefined') {
-        console.log("features provided directly");
         needToFetchFeatures = false;
         initialFeatures = _params.geojsonFeatures;
       }
@@ -328,7 +325,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       });
     } else {
       features.forEach(function (feature) {
-        console.log(feature);
         addLayer(feature);
       });
     }
