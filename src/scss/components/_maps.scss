@@ -28,11 +28,15 @@ $govuk-tag-light-blue: #d2e2f1;
   }
 }
 
+$note-panel-font-size: 16;
+$note-panel-offset: $note-panel-font-size - 2;
+
 .dl-map__note-panel {
-  display: inline-block;
-  @include govuk-font($size: 16);
+  position: absolute;
+  z-index: 1005;
+  bottom: calc((1rem * -1) - #{$note-panel-offset}px);
+  @include govuk-font($size: $note-panel-font-size);
   padding: 5px 8px;
-  //color: $govuk-tag-dark-blue;
   background: govuk-colour("light-grey");
 }
 
@@ -117,6 +121,10 @@ $bfs-brown: #594d00;
     bottom: 0;
     width: 100%;
   }
+}
+
+.dl-map__wrapper--bottom-margin {
+  margin-bottom: 50px;
 }
 
 .dl-map__loader {

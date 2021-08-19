@@ -213,17 +213,30 @@
     {%- if includesMap %}
     <h2 class="govuk-heading-m">Geographical area</h2>
 
+<<<<<<< HEAD
     <div class="dl-map__wrapper">
         {{- dlLeafletMap({
             "id": "dlMap",
             "classes": "govuk-!-margin-top-4",
             "height": "460"
         }) -}}
+=======
+    {% set noteHTML %}
+    <a class="js-hidden dl-link-national-map" href="#">See on national map.</a>
+    {% endset %}
+>>>>>>> record-page-map-fixes
 
-        <div class="dl-map__note-panel">
-            <a class="js-hidden dl-link-national-map" href="#">See on national map.</a>
-        </div>
-    </div>
+    {{- dlMap({
+        "id": "dlMap",
+        "wrapper_classes": "govuk-!-margin-top-4",
+        "attributes": {
+            "data-geojson-urls": geometry_url
+        },
+        "height": "460",
+        "notePanel": {
+            "html": noteHTML
+        }
+    }) -}}
 
     <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-6">
         <a class="dl-page-action-button" href="{{geometry_url}}">Download geojson</a>
