@@ -2,7 +2,7 @@
 {% set templateName = "page-per-thing/record.html" %}
 
 {%- from "govuk-jinja-components/components/details/macro.jinja" import govukDetails %}
-{%- from "digital-land-frontend/components/map/macro.html" import dlLeafletMap %}
+{%- from "digital-land-frontend/components/map/macro.html" import dlMap %}
 {%- from "digital-land-frontend/components/data-record/macro.html" import dlDataRecordPanel %}
 {%- from "digital-land-frontend/components/data-reference-cell/macro.html" import dlDataReferenceCell %}
 {%- from "digital-land-frontend/components/data-table/macro.html" import dlDataTableWrapper %}
@@ -213,25 +213,13 @@
     {%- if includesMap %}
     <h2 class="govuk-heading-m">Geographical area</h2>
 
-<<<<<<< HEAD
-    <div class="dl-map__wrapper">
-        {{- dlLeafletMap({
-            "id": "dlMap",
-            "classes": "govuk-!-margin-top-4",
-            "height": "460"
-        }) -}}
-=======
     {% set noteHTML %}
     <a class="js-hidden dl-link-national-map" href="#">See on national map.</a>
     {% endset %}
->>>>>>> record-page-map-fixes
 
     {{- dlMap({
         "id": "dlMap",
         "wrapper_classes": "govuk-!-margin-top-4",
-        "attributes": {
-            "data-geojson-urls": geometry_url
-        },
         "height": "460",
         "notePanel": {
             "html": noteHTML
