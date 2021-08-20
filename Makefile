@@ -1,5 +1,8 @@
 SOURCE_URL=https://raw.githubusercontent.com/digital-land/
 
+# current git branch
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+
 .PHONY: black black-check flake8 lint test
 
 all: lint test
@@ -8,6 +11,7 @@ init::
 	pip install --upgrade pip setuptools
 	pip install -e .
 	pip install -r requirements.txt
+	npm install
 
 
 # update local copies of specification files
@@ -36,3 +40,16 @@ flake8:
 	flake8 --exclude .venv,node_modules
 
 lint: black-check flake8
+
+js::
+	gulp js
+
+css::
+	gulp stylesheets
+
+assets:: js css
+
+commit-assets::
+	git add digital_land_frontend/static/stylesheets/
+	git add digital_land_frontend/static/javascripts/
+	git diff --quiet && git diff --staged --quiet || (git commit -m "Rebuilt frontend assets $(shell date +%F)"; git push origin $(BRANCH))
