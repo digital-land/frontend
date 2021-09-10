@@ -172,9 +172,9 @@ class Renderer:
 
     def render_dataset(self, dataset_path):
         repo = EntryRepository(dataset_path)
-        entities = repo.list_entities()
+        slugs = repo.list_slugs()
         reader = (
-            Entity(repo.find_by_entity(entity), self.schema) for entity in entities
+            Entity(repo.find_by_slug(slug), self.schema) for slug in slugs
         )
         self.render(reader)
 
