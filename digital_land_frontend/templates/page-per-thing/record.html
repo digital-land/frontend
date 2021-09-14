@@ -227,7 +227,7 @@
     }) -}}
 
     <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-6">
-        <a class="dl-page-action-button" href="{{geometry_url or "?format=geojson"}}">Download geojson</a>
+        <a class="dl-page-action-button" href="{{geometry_url or "./" + row["entity"]|string + ".geojson"}}">Download geojson</a>
     </div>
     {%- endif %}
 {%- endblock recordGeometry %}
