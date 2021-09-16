@@ -11,7 +11,7 @@
 {%- if row["slug-id"] %}
     {% set references = row["slug-id"]|reference_mapper_by_slug_id(pipeline_name) if enable_x_ref else {} %}
 {%- else %}
-    {% set references = row[key_field]|reference_mapper(pipeline_name) if enable_x_ref else {} %}
+    {% set references = row["entity"]|reference_mapper(pipeline_name) if enable_x_ref else {} %}
 {%- endif %}
 
 {%- set row_name = row['name'] if row['name'] else row['slug'] %}
@@ -316,7 +316,7 @@
                 {%- for ref in refs %}
                 <li>
                     <a href={{ entity_prefix|default('') }}{{ ref["href"] }}>{{ ref["text"] }}</a>
-                    <span class="secondary-text data-reference">({{ ref["id"] }})</span>
+                    <span class="secondary-text data-reference">({{ ref["reference"] }})</span>
                 </li>
                 {% endfor -%}
             </ul>

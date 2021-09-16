@@ -124,7 +124,7 @@ class OrganisationMapper(Mapper):
     dataset_urls = [
         "https://raw.githubusercontent.com/digital-land/organisation-dataset/master/collection/organisation.csv"
     ]
-    url_pattern = "https://digital-land.github.io/organisation/{key}"
+    url_pattern = "/entity/?slug=/organisation/{key}"
     key_field = "organisation"
     matcher = re.compile(r"^.*")
 

@@ -10,6 +10,22 @@ class ReferenceMapper:
         self.view_model = view_model
         self.specification = specification
 
+    def get_references_by_entity(self, typology, entity):
+        result = {}
+
+        logger.debug('looking for "%s" relationships', typology)
+        for reference in self.view_model.get_references(typology, entity):
+            result.setdefault(reference["type"], []).append(
+                {
+                    "entity": reference["entity"],
+                    "reference": reference["reference"],
+                    "href": f"/entity/{reference['entity']}",
+                    "text": reference["name"],
+                }
+            )
+
+        return result
+
     def get_references_by_slug_id(self, slug_id, field):
         result = {}
         field_typology = self.specification.field_typology(field)
@@ -43,20 +59,4 @@ class ReferenceMapper:
             logger.info("no relationships configured for %s typology", field_typology)
             return {}
 
-        key = list(self.view_model.get_id(field_typology, value))
-
-        if key and "type" in key[0]:
-            key = [id for id in key if id["type"] == field]
-
-        row_count = len(key)
-        if row_count != 1:
-            logger.warning(
-                'select %s "%s" returned %s rows, expected exactly 1',
-                field_typology,
-                value,
-                row_count,
-            )
-            return {}
-        key_id = key[0]["id"]
-
-        return self.get_references_by_slug_id(key_id, field)
+        return self.get_references_by_entity(field_typology, value)
