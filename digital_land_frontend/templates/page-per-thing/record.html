@@ -238,7 +238,7 @@
 <ul class="govuk-list govuk-list--bullet">
     <li><a href="https://digital-land.github.io/specification/schema/{{ schema }}/">View the {{ schema }} schema</a></li>
     {%- if typology == "category" %}
-    <li>This record is <a href="#referenced-by">referenced by {{ references|length }} other planning related data record{{ "" if references|length == 1 else "s" }}</a></li>
+    <li>This record is <a href="#referenced-by">referenced by {{ references|total_items }} other planning related data record{{ "" if references|total_items == 1 else "s" }}</a></li>
     {% endif -%}
 </ul>
 {% endblock recordAssociatedInfo %}
