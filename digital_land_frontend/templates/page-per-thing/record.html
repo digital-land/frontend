@@ -186,6 +186,7 @@
         {%- endfor %}
         {%- endset %}
 
+        <!-- this section can probably be removed. Entities no longer have a resource field
         {%- if row['resource'] -%}
         {{ dlDataRecordPanel({
             "classes": "govuk-!-margin-bottom-6",
@@ -196,6 +197,8 @@
             },
             "html": areaproperties
         }) }}
+        <!-- delete to here -->
+
         {%- else -%}
         {{ dlDataRecordPanel({
             "classes": "govuk-!-margin-bottom-6",
