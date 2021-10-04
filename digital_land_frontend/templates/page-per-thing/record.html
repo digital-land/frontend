@@ -7,12 +7,6 @@
 {%- from "digital-land-frontend/components/data-reference-cell/macro.html" import dlDataReferenceCell %}
 {%- from "digital-land-frontend/components/data-table/macro.html" import dlDataTableWrapper %}
 
-{# set at the top level, not in a block. Should this variable be passed to the template? #}
-{%- if row["slug-id"] %}
-    {% set references = row["slug-id"]|reference_mapper_by_slug_id(pipeline_name) if enable_x_ref else {} %}
-{%- else %}
-    {% set references = row["entity"]|reference_mapper(pipeline_name) if enable_x_ref else {} %}
-{%- endif %}
 
 {%- set row_name = row['name'] if row['name'] else row['slug'] %}
 {% set geometry_url = row|get_geometry_url %}
