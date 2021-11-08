@@ -12,11 +12,12 @@ import '../../../node_modules/govuk-frontend/govuk/vendor/polyfills/Function/pro
 function FilterCheckboxes ($module) {
   this.$module = $module
   this.$textbox = $module.querySelector('.filter-group__auto-filter__input')
-  this.checkboxArr = [...$module.querySelectorAll('.govuk-checkboxes__item')]
 }
 
-FilterCheckboxes.prototype.init = function () {
+FilterCheckboxes.prototype.init = function (params) {
+  this.setupOptions(params)
   var $module = this.$module
+  this.checkboxArr = [...$module.querySelectorAll(this.listItemSelector)]
   var $checkboxes = this.checkboxArr
 
   // if no checkboxes then return
@@ -114,6 +115,11 @@ FilterCheckboxes.prototype.generateAriaMessage = function (optionCount, selected
   }
 
   ariaEl.textContent = optionCount + ' ' + optionStr + ', ' + selectedCount + ' ' + ariaEl.dataset.selected
+}
+
+FilterCheckboxes.prototype.setOptions = function (params) {
+  params = params || {}
+  this.listItemSelector = params.listItemSelector || '.govuk-checkboxes__item'
 }
 
 export default FilterCheckboxes
