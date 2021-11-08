@@ -117,7 +117,7 @@ FilterCheckboxes.prototype.generateAriaMessage = function (optionCount, selected
   ariaEl.textContent = optionCount + ' ' + optionStr + ', ' + selectedCount + ' ' + ariaEl.dataset.selected
 }
 
-FilterCheckboxes.prototype.setOptions = function (params) {
+FilterCheckboxes.prototype.setupOptions = function (params) {
   params = params || {}
   this.listItemSelector = params.listItemSelector || '.govuk-checkboxes__item'
 }
