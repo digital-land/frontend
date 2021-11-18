@@ -35,7 +35,7 @@ class JinjaRenderer:
     def __init__(self, url_root, view_model, specification, docs="docs"):
         self.docs = docs
         self.env = setup_jinja(view_model, specification)
-        self.env.globals["enable_x_ref"] = view_model is not None
+        self.env.globals["enable_x_ref"] = None
         self.env.globals["urlRoot"] = url_root
         self.env.trim_blocks = True
         self.env.lstrip_blocks = True

@@ -37,8 +37,6 @@ setup(
         "shapely",
         "govuk_jinja_components @ git+https://github.com/digital-land/govuk-jinja-components.git#egg=govuk_jinja_components",
         "markdown",
-        "datasette_builder @ git+https://github.com/digital-land/datasette-builder.git#egg=datastte_builder",
-        "view_builder @ git+https://github.com/digital-land/view-builder.git#egg=view_builder",
         "sqlalchemy",
     ],
     include_package_data=True,
