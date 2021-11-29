@@ -35,7 +35,6 @@ def register_basic_filters(env, specification):
     env.filters["is_list"] = is_list
     env.filters["is_historical"] = is_historical
     env.filters["contains_historical"] = contains_historical
-    env.filters["key_field"] = functools.partial(key_field_filter, specification)
     env.filters["field_name"] = functools.partial(field_name_filter, specification)
     env.filters["github_line_num"] = github_line_num_filter
     env.filters["total_items"] = total_items_filter
@@ -231,12 +230,6 @@ def get_geometry_url_filter(geography_mapper, record):
     if "statistical-geography" in record and record["statistical-geography"]:
         return geography_mapper.get_geometry_url(record["statistical-geography"])
     return None
-
-
-def key_field_filter(specification, record, pipeline_name):
-    schema = specification.pipeline[pipeline_name]["schema"]
-    key_field = specification.key_field(schema)
-    return record.get(key_field)
 
 
 def field_name_filter(specification, field):

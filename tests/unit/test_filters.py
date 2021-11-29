@@ -9,7 +9,6 @@ from digital_land_frontend.filters import (
     contains_historical,
     is_historical,
     is_list,
-    key_field_filter,
     readable_date_filter,
     total_items_filter,
 )
@@ -171,19 +170,6 @@ def test_contains_historical_future_date(_item_data):
 def test_contains_historical_not_a_list():
     with pytest.raises(ValueError, match=r"not a list"):
         contains_historical("bad value")
-
-
-def test_key_field_filter():
-    record = {
-        "geography": "xyz",
-        "name": "test record",
-        "development-plan-document": "dev-plan-1",
-    }
-    pipeline_name = "conservation-area"
-    pipeline_name_2 = "development-plan-document"
-
-    assert key_field_filter(SPECIFICATION, record, pipeline_name) == "xyz"
-    assert key_field_filter(SPECIFICATION, record, pipeline_name_2) == "dev-plan-1"
 
 
 def test_total_items_filter():
