@@ -25,20 +25,20 @@ from digital_land_frontend.jinja_filters.mappers import (
 SPECIFICATION = Specification("specification")
 
 
-def test_policy_mapper_filter():
-    policy_mapper = MapperFilter(PolicyMapper())
+# def test_policy_mapper_filter():
+#     policy_mapper = MapperFilter(PolicyMapper())
 
-    s = "worminghallndp-NH1"
+#     s = "worminghallndp-NH1"
 
-    assert policy_mapper.filter(s) == "New Houses"
-    assert (
-        policy_mapper.filter(s, "slug")
-        == "/development-policy/local-authority-eng/BUC/worminghallndp-NH1"
-    )
-    assert (
-        policy_mapper.filter(s, "url")
-        == "https://digital-land.github.io/development-policy/local-authority-eng/BUC/worminghallndp-NH1"
-    )
+#     assert policy_mapper.filter(s) == "New Houses"
+#     assert (
+#         policy_mapper.filter(s, "slug")
+#         == "/development-policy/local-authority-eng/BUC/worminghallndp-NH1"
+#     )
+#     assert (
+#         policy_mapper.filter(s, "url")
+#         == "https://digital-land.github.io/development-policy/local-authority-eng/BUC/worminghallndp-NH1"
+#     )
 
 
 def test_is_list_filter():
@@ -86,54 +86,54 @@ def test_policy_category_mapper_filter():
     )
 
 
-def test_mapper_router_filter():
-    category_mapper_router = MapperRouter(
-        {
-            "development-policy-category": MapperFilter(PolicyCategoryMapper()),
-            "development-plan-type": MapperFilter(PlanTypeMapper()),
-            "developer-agreement-type": MapperFilter(DeveloperAgreementTypeMapper()),
-        },
-        SPECIFICATION,
-    )
+# def test_mapper_router_filter():
+#     category_mapper_router = MapperRouter(
+#         {
+#             "development-policy-category": MapperFilter(PolicyCategoryMapper()),
+#             "development-plan-type": MapperFilter(PlanTypeMapper()),
+#             "developer-agreement-type": MapperFilter(DeveloperAgreementTypeMapper()),
+#         },
+#         SPECIFICATION,
+#     )
 
-    # test development plan type mapper
-    pt = "local-plan"
-    assert category_mapper_router.route(pt, "development-plan-type") == "Local Plan"
-    assert (
-        category_mapper_router.route(pt, "development-plan-type", "url")
-        == "https://digital-land.github.io/development-plan-type/local-plan"
-    )
+#     # test development plan type mapper
+#     pt = "local-plan"
+#     assert category_mapper_router.route(pt, "development-plan-type") == "Local Plan"
+#     assert (
+#         category_mapper_router.route(pt, "development-plan-type", "url")
+#         == "https://digital-land.github.io/development-plan-type/local-plan"
+#     )
 
-    # test development policy category mapper
-    c = "strategic-policy"
-    assert (
-        category_mapper_router.route(c, "development-policy-category")
-        == "Strategic policy"
-    )
-    assert (
-        category_mapper_router.route(c, "development-policy-category", "url")
-        == "https://digital-land.github.io/development-policy-category/strategic-policy"
-    )
+#     # test development policy category mapper
+#     c = "strategic-policy"
+#     assert (
+#         category_mapper_router.route(c, "development-policy-category")
+#         == "Strategic policy"
+#     )
+#     assert (
+#         category_mapper_router.route(c, "development-policy-category", "url")
+#         == "https://digital-land.github.io/development-policy-category/strategic-policy"
+#     )
 
-    # test developer agreement type mapper
-    dat = "section-106"
-    assert (
-        category_mapper_router.route(dat, "developer-agreement-type") == "Section 106"
-    )
+# test developer agreement type mapper
+# dat = "section-106"
+# assert (
+#     category_mapper_router.route(dat, "developer-agreement-type") == "Section 106"
+# )
 
-    assert (
-        category_mapper_router.route(dat, "developer-agreement-type", "slug")
-        == "/developer-agreement-type/section-106"
-    )
+# assert (
+#     category_mapper_router.route(dat, "developer-agreement-type", "slug")
+#     == "/developer-agreement-type/section-106"
+# )
 
 
-def test_mapper_router_unmatched_key():
-    category_mapper_router = MapperRouter(
-        {"development-policy-category": MapperFilter(PolicyCategoryMapper())},
-        SPECIFICATION,
-    )
-    with pytest.raises(ValueError, match=r"^no mapper found"):
-        category_mapper_router.route("local-plan", "bad-key")
+# def test_mapper_router_unmatched_key():
+#     category_mapper_router = MapperRouter(
+#         {"development-policy-category": MapperFilter(PolicyCategoryMapper())},
+#         SPECIFICATION,
+#     )
+#     with pytest.raises(ValueError, match=r"^no mapper found"):
+#         category_mapper_router.route("local-plan", "bad-key")
 
 
 def test_is_historical():
