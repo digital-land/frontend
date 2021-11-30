@@ -5,7 +5,6 @@ from digital_land.specification import Specification
 
 from digital_land_frontend.filters import (
     MapperFilter,
-    MapperRouter,
     contains_historical,
     is_historical,
     is_list,
@@ -13,13 +12,11 @@ from digital_land_frontend.filters import (
     total_items_filter,
 )
 from digital_land_frontend.jinja_filters.category_mappers import (
-    DeveloperAgreementTypeMapper,
     PlanTypeMapper,
     PolicyCategoryMapper,
 )
 from digital_land_frontend.jinja_filters.mappers import (
     DevelopmentDocMapper,
-    PolicyMapper,
 )
 
 SPECIFICATION = Specification("specification")
