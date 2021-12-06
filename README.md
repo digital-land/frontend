@@ -1,6 +1,15 @@
-# Frontend
+# Frontend - soon to be archived
 
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/psd/openregister/blob/master/LICENSE)
+
+---
+**NOTE**
+
+This repo and package has been replaced by [digital-land-frontend](https://github.com/digital-land/digital-land-frontend). Please use that one.
+
+This repo is still used by some older prototypes so needs to exist for a little longer.
+
+---
 
 Frontend contains the code you need to start building a user interface for digital land pages and services. It builds on [GOV.UK frontend](https://github.com/alphagov/govuk-frontend).
 
