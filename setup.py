@@ -29,8 +29,7 @@ setup(
     python_requires=">=3.5",
     install_requires=[
         "CacheControl",
-        # issue with frames ..
-        "jinja2==2.11.3",
+        "jinja2",
         "lockfile",
         "validators",
         "requests",
