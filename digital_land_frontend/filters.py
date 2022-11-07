@@ -2,11 +2,12 @@ import functools
 import logging
 import numbers
 import os
-from collections import Mapping
+from collections.abc import Mapping
 from datetime import datetime
 
 import validators
-from jinja2 import Markup, evalcontextfilter
+from jinja2.filters import evalcontextfilter
+from markupsafe import Markup
 
 from .jinja_filters.category_mappers import (
     ContributionFundingStatusMapper,
