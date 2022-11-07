@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from datetime import datetime
 
 import validators
-from jinja2.filters import evalcontextfilter
+from jinja2.filters import pass_eval_context
 from markupsafe import Markup
 
 from .jinja_filters.category_mappers import (
@@ -106,7 +106,7 @@ def get_jinja_template_raw(template_file_path):
     return None
 
 
-@evalcontextfilter
+@pass_eval_context
 def make_link(eval_ctx, url):
     """
     Converts a url string into an anchor element.
