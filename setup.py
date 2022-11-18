@@ -26,7 +26,7 @@ setup(
     license="MIT",
     packages=find_packages(),
     package_data={"digital-land-frontend": components},
-    python_requires=">=3.8",
+    python_requires="==3.8.*",
     install_requires=[
         "CacheControl",
         "jinja2",
